@@ -3,11 +3,11 @@ package com.example.docsachapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -21,7 +21,6 @@ public class LoginActivity extends AppCompatActivity {
         EditText etUsername = findViewById(R.id.et_username);
         EditText etPassword = findViewById(R.id.et_password);
         ImageView ivEye = findViewById(R.id.iv_eye);
-        TextView tvError = findViewById(R.id.tv_error);
         Button btnLogin = findViewById(R.id.btn_login);
         TextView tvRegisterLink = findViewById(R.id.tv_register_link);
         TextView tvForgotPassword = findViewById(R.id.tv_forgot_password);
@@ -40,9 +39,8 @@ public class LoginActivity extends AppCompatActivity {
             String user = etUsername.getText().toString();
             String pass = etPassword.getText().toString();
             if (user.equals("error") || pass.equals("error")) {
-                tvError.setVisibility(View.VISIBLE);
+                Toast.makeText(this, "Tên đăng nhập hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
             } else {
-                tvError.setVisibility(View.GONE);
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

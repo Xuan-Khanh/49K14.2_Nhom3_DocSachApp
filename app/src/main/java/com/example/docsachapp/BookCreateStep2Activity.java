@@ -2,8 +2,8 @@ package com.example.docsachapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,11 +13,11 @@ public class BookCreateStep2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_create_step2);
 
-        ImageView btnBack = findViewById(R.id.btn_back);
+        ImageView btnClose = findViewById(R.id.btn_close);
         ImageView btnDone = findViewById(R.id.btn_done);
-        Button btnAddChapter = findViewById(R.id.btn_add_chapter);
+        TextView btnAddChapter = findViewById(R.id.btn_add_chapter);
 
-        btnBack.setOnClickListener(v -> finish());
+        btnClose.setOnClickListener(v -> finish());
         
         btnDone.setOnClickListener(v -> {
             Toast.makeText(this, "Thêm truyện thành công", Toast.LENGTH_SHORT).show();

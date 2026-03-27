@@ -399,7 +399,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/bg_popup_rounded"
+        android:background="@drawable/bg_profile_card"
         android:orientation="vertical"
         android:padding="24dp"
         android:visibility="gone">
@@ -453,7 +453,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/bg_popup_rounded"
+        android:background="@drawable/bg_profile_card"
         android:orientation="vertical"
         android:padding="24dp"
         android:visibility="gone">

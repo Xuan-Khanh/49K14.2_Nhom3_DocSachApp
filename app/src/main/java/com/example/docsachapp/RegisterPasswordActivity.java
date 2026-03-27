@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +27,11 @@ public class RegisterPasswordActivity extends AppCompatActivity {
         ImageView ivEyeConfirm = findViewById(R.id.iv_eye_confirm);
         TextView tvError = findViewById(R.id.tv_error);
         Button btnRegister = findViewById(R.id.btn_register);
+        
+        LinearLayout layoutRegisterForm = findViewById(R.id.layout_register_form);
+        LinearLayout layoutSuccessPopup = findViewById(R.id.layout_success_popup);
+        ImageView btnBackSuccess = findViewById(R.id.btn_back_success);
+        Button btnBackToLogin = findViewById(R.id.btn_back_to_login);
 
         btnBack.setOnClickListener(v -> finish());
 
@@ -55,9 +61,20 @@ public class RegisterPasswordActivity extends AppCompatActivity {
                 tvError.setVisibility(View.VISIBLE);
             } else {
                 tvError.setVisibility(View.GONE);
-                Intent intent = new Intent(RegisterPasswordActivity.this, RegisterSuccessActivity.class);
-                startActivity(intent);
+                layoutRegisterForm.setVisibility(View.GONE);
+                layoutSuccessPopup.setVisibility(View.VISIBLE);
             }
+        });
+        
+        btnBackSuccess.setOnClickListener(v -> {
+            layoutSuccessPopup.setVisibility(View.GONE);
+            layoutRegisterForm.setVisibility(View.VISIBLE);
+        });
+        
+        btnBackToLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterPasswordActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         });
     }
 }

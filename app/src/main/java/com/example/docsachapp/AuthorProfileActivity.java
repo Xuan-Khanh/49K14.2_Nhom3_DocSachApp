@@ -1,11 +1,11 @@
 package com.example.docsachapp;
 
-import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import com.google.android.material.button.MaterialButton;
 
 public class AuthorProfileActivity extends AppCompatActivity {
     private boolean isFollowing = false;
@@ -16,27 +16,25 @@ public class AuthorProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_author_profile);
 
         ImageView btnBack = findViewById(R.id.btn_back);
-        Button btnFollowAuthor = findViewById(R.id.btn_follow_author);
-        TextView itemBook = findViewById(R.id.item_book);
+        MaterialButton btnFollowAuthor = findViewById(R.id.btn_follow_author);
 
         btnBack.setOnClickListener(v -> finish());
         
         btnFollowAuthor.setOnClickListener(v -> {
             isFollowing = !isFollowing;
             if (isFollowing) {
-                btnFollowAuthor.setText("Đang theo dõi");
-                btnFollowAuthor.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.primary_transparent_25)));
-                btnFollowAuthor.setTextColor(getResources().getColor(R.color.primary));
+                btnFollowAuthor.setText(R.string.following);
+                int primaryTransparent = ContextCompat.getColor(this, R.color.primary_transparent_25);
+                int primary = ContextCompat.getColor(this, R.color.primary);
+                btnFollowAuthor.setBackgroundTintList(ColorStateList.valueOf(primaryTransparent));
+                btnFollowAuthor.setTextColor(primary);
             } else {
-                btnFollowAuthor.setText("Theo dõi tác giả");
-                btnFollowAuthor.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.primary)));
-                btnFollowAuthor.setTextColor(getResources().getColor(R.color.white));
+                btnFollowAuthor.setText(R.string.follow_author);
+                int primary = ContextCompat.getColor(this, R.color.primary);
+                int white = ContextCompat.getColor(this, R.color.white);
+                btnFollowAuthor.setBackgroundTintList(ColorStateList.valueOf(primary));
+                btnFollowAuthor.setTextColor(white);
             }
-        });
-        
-        itemBook.setOnClickListener(v -> {
-            Intent intent = new Intent(AuthorProfileActivity.this, BookDetailsActivity.class);
-            startActivity(intent);
         });
     }
 }

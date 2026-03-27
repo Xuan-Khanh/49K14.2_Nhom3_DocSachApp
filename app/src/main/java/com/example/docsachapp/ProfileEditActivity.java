@@ -15,7 +15,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         ImageView btnBack = findViewById(R.id.btn_back);
         Button btnSave = findViewById(R.id.btn_save);
-        EditText etName = findViewById(R.id.et_name);
+        EditText etName = findViewById(R.id.et_username);
 
         btnBack.setOnClickListener(v -> finish());
         

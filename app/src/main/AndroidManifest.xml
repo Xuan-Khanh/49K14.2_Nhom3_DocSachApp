@@ -21,7 +21,6 @@
         <activity android:name=".RegisterMethodActivity" />
         <activity android:name=".RegisterInfoActivity" />
         <activity android:name=".RegisterPasswordActivity" />
-        <activity android:name=".RegisterSuccessActivity" />
         <activity android:name=".ForgotPasswordEmailActivity" />
         <activity android:name=".ForgotPasswordOtpActivity" />
         <activity android:name=".ForgotPasswordResetActivity" />

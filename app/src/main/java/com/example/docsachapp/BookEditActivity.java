@@ -16,7 +16,7 @@ public class BookEditActivity extends AppCompatActivity {
 
         Button btnAddChapter = findViewById(R.id.btn_add_chapter);
         Button btnDeleteBook = findViewById(R.id.btn_delete_book);
-        android.widget.ImageView btnChapterSettings = findViewById(R.id.btn_chapter_settings);
+        android.widget.ImageView btnChapterSettings = findViewById(R.id.btn_settings);
 
         btnChapterSettings.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(this, btnChapterSettings);
@@ -34,8 +34,7 @@ public class BookEditActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        btnDeleteBook.setOnClickListener(v -> {
-            new AlertDialog.Builder(this)
+        btnDeleteBook.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle("Xóa truyện này vĩnh viễn?")
                 .setMessage("Tác phẩm này sẽ không thể khôi phục sau khi xóa.")
                 .setPositiveButton("Xóa", (d, w) -> {
@@ -43,7 +42,6 @@ public class BookEditActivity extends AppCompatActivity {
                     finish();
                 })
                 .setNegativeButton("Hủy", null)
-                .show();
-        });
+                .show());
     }
 }

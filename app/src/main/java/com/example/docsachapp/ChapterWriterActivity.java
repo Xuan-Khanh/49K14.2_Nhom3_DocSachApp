@@ -16,7 +16,7 @@ public class ChapterWriterActivity extends AppCompatActivity {
 
         ImageView btnBack = findViewById(R.id.btn_back);
         TextView btnPublish = findViewById(R.id.btn_publish);
-        Button btnSaveDraft = findViewById(R.id.btn_save_draft);
+        TextView btnDraft = findViewById(R.id.btn_draft);
         EditText etTitle = findViewById(R.id.et_chapter_title);
         EditText etContent = findViewById(R.id.et_chapter_content);
 
@@ -31,7 +31,7 @@ public class ChapterWriterActivity extends AppCompatActivity {
             }
         });
         
-        btnSaveDraft.setOnClickListener(v -> {
+        btnDraft.setOnClickListener(v -> {
             Toast.makeText(this, "Đã lưu bản nháp", Toast.LENGTH_SHORT).show();
             finish();
         });

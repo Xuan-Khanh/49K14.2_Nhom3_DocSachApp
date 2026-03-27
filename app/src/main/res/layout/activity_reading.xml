@@ -88,10 +88,10 @@
                 android:id="@+id/tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:lineSpacingExtra="10dp"
                 android:text="[Hành khách số 1888 đã đến nơi, xin vui lòng rời tàu ngay lập tức.]\n\nCô gái trẻ quấn mình trong chiếc áo khoác hai màu đen đỏ đan xen, vội vàng xách vali lên rồi lao nhanh về phía khoang tàu đang mở cửa.\n\nMột con bạch tuộc đen lặng lẽ trườn ra từ dưới ghế ngồi của cô. Chỉ cần cô sơ sẩy một chút thôi, chắc chắn sẽ trượt ngã.\n\nNếu quá thời gian quy định mà vẫn chưa rời đi, cô gái đáng thương này sẽ bị xem là chống lệnh và bị robot chấp pháp xử lý ngay tại chỗ.\n\nỞ Tinh Tế, nơi tài nguyên khan hiếm, những cư dân bất hợp pháp không có căn cước hoàn toàn chẳng được hưởng chút quyền lợi nhân đạo nào.\n\nCô bước rất nhanh. Bàn chân giẫm mạnh lên thân con bạch tuộc mềm nhũn, đúng ngay vào giác hút của nó.\n\nBạch tuộc trên Hành tinh Khắc Lỗ nổi tiếng with lớp da cứng như thép, chỉ có phần giác hút là yếu ớt và nhạy cảm. Chủ nhân của nó còn chưa kịp phản ứng thì hàng chục ống kim loại màu bạc, dài và mảnh, đã chĩa thẳng vào mặt.\n\nĐó là súng photon của robot chấp pháp, chỉ cần một giây cũng đủ thiêu rụi con bạch tuộc khổng lồ thành tro bụi.\n\nCô gái trẻ không hề để tâm đến sự hỗn loạn phía sau, cũng chẳng buồn ngoái lại, cứ thế phóng thẳng ra cửa.\n\nKhuôn mặt đỏ gay của con bạch tuộc cố nặn ra một nụ cười lấy lòng. Nó cẩn trọng nhắc con bạch tuộc nhỏ của mình"
                 android:textColor="@color/text_dark"
-                android:textSize="17sp"
-                android:lineSpacingExtra="10dp" />
+                android:textSize="17sp" />
         </LinearLayout>
     </ScrollView>
 

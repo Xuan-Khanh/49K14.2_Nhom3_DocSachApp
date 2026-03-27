@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 public class BookCreateActivity extends AppCompatActivity {
     private boolean isFormValid = false;
@@ -20,19 +21,19 @@ public class BookCreateActivity extends AppCompatActivity {
 
         ImageView btnClose = findViewById(R.id.btn_close);
         ImageView btnNext = findViewById(R.id.btn_next);
-        EditText etTitle = findViewById(R.id.et_title);
-        EditText etDesc = findViewById(R.id.et_desc);
+        EditText etTitle = findViewById(R.id.et_book_title);
+        EditText etDesc = findViewById(R.id.et_book_description);
 
         TextWatcher watcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override public void afterTextChanged(Editable s) {
-                if (etTitle.getText().toString().trim().length() > 0 && etDesc.getText().toString().trim().length() > 0) {
+                if (!etTitle.getText().toString().trim().isEmpty() && !etDesc.getText().toString().trim().isEmpty()) {
                     isFormValid = true;
-                    btnNext.setColorFilter(getResources().getColor(R.color.text_dark));
+                    btnNext.setColorFilter(ContextCompat.getColor(BookCreateActivity.this, R.color.text_dark));
                 } else {
                     isFormValid = false;
-                    btnNext.setColorFilter(getResources().getColor(R.color.placeholder));
+                    btnNext.setColorFilter(ContextCompat.getColor(BookCreateActivity.this, R.color.placeholder));
                 }
             }
         };
