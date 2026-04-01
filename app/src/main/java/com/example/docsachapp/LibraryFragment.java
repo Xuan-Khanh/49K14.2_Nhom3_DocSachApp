@@ -43,14 +43,33 @@ public class LibraryFragment extends Fragment {
         
         ImageView btnCollectionMore = view.findViewById(R.id.btn_collection_more);
 
+        // Book Item in Following Tab
+        View bookItem1 = view.findViewById(R.id.book_item_1);
+        if (bookItem1 != null) {
+            bookItem1.setOnClickListener(v -> {
+                Intent intent = new Intent(requireContext(), BookDetailsActivity.class);
+                startActivity(intent);
+            });
+        }
+
+        // Collection Item in Collections Tab
+        View collectionItem = view.findViewById(R.id.layout_collection_item);
+        if (collectionItem != null) {
+            collectionItem.setOnClickListener(v -> {
+                Intent intent = new Intent(requireContext(), CollectionDetailsActivity.class);
+                startActivity(intent);
+            });
+        }
+
         // Tab Switching Logic
         View.OnClickListener tabListener = v -> {
             if (v.getId() == R.id.tab_following) {
                 isFollowingTab = true;
-                tabFollowing.setBackgroundResource(R.drawable.tab_selected_bg);
                 tabFollowing.setTextColor(getResources().getColor(R.color.primary));
-                tabCollections.setBackgroundResource(android.R.color.transparent);
-                tabCollections.setTextColor(getResources().getColor(R.color.text_dark));
+                view.findViewById(R.id.indicator_following).setVisibility(View.VISIBLE);
+                
+                tabCollections.setTextColor(getResources().getColor(R.color.placeholder));
+                view.findViewById(R.id.indicator_collections).setVisibility(View.INVISIBLE);
                 
                 contentFollowing.setVisibility(View.VISIBLE);
                 contentCollections.setVisibility(View.GONE);
@@ -58,10 +77,11 @@ public class LibraryFragment extends Fragment {
                 btnMore.setVisibility(View.VISIBLE);
             } else {
                 isFollowingTab = false;
-                tabCollections.setBackgroundResource(R.drawable.tab_selected_bg);
                 tabCollections.setTextColor(getResources().getColor(R.color.primary));
-                tabFollowing.setBackgroundResource(android.R.color.transparent);
-                tabFollowing.setTextColor(getResources().getColor(R.color.text_dark));
+                view.findViewById(R.id.indicator_collections).setVisibility(View.VISIBLE);
+                
+                tabFollowing.setTextColor(getResources().getColor(R.color.placeholder));
+                view.findViewById(R.id.indicator_following).setVisibility(View.INVISIBLE);
                 
                 contentCollections.setVisibility(View.VISIBLE);
                 contentFollowing.setVisibility(View.GONE);
@@ -108,7 +128,6 @@ public class LibraryFragment extends Fragment {
         });
 
         btnBulkAdd.setOnClickListener(v -> {
-            // Mock adding to collection list popup
              String[] collections = {"Tinh Hoa Kinh Điển", "Truyện Ngắn"};
              new AlertDialog.Builder(requireContext())
                  .setTitle("Thêm vào Bộ sưu tập")
@@ -129,31 +148,27 @@ public class LibraryFragment extends Fragment {
         });
 
         // Collection Item More Button
-        btnCollectionMore.setOnClickListener(v -> {
-            PopupMenu popup = new PopupMenu(requireContext(), btnCollectionMore);
-            popup.getMenu().add("Thêm truyện");
-            popup.getMenu().add("Đổi tên bộ sưu tập");
-            popup.getMenu().add("Xóa bộ sưu tập");
-            popup.setOnMenuItemClickListener(item -> {
-                if (item.getTitle().equals("Xóa bộ sưu tập")) {
-                    new AlertDialog.Builder(requireContext())
-                        .setMessage("Bạn có muốn xóa BST này? Toàn bộ truyện trong bộ sưu tập này sẽ bị xóa.")
-                        .setPositiveButton("Xóa", null)
-                        .setNegativeButton("Hủy", null)
-                        .show();
-                } else {
-                    Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-                }
-                return true;
+        if (btnCollectionMore != null) {
+            btnCollectionMore.setOnClickListener(v -> {
+                PopupMenu popup = new PopupMenu(requireContext(), btnCollectionMore);
+                popup.getMenu().add("Thêm truyện");
+                popup.getMenu().add("Đổi tên bộ sưu tập");
+                popup.getMenu().add("Xóa bộ sưu tập");
+                popup.setOnMenuItemClickListener(item -> {
+                    if (item.getTitle().equals("Xóa bộ sưu tập")) {
+                        new AlertDialog.Builder(requireContext())
+                            .setMessage("Bạn có muốn xóa BST này? Toàn bộ truyện trong bộ sưu tập này sẽ bị xóa.")
+                            .setPositiveButton("Xóa", null)
+                            .setNegativeButton("Hủy", null)
+                            .show();
+                    } else {
+                        Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+                });
+                popup.show();
             });
-            popup.show();
-        });
-
-        // Open Collection Details
-        contentCollections.getChildAt(0).setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), CollectionDetailsActivity.class);
-            startActivity(intent);
-        });
+        }
 
         return view;
     }
