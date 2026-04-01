@@ -322,7 +322,7 @@
       <entry key="_D:/HocTap/Nam3kiII/androidstudio/DocSachApp" value="3BWUAEyLcSlt5p5s3b2K7j3ysnk" />
     </persistenceIdMap>
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[LocalEmulator::path=C:\Users\ASUS\.android\avd\Medium_Phone.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[LocalEmulator::path=C:\Users\ASUS\.android\avd\Small_Phone.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -348,7 +348,7 @@
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/Xuan-Khanh/49K14.2_Nhom3_DocSachApp.git",
-    "accountId": "44fd7d1a-447c-470c-8f50-364d9051e4eb"
+    "accountId": "5fd29f55-f145-45e0-8eb4-4c71aee71620"
   }
 }]]></component>
   <component name="ProblemsViewState">
