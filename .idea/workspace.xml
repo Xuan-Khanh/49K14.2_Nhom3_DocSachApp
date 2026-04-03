@@ -307,7 +307,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b7e91935-87d7-436e-8a36-2c8d7a2a4c09" name="Changes" comment="app đọc sách">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -323,7 +323,7 @@
       <entry key="_D:/HocTap/Nam3kiII/androidstudio/DocSachApp" value="3BWUAEyLcSlt5p5s3b2K7j3ysnk" />
     </persistenceIdMap>
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[LocalEmulator::path=C:\Users\ASUS\.android\avd\Small_Phone.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[LocalEmulator::path=C:\Users\ASUS\.android\avd\Medium_Phone.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -339,6 +339,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -346,12 +347,12 @@
     &quot;assignee&quot;: &quot;Xuan-Khanh&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Xuan-Khanh/49K14.2_Nhom3_DocSachApp.git",
-    "accountId": "5fd29f55-f145-45e0-8eb4-4c71aee71620"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Xuan-Khanh/49K14.2_Nhom3_DocSachApp.git&quot;,
+    &quot;accountId&quot;: &quot;5fd29f55-f145-45e0-8eb4-4c71aee71620&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -529,12 +530,12 @@
       <map>
         <entry key="com.example.docsachapp">
           <value>
-            <CheckInfo lastCheckTimestamp="1775030059144" />
+            <CheckInfo lastCheckTimestamp="1775197899406" />
           </value>
         </entry>
         <entry key="com.example.docsachapp.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1775030059177" />
+            <CheckInfo lastCheckTimestamp="1775197899407" />
           </value>
         </entry>
       </map>
