@@ -1,214 +1,116 @@
-<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white">
 
-    <!-- Top Bar -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="27dp"
-        android:paddingBottom="16dp">
-        <ImageView
-            android:id="@+id/btn_back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_back_arrow"
-            app:tint="@color/black" />
-    </LinearLayout>
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Không thể tải dữ liệu. Thử lại sau."
+        android:visibility="gone" />
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp">
+            android:paddingBottom="24dp">
 
-            <TextView
+            <!-- Section: Mới đăng -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Truyện đọc gần đây"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_marginBottom="24dp" />
+                android:paddingTop="16dp"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mới đăng"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+            </RelativeLayout>
 
-            <!-- Book Item 1 -->
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_new_stories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="24dp">
+                android:paddingHorizontal="16dp"
+                android:clipToPadding="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_story_horizontal"/>
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:layout_width="100dp"
-                    android:layout_height="140dp"
-                    android:src="@drawable/image5"
-                    android:scaleType="centerCrop"
-                    app:riv_corner_radius="8dp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
+            <!-- Section: Truyện hoàn thành -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="24dp"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
+                    android:text="Truyện đã hoàn thành"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+            </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Hai Vạn Năm Dưới Đáy Biển - Jules Verne"
-                        android:textStyle="bold"
-                        android:textSize="17sp"
-                        android:textColor="@color/black"
-                        android:maxLines="2"
-                        android:ellipsize="end"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="6dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="👁 1,70 M" android:textSize="12sp" android:textColor="#666666"/>
-                        <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_bookmark" app:tint="#666666" android:layout_marginStart="8dp"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" 20,4 N" android:textSize="12sp" android:textColor="#666666"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="  ≡ 45 chương" android:textSize="12sp" android:textColor="#666666" android:layout_marginStart="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Khoa học" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:textSize="11sp" android:textColor="#999999"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Viễn tưởng" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:textSize="11sp" android:textColor="#999999" android:layout_marginStart="8dp"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Phiêu lưu" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:textSize="11sp" android:textColor="#999999" android:layout_marginStart="8dp"/>
-                    </LinearLayout>
-
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+ 1 thẻ khác" android:textSize="12sp" android:textColor="#999999" android:layout_marginTop="8dp"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Book Item 2 -->
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_completed_stories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="24dp">
+                android:paddingHorizontal="16dp"
+                android:clipToPadding="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_story_horizontal"/>
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:layout_width="100dp"
-                    android:layout_height="140dp"
-                    android:src="@drawable/image5"
-                    android:scaleType="centerCrop"
-                    app:riv_corner_radius="8dp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
+            <!-- Section: Đọc gần đây -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="24dp"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
+                    android:text="Truyện đọc gần đây"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+            </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Tây Du Ký - Ngô Thừa Ân"
-                        android:textStyle="bold"
-                        android:textSize="17sp"
-                        android:textColor="@color/black"
-                        android:maxLines="2"
-                        android:ellipsize="end"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="6dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="👁 3,00 M" android:textSize="12sp" android:textColor="#666666"/>
-                        <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_bookmark" app:tint="#666666" android:layout_marginStart="8dp"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" 500 N" android:textSize="12sp" android:textColor="#666666"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="  ≡ 100 chương" android:textSize="12sp" android:textColor="#666666" android:layout_marginStart="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tiểu thuyết" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:textSize="11sp" android:textColor="#999999"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thần thoại" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:textSize="11sp" android:textColor="#999999" android:layout_marginStart="8dp"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kỳ ảo" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:textSize="11sp" android:textColor="#999999" android:layout_marginStart="8dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Book Item 3 -->
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recent_stories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="24dp">
-
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:layout_width="100dp"
-                    android:layout_height="140dp"
-                    android:src="@drawable/image5"
-                    android:scaleType="centerCrop"
-                    app:riv_corner_radius="8dp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Nhà Giả Kim - Paul Coelho"
-                        android:textStyle="bold"
-                        android:textSize="17sp"
-                        android:textColor="@color/black"
-                        android:maxLines="2"
-                        android:ellipsize="end"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="6dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="👁 2,00 M" android:textSize="12sp" android:textColor="#666666"/>
-                        <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_bookmark" app:tint="#666666" android:layout_marginStart="8dp"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" 700 N" android:textSize="12sp" android:textColor="#666666"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="  ≡ 10 chương" android:textSize="12sp" android:textColor="#666666" android:layout_marginStart="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ngụ ngôn" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:textSize="11sp" android:textColor="#999999"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Phiêu lưu" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:textSize="11sp" android:textColor="#999999" android:layout_marginStart="8dp"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tâm lý" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:textSize="11sp" android:textColor="#999999" android:layout_marginStart="8dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" android:layout_marginBottom="24dp"/>
+                android:paddingHorizontal="16dp"
+                android:clipToPadding="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_story_horizontal"/>
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</RelativeLayout>

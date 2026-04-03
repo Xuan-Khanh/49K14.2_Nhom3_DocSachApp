@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -169,46 +170,12 @@
             android:layout_weight="1">
 
             <!-- Following Content -->
-            <ScrollView
-                android:id="@+id/content_following"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_following"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="none">
-                <GridLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:columnCount="3"
-                    android:padding="8dp">
-
-                    <!-- Book Item Clickable -->
-                    <LinearLayout
-                        android:id="@+id/book_item_1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:orientation="vertical"
-                        android:padding="8dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="145dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/image5"
-                            app:riv_corner_radius="8dp" />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:text="Gieo Lại Nầm Sáng Ở Vùng..."
-                            android:textColor="@color/text_dark"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-                </GridLayout>
-            </ScrollView>
+                android:padding="8dp"
+                tools:listitem="@layout/item_story_grid" />
 
             <!-- Collections Content -->
             <ScrollView

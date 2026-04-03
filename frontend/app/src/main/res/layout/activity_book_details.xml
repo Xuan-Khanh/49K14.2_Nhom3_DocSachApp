@@ -19,6 +19,7 @@
 
 
     <ScrollView
+        android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/btn_back"
@@ -102,9 +103,13 @@
                         android:orientation="horizontal"
                         android:layout_marginTop="20dp"
                         android:gravity="center_vertical">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="👁 777 N" android:textSize="13sp" android:textColor="@color/text_dark"/>
+                        <TextView
+                            android:id="@+id/tv_views_count"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="👁 777 N" android:textSize="13sp" android:textColor="@color/text_dark"/>
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="  🔖 11,4 N" android:textSize="13sp" android:textColor="@color/text_dark" android:layout_marginStart="8dp"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="  ≡ 45 chương" android:textSize="13sp" android:textColor="@color/text_dark" android:layout_marginStart="8dp"/>
+                        <TextView
+                            android:id="@+id/tv_chapters_count"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="  ≡ 45 chương" android:textSize="13sp" android:textColor="@color/text_dark" android:layout_marginStart="8dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -341,4 +346,3 @@
 
 
 </RelativeLayout>
-

@@ -105,7 +105,16 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Loading Spinner (ẩn mặc định, hiện khi đang gọi API) -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp"/>
 
     <!-- Footer Links -->
     <TextView
@@ -126,3 +135,4 @@
         android:textStyle="bold" />
 
 </LinearLayout>
+

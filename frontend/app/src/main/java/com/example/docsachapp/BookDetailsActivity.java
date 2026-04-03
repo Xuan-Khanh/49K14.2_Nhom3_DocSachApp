@@ -2,77 +2,109 @@ package com.example.docsachapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.example.docsachapp.api.RetrofitClient;
+import com.example.docsachapp.model.Story;
+import com.makeramen.roundedimageview.RoundedImageView;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class BookDetailsActivity extends AppCompatActivity {
     private boolean isFollowing = false;
+    private int storyId;
+    private int authorId = -1;
+    
+    private TextView tvTitle, tvAuthor, tvDescription, tvRating;
+    private RoundedImageView ivCover, ivAuthorAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_details);
 
-        ImageView btnBack = findViewById(R.id.btn_back);
-        com.google.android.material.button.MaterialButton btnRead = findViewById(R.id.btn_read);
-        com.google.android.material.button.MaterialButton btnFollowBook = findViewById(R.id.btn_follow_book);
-        LinearLayout btnCollection = findViewById(R.id.btn_collection);
-        com.google.android.material.button.MaterialButton btnComments = findViewById(R.id.btn_comments);
-        TextView tvAuthor = findViewById(R.id.tv_author);
-        TextView tvRatingScore = findViewById(R.id.tv_rating_score);
-        
-        LinearLayout llStars = findViewById(R.id.ll_stars);
-        ImageView[] stars = new ImageView[5];
-        for (int i = 0; i < 5; i++) {
-            stars[i] = (ImageView) llStars.getChildAt(i);
+        storyId = getIntent().getIntExtra("STORY_ID", -1);
+        if (storyId == -1) {
+            Toast.makeText(this, "Không tìm thấy truyện", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
 
+        initViews();
+        loadStoryDetails();
+    }
+
+    private void initViews() {
+        tvTitle = findViewById(R.id.tv_title);
+        tvAuthor = findViewById(R.id.tv_author);
+        tvDescription = findViewById(R.id.tv_description);
+        tvRating = findViewById(R.id.tv_rating_score);
+        ivCover = findViewById(R.id.iv_book_cover);
+        ivAuthorAvatar = findViewById(R.id.iv_author_avatar);
+        
+        ImageView btnBack = findViewById(R.id.btn_back);
         btnBack.setOnClickListener(v -> finish());
-
-        tvAuthor.setOnClickListener(v -> {
-            // Later: transition to Author Profile
-        });
-
-        btnRead.setOnClickListener(v -> {
-            Intent intent = new Intent(BookDetailsActivity.this, ReadingActivity.class);
-            startActivity(intent);
-        });
-
-        btnFollowBook.setOnClickListener(v -> {
-            isFollowing = !isFollowing;
-            if (isFollowing) {
-                btnFollowBook.setText("Bỏ theo dõi truyện");
-                btnFollowBook.setBackgroundTintList(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.primary_transparent_25)));
-                btnFollowBook.setTextColor(ContextCompat.getColor(this, R.color.primary));
-            } else {
-                btnFollowBook.setText("Theo dõi truyện");
-                btnFollowBook.setBackgroundTintList(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.primary)));
-                btnFollowBook.setTextColor(ContextCompat.getColor(this, R.color.white));
+        
+        // Sự kiện click vào tác giả
+        View.OnClickListener authorClick = v -> {
+            if (authorId != -1) {
+                Intent intent = new Intent(BookDetailsActivity.this, AuthorProfileActivity.class);
+                intent.putExtra("AUTHOR_ID", authorId);
+                startActivity(intent);
             }
-        });
+        };
+        
+        tvAuthor.setOnClickListener(authorClick);
+        if (ivAuthorAvatar != null) ivAuthorAvatar.setOnClickListener(authorClick);
 
-        btnCollection.setOnClickListener(v -> Toast.makeText(this, "Đã thêm vào bộ sưu tập", Toast.LENGTH_SHORT).show());
-
-        btnComments.setOnClickListener(v -> {
-            Intent intent = new Intent(BookDetailsActivity.this, CommentsActivity.class);
+        findViewById(R.id.btn_read).setOnClickListener(v -> {
+            Intent intent = new Intent(this, ReadingActivity.class);
+            intent.putExtra("STORY_ID", storyId);
             startActivity(intent);
         });
 
-        for (int i = 0; i < stars.length; i++) {
-            final int index = i;
-            stars[i].setOnClickListener(v -> {
-                tvRatingScore.setText("Đánh giá của bạn");
-                for (int j = 0; j <= index; j++) {
-                    stars[j].setColorFilter(ContextCompat.getColor(this, R.color.primary));
+        findViewById(R.id.btn_comments).setOnClickListener(v -> {
+            Intent intent = new Intent(this, CommentsActivity.class);
+            intent.putExtra("STORY_ID", storyId);
+            startActivity(intent);
+        });
+    }
+
+    private void loadStoryDetails() {
+        RetrofitClient.getApi().getStoryDetail(storyId).enqueue(new Callback<Story>() {
+            @Override
+            public void onResponse(Call<Story> call, Response<Story> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Story story = response.body();
+                    authorId = story.getAuthor().getId(); // Lưu authorId để dùng khi click
+                    displayStory(story);
                 }
-                for (int j = index + 1; j < stars.length; j++) {
-                    stars[j].setColorFilter(ContextCompat.getColor(this, R.color.text_dark));
-                }
-            });
+            }
+            @Override
+            public void onFailure(Call<Story> call, Throwable t) {}
+        });
+    }
+
+    private void displayStory(Story story) {
+        tvTitle.setText(story.getTitle());
+        tvAuthor.setText(story.getAuthorName());
+        tvDescription.setText(story.getDescription());
+        tvRating.setText(String.valueOf(story.getRating()));
+        
+        Glide.with(this).load(story.getCoverUrl()).placeholder(R.drawable.biatruyen).into(ivCover);
+        if (ivAuthorAvatar != null && story.getAuthor().getAvatar() != null) {
+            Glide.with(this).load(story.getAuthor().getAvatar())
+                    .placeholder(android.R.drawable.ic_menu_gallery)
+                    .circleCrop().into(ivAuthorAvatar);
         }
     }
 }

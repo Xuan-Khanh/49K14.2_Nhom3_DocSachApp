@@ -30,6 +30,19 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
     // Rounded image view
     implementation 'com.makeramen:roundedimageview:2.3.0'
+
+    // ── Retrofit + Gson: Gọi API Django ──────────────────────────────────────
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // ── OkHttp Logging: Debug request/response trong Logcat ──────────────────
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+
+    // ── Glide: Load ảnh từ URL (bìa sách, avatar) ────────────────────────────
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 }
+
