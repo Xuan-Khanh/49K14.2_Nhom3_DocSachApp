@@ -306,9 +306,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b7e91935-87d7-436e-8a36-2c8d7a2a4c09" name="Changes" comment="app đọc sách">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="b7e91935-87d7-436e-8a36-2c8d7a2a4c09" name="Changes" comment="app đọc sách" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -346,12 +344,12 @@
     &quot;assignee&quot;: &quot;Xuan-Khanh&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Xuan-Khanh/49K14.2_Nhom3_DocSachApp.git&quot;,
-    &quot;accountId&quot;: &quot;5fd29f55-f145-45e0-8eb4-4c71aee71620&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Xuan-Khanh/49K14.2_Nhom3_DocSachApp",
+    "accountId": "44fd7d1a-447c-470c-8f50-364d9051e4eb"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
