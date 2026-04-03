@@ -29,7 +29,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from .models import (
     NguoiDung, Truyen, TheLoai, TheLoaiTruyen,
     Chuong, DanhGia, BinhLuan, TheoDoiTruyen,
-    TheoDoiNguoiDung, BoSuuTap, BoSuuTapTruyen
+    TheoDoiNguoiDung, BoSuuTap, BoSuuTapTruyen, LichSuDoc
 )
 from .serializers import (
     DangKySerializer, DangNhapSerializer,
@@ -38,7 +38,7 @@ from .serializers import (
     BinhLuanSerializer, DanhGiaSerializer,
     TheoDoiTruyenSerializer,
     BoSuuTapSerializer, BoSuuTapDetailSerializer,
-    TheLoaiSerializer
+    TheLoaiSerializer, LichSuDocSerializer
 )
 from .permissions import IsOwnerOrReadOnly, IsAuthorOfStory, IsCommentOwnerOrAdmin
 
@@ -772,6 +772,8 @@ class DanhSachTheoDoiTruyenView(APIView):
     """
     GET /api/user/following-stories
     Danh sách truyện đang theo dõi của user hiện tại.
+    FIX: Trả về flat List[Truyen] thay vì TheoDoiTruyen wrapper
+    để Android parse trực tiếp thành List<Story>.
     """
     permission_classes = [IsAuthenticated]
 
@@ -779,8 +781,12 @@ class DanhSachTheoDoiTruyenView(APIView):
         profile, err = get_nguoidung_or_error(request)
         if err:
             return err
-        theo_doi_list = TheoDoiTruyen.objects.filter(nguoi_dung=profile).select_related('truyen')
-        serializer = TheoDoiTruyenSerializer(theo_doi_list, many=True, context={'request': request})
+        # Lấy danh sách truyện trực tiếp (không wrap trong TheoDoiTruyen)
+        theo_doi_list = TheoDoiTruyen.objects.filter(
+            nguoi_dung=profile
+        ).select_related('truyen')
+        truyen_list = [td.truyen for td in theo_doi_list]
+        serializer = TruyenSerializer(truyen_list, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -994,3 +1000,92 @@ class SearchView(APIView):
                 for u in user_list
             ]
         })
+
+
+# =============================================
+# 10. LỊCH SỬ ĐỌC
+# =============================================
+
+class LichSuDocView(APIView):
+    """
+    GET /api/reading-history
+    Trả về lịch sử đọc của user hiện tại.
+    - Chỉ user đăng nhập mới xem được
+    - Sắp xếp theo đọc gần nhất (updated_at DESC)
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        profile, err = get_nguoidung_or_error(request)
+        if err:
+            return err
+
+        # Lấy lịch sử đọc, eager load để tránh N+1 query
+        lich_su = LichSuDoc.objects.filter(
+            nguoi_dung=profile
+        ).select_related(
+            'truyen__nguoi_dung__user',   # để lấy tên tác giả
+            'chuong',                      # để lấy chương hiện tại
+        ).prefetch_related(
+            'truyen__the_loai',            # để lấy danh sách thể loại
+            'truyen__theo_doi_list',       # để đếm followers
+        ).order_by('-updated_at')          # Mới nhất trước
+
+        serializer = LichSuDocSerializer(
+            lich_su, many=True, context={'request': request}
+        )
+        return Response(serializer.data)
+
+
+class UpdateLichSuDocView(APIView):
+    """
+    POST /api/reading-history/update
+    Ghi hoặc cập nhật lịch sử đọc khi user mở một chương.
+    Body: {
+        "story_id": 5,
+        "chapter_id": 12
+    }
+    Logic:
+      - Nếu chưa có bản ghi → tạo mới
+      - Nếu đã có → update chương và updated_at
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        profile, err = get_nguoidung_or_error(request)
+        if err:
+            return err
+
+        story_id   = request.data.get('story_id')
+        chapter_id = request.data.get('chapter_id')
+
+        if not story_id:
+            return Response({"error": "Thiếu story_id."}, status=400)
+
+        # Kiểm tra truyện tồn tại
+        try:
+            truyen = Truyen.objects.get(pk=story_id)
+        except Truyen.DoesNotExist:
+            return Response({"error": "Không tìm thấy truyện."}, status=404)
+
+        # Kiểm tra chương (nếu có)
+        chuong = None
+        if chapter_id:
+            try:
+                chuong = Chuong.objects.get(pk=chapter_id, truyen=truyen)
+            except Chuong.DoesNotExist:
+                return Response({"error": "Không tìm thấy chương."}, status=404)
+
+        # Dùng update_or_create: tạo mới hoặc cập nhật
+        lich_su, created = LichSuDoc.objects.update_or_create(
+            nguoi_dung=profile,
+            truyen=truyen,
+            defaults={'chuong': chuong}    # auto_now=True sẽ tự cập nhật updated_at
+        )
+
+        serializer = LichSuDocSerializer(lich_su, context={'request': request})
+        return Response({
+            "message": "Lưu lịch sử đọc thành công.",
+            "created": created,
+            "history": serializer.data
+        }, status=201 if created else 200)

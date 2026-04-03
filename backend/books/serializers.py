@@ -10,7 +10,7 @@ from rest_framework import serializers
 from .models import (
     NguoiDung, Truyen, TheLoai, TheLoaiTruyen,
     Chuong, DanhGia, BinhLuan, TheoDoiTruyen,
-    TheoDoiNguoiDung, BoSuuTap, BoSuuTapTruyen
+    TheoDoiNguoiDung, BoSuuTap, BoSuuTapTruyen, LichSuDoc
 )
 
 
@@ -323,3 +323,80 @@ class BoSuuTapDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoSuuTap
         fields = ['id', 'ten_bo_suu_tap', 'truyen_list']
+
+
+# =============================================
+# LỊCH SỬ ĐỌC SERIALIZERS
+# =============================================
+
+class LichSuDocSerializer(serializers.ModelSerializer):
+    """
+    Serializer lịch sử đọc.
+    Trả về thông tin đầy đủ để hiển thị UI:
+      - id: ID bản ghi lịch sử
+      - book_id: ID truyện  → dùng để navigate sang BookDetailsActivity
+      - title: Tên truyện   → hiển thị tên
+      - author: Tên tác giả → hiển thị tác giả
+      - cover_url: URL ảnh bìa → load bằng Glide
+      - views: Số lượt đọc
+      - followers: Số người theo dõi
+      - chapters_count: Tổng số chương
+      - genres: Danh sách thể loại
+      - current_chapter: Chương đang đọc (id + tên)
+      - updated_at: Thời gian đọc lần cuối → sort, hiển thị
+    """
+    # Thông tin truyện
+    book_id      = serializers.IntegerField(source='truyen.id', read_only=True)
+    title        = serializers.CharField(source='truyen.ten_truyen', read_only=True)
+    cover_url    = serializers.SerializerMethodField()
+    views        = serializers.IntegerField(source='truyen.so_luot_doc', read_only=True)
+    followers    = serializers.SerializerMethodField()
+    chapters_count = serializers.SerializerMethodField()
+    genres       = serializers.SerializerMethodField()
+
+    # Thông tin tác giả
+    author       = serializers.CharField(
+                       source='truyen.nguoi_dung.user.username',
+                       read_only=True
+                   )
+
+    # Chương đang đọc
+    current_chapter = serializers.SerializerMethodField()
+
+    class Meta:
+        model = LichSuDoc
+        fields = [
+            'id',
+            'book_id', 'title', 'author', 'cover_url',
+            'views', 'followers', 'chapters_count', 'genres',
+            'current_chapter',
+            'updated_at',
+        ]
+
+    def get_cover_url(self, obj):
+        """Trả về URL đầy đủ của ảnh bìa (hoặc None nếu chưa có)"""
+        request = self.context.get('request')
+        if obj.truyen.anh_bia and request:
+            return request.build_absolute_uri(obj.truyen.anh_bia.url)
+        return None
+
+    def get_followers(self, obj):
+        """Số người đang theo dõi truyện"""
+        return obj.truyen.theo_doi_list.count()
+
+    def get_chapters_count(self, obj):
+        """Tổng số chương (đã đăng)"""
+        return obj.truyen.chuong_list.filter(trang_thai='da_dang').count()
+
+    def get_genres(self, obj):
+        """Danh sách tên thể loại"""
+        return list(obj.truyen.the_loai.values_list('ten_the_loai', flat=True))
+
+    def get_current_chapter(self, obj):
+        """Thông tin chương đang đọc (None nếu chưa đọc chương nào)"""
+        if obj.chuong:
+            return {
+                'id': obj.chuong.id,
+                'title': obj.chuong.tieu_de,
+            }
+        return None

@@ -363,3 +363,50 @@ class BoSuuTapTruyen(models.Model):
 
     def __str__(self):
         return f"{self.bo_suu_tap} - {self.truyen}"
+
+
+# ==================== LỊCH SỬ ĐỌC ====================
+
+class LichSuDoc(models.Model):
+    """
+    Lưu lịch sử đọc của người dùng.
+    Mỗi user chỉ có 1 bản ghi per truyện (unique_together).
+    Khi user đọc chương mới → update bản ghi hiện có (không tạo thêm).
+    updated_at tự động cập nhật → dùng để sort "đọc gần đây nhất".
+    """
+    nguoi_dung = models.ForeignKey(
+        NguoiDung,
+        on_delete=models.CASCADE,
+        related_name='lich_su_doc_list',
+        verbose_name='Người dùng'
+    )
+    truyen = models.ForeignKey(
+        Truyen,
+        on_delete=models.CASCADE,
+        related_name='lich_su_doc_list',
+        verbose_name='Truyện'
+    )
+    chuong = models.ForeignKey(
+        Chuong,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='lich_su_doc_list',
+        verbose_name='Chương đang đọc'
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,          # Tự động cập nhật mỗi khi save()
+        verbose_name='Cập nhật lần cuối'
+    )
+
+    class Meta:
+        verbose_name = 'Lịch sử đọc'
+        verbose_name_plural = 'Lịch sử đọc'
+        # Mỗi user chỉ có 1 bản ghi per truyện
+        unique_together = ('nguoi_dung', 'truyen')
+        # Mặc định sort theo đọc gần nhất
+        ordering = ['-updated_at']
+
+    def __str__(self):
+        chuong_str = self.chuong.tieu_de if self.chuong else "Chưa chọn chương"
+        return f"{self.nguoi_dung} đọc {self.truyen} – {chuong_str}"

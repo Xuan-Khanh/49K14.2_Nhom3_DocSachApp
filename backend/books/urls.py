@@ -89,4 +89,10 @@ urlpatterns = [
     # ==================== TÌM KIẾM ====================
     # GET /api/search?keyword=abc
     path('search', views.SearchView.as_view(), name='search'),
+
+    # ==================== LỊCH SỬ ĐỌC ====================
+    # GET  /api/reading-history        – Lịch sử đọc của user hiện tại
+    path('reading-history', views.LichSuDocView.as_view(), name='reading-history'),
+    # POST /api/reading-history/update – Cập nhật lịch sử khi mở chương
+    path('reading-history/update', views.UpdateLichSuDocView.as_view(), name='reading-history-update'),
 ]
