@@ -92,6 +92,12 @@ public interface ApiService {
 
     // ==================== BỘ SƯU TẬP ====================
 
-    @GET("collections")
-    Call<Map<String, List<Collection>>> getCollections(@Header("Authorization") String authToken);
+    @GET("bosuutap")
+    Call<List<Collection>> getBoSuuTap(@Header("Authorization") String authToken);
+
+    @GET("collections/{id}")
+    Call<Collection> getCollectionDetail(@Header("Authorization") String authToken, @Path("id") int collectionId);
+
+    @POST("collections")
+    Call<Map<String, Object>> createCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 }

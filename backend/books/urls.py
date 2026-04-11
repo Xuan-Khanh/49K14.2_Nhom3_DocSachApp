@@ -70,6 +70,8 @@ urlpatterns = [
     path('user/following-stories', views.DanhSachTheoDoiTruyenView.as_view(), name='following-stories'),
 
     # ==================== BỘ SƯU TẬP ====================
+    # GET  /api/bosuutap       – Danh sách tất cả BST (public)
+    path('bosuutap', views.BoSuuTapListView.as_view(), name='bosuutap-list'),
     # GET  /api/collections       – Danh sách BST của user
     # POST /api/collections       – Tạo BST mới
     path('collections', views.BoSuuTapListCreateView.as_view(), name='collection-list-create'),
@@ -81,6 +83,8 @@ urlpatterns = [
     path('collections/add-story', views.ThemTruyenVaoBSTView.as_view(), name='collection-add-story'),
     # DELETE /api/collections/remove-story – Xóa truyện khỏi BST
     path('collections/remove-story', views.XoaTruyenKhoiBSTView.as_view(), name='collection-remove-story'),
+    # GET /api/collections/{id}/stories – Lấy danh sách truyện trong một bộ sưu tập
+    path('collections/<int:pk>/stories', views.TruyenInBoSuuTapView.as_view(), name='truyen-in-bosuutap'),
 
     # ==================== THỂ LOẠI ====================
     # GET /api/genres – Danh sách thể loại

@@ -794,6 +794,18 @@ class DanhSachTheoDoiTruyenView(APIView):
 # 8. BỘ SƯU TẬP
 # =============================================
 
+class BoSuuTapListView(APIView):
+    """
+    GET  /api/bosuutap  – Danh sách tất cả bộ sưu tập (public)
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        bst_list = BoSuuTap.objects.all()
+        serializer = BoSuuTapSerializer(bst_list, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
 class BoSuuTapListCreateView(APIView):
     """
     GET  /api/collections  – Danh sách bộ sưu tập của user đang đăng nhập
@@ -827,24 +839,18 @@ class BoSuuTapDetailView(APIView):
     PUT    /api/collections/{id}  – Đổi tên BST
     DELETE /api/collections/{id}  – Xóa BST
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get_object(self, pk, profile):
+    def get_object(self, pk):
         try:
-            bst = BoSuuTap.objects.get(pk=pk)
+            return BoSuuTap.objects.get(pk=pk)
         except BoSuuTap.DoesNotExist:
-            return None, Response({"error": "Không tìm thấy bộ sưu tập."}, status=404)
-        if bst.nguoi_dung != profile:
-            return None, Response({"error": "Bạn không có quyền truy cập bộ sưu tập này."}, status=403)
-        return bst, None
+            return None
 
     def get(self, request, pk):
-        profile, err = get_nguoidung_or_error(request)
-        if err:
-            return err
-        bst, err = self.get_object(pk, profile)
-        if err:
-            return err
+        bst = self.get_object(pk)
+        if not bst:
+            return Response({"error": "Không tìm thấy bộ sưu tập."}, status=404)
         serializer = BoSuuTapDetailSerializer(bst, context={'request': request})
         return Response(serializer.data)
 
@@ -852,9 +858,11 @@ class BoSuuTapDetailView(APIView):
         profile, err = get_nguoidung_or_error(request)
         if err:
             return err
-        bst, err = self.get_object(pk, profile)
-        if err:
-            return err
+        bst = self.get_object(pk)
+        if not bst:
+            return Response({"error": "Không tìm thấy bộ sưu tập."}, status=404)
+        if bst.nguoi_dung != profile:
+            return Response({"error": "Bạn không có quyền truy cập bộ sưu tập này."}, status=403)
         ten = request.data.get('ten_bo_suu_tap', '').strip()
         if not ten:
             return Response({"error": "Tên bộ sưu tập không được để trống."}, status=400)
@@ -866,9 +874,11 @@ class BoSuuTapDetailView(APIView):
         profile, err = get_nguoidung_or_error(request)
         if err:
             return err
-        bst, err = self.get_object(pk, profile)
-        if err:
-            return err
+        bst = self.get_object(pk)
+        if not bst:
+            return Response({"error": "Không tìm thấy bộ sưu tập."}, status=404)
+        if bst.nguoi_dung != profile:
+            return Response({"error": "Bạn không có quyền truy cập bộ sưu tập này."}, status=403)
         bst.delete()
         return Response({"message": "Đã xóa bộ sưu tập."})
 
@@ -935,6 +945,24 @@ class XoaTruyenKhoiBSTView(APIView):
         if deleted:
             return Response({"message": "Đã xóa truyện khỏi bộ sưu tập."})
         return Response({"error": "Truyện không có trong bộ sưu tập."}, status=400)
+
+
+class TruyenInBoSuuTapView(APIView):
+    """
+    GET /api/collections/{id}/stories
+    Lấy danh sách truyện trong một bộ sưu tập.
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request, pk):
+        try:
+            bst = BoSuuTap.objects.get(pk=pk)
+        except BoSuuTap.DoesNotExist:
+            return Response({"error": "Không tìm thấy bộ sưu tập."}, status=404)
+
+        truyen_list = bst.truyen_list.all()
+        serializer = TruyenSerializer(truyen_list, many=True, context={'request': request})
+        return Response(serializer.data)
 
 
 # =============================================

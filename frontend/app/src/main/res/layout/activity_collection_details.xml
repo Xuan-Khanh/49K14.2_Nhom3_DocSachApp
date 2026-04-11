@@ -1,290 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
     android:layout_marginTop="27dp">
 
-
     <!-- Top Bar -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:paddingHorizontal="16dp">
-
-
         <ImageView
             android:id="@+id/btn_back"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
-            android:src="@android:drawable/ic_menu_revert"
+            android:src="@drawable/ic_back_arrow"
             app:tint="@color/text_dark" />
-
-
         <ImageView
             android:id="@+id/btn_more"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_menu_lib"/>
+            android:src="@android:drawable/ic_menu_more"
+            app:tint="@color/text_dark"/>
     </RelativeLayout>
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
-    <!-- Header Title Area -->
+    <!-- Header Area -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
         android:layout_marginBottom="16dp">
-
-
         <TextView
+            android:id="@+id/tv_collection_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tinh Hoa Kinh Điển"
+            android:text="Bộ sưu tập"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@color/text_dark" />
-
-
+            android:textColor="@color/black" />
         <TextView
             android:id="@+id/tv_book_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="05 truyện"
-            android:textColor="@color/placeholder"
+            android:text="0 truyện"
+            android:textColor="#9E9E9E"
             android:textSize="14sp" />
     </LinearLayout>
 
-
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_stories"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <!-- Book Item 1 -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
-
-
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/img_cover_1"
-                    android:layout_width="90dp"
-                    android:layout_height="130dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/image5"
-                    app:riv_corner_radius="8dp" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/img_cover_1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
-
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:id="@+id/tv_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_toStartOf="@id/btn_item_more_1"
-                            android:text="Hai Vạn Năm Dưới Đáy Biển - Jules Verne"
-                            android:textColor="@color/text_dark"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                        <ImageView
-                            android:id="@+id/btn_item_more_1"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_alignParentEnd="true"
-                            android:src="@drawable/ic_menu_lib" />
-                    </RelativeLayout>
-
-
-                    <!-- Stats Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center_vertical">
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:src="@android:drawable/ic_menu_view"
-                            app:tint="@color/text_dark"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" 1,70 M"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_dark"/>
-
-
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:layout_marginStart="12dp"
-                            android:src="@android:drawable/btn_star_big_off"
-                            app:tint="@color/text_dark"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" 20,4 N"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_dark"/>
-
-
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:layout_marginStart="12dp"
-                            android:src="@android:drawable/ic_menu_sort_by_size"
-                            app:tint="@color/text_dark"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" 45 chương"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_dark"/>
-                    </LinearLayout>
-
-
-                    <!-- Tags Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Khoa học"
-                            android:textSize="11sp"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="4dp"
-                            android:background="@drawable/bg_chip_unselected"
-                            android:textColor="@color/placeholder"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="Viễn tưởng"
-                            android:textSize="11sp"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="4dp"
-                            android:background="@drawable/bg_chip_unselected"
-                            android:textColor="@color/placeholder"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="Phiêu lưu"
-                            android:textSize="11sp"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="4dp"
-                            android:background="@drawable/bg_chip_unselected"
-                            android:textColor="@color/placeholder"/>
-                    </LinearLayout>
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="+ 1 thẻ khác"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_dark"/>
-
-
-                </LinearLayout>
-            </RelativeLayout>
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" android:layout_marginHorizontal="16dp"/>
-
-
-            <!-- Book Item 2 (Mock) -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/img_cover_2"
-                    android:layout_width="90dp"
-                    android:layout_height="130dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/image5"
-                    app:riv_corner_radius="8dp" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/img_cover_2"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_toStartOf="@id/btn_item_more_2"
-                            android:text="Tây Du Ký - Ngô Thừa Ân"
-                            android:textColor="@color/text_dark"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                        <ImageView
-                            android:id="@+id/btn_item_more_2"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_alignParentEnd="true"
-                            android:src="@drawable/ic_menu_lib" />
-                    </RelativeLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center_vertical">
-                        <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@android:drawable/ic_menu_view" app:tint="@color/text_dark"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" 3,00 M" android:textSize="12sp" android:textColor="@color/text_dark"/>
-                        <ImageView android:layout_width="14dp" android:layout_height="14dp" android:layout_marginStart="12dp" android:src="@android:drawable/btn_star_big_off" app:tint="@color/text_dark"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" 500 N" android:textSize="12sp" android:textColor="@color/text_dark"/>
-                        <ImageView android:layout_width="14dp" android:layout_height="14dp" android:layout_marginStart="12dp" android:src="@android:drawable/ic_menu_sort_by_size" app:tint="@color/text_dark"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" 100 chương" android:textSize="12sp" android:textColor="@color/text_dark"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tiểu thuyết" android:textSize="11sp" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:background="@drawable/bg_chip_unselected" android:textColor="@color/placeholder"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Thần thoại" android:textSize="11sp" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:background="@drawable/bg_chip_unselected" android:textColor="@color/placeholder"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Kỳ ảo" android:textSize="11sp" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:background="@drawable/bg_chip_unselected" android:textColor="@color/placeholder"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </RelativeLayout>
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" android:layout_marginHorizontal="16dp"/>
-
-
-        </LinearLayout>
-    </ScrollView>
-
+        android:layout_height="match_parent"
+        android:paddingHorizontal="8dp"
+        tools:listitem="@layout/item_story_vertical" />
 
 </LinearLayout>
-
-
-

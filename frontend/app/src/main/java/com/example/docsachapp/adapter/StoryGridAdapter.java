@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,16 +17,39 @@ import com.example.docsachapp.R;
 import com.example.docsachapp.model.Story;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class StoryGridAdapter extends RecyclerView.Adapter<StoryGridAdapter.ViewHolder> {
 
     private List<Story> storyList;
     private Context context;
+    private boolean isSelectionMode = false;
+    private Set<Integer> selectedStoryIds = new HashSet<>();
+    private OnSelectionChangeListener selectionChangeListener;
+
+    public interface OnSelectionChangeListener {
+        void onSelectionChanged(int count);
+    }
 
     public StoryGridAdapter(List<Story> storyList, Context context) {
         this.storyList = storyList;
         this.context = context;
+    }
+
+    public void setSelectionMode(boolean isMode) {
+        this.isSelectionMode = isMode;
+        if (!isMode) selectedStoryIds.clear();
+        notifyDataSetChanged();
+    }
+
+    public void setOnSelectionChangeListener(OnSelectionChangeListener listener) {
+        this.selectionChangeListener = listener;
+    }
+
+    public Set<Integer> getSelectedStoryIds() {
+        return selectedStoryIds;
     }
 
     @NonNull
@@ -45,10 +69,31 @@ public class StoryGridAdapter extends RecyclerView.Adapter<StoryGridAdapter.View
                 .placeholder(R.drawable.image5)
                 .into(holder.ivCover);
 
+        // Hiển thị/Ẩn dấu tick chọn
+        if (isSelectionMode && selectedStoryIds.contains(story.getId())) {
+            holder.ivCheck.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivCheck.setVisibility(View.GONE);
+        }
+
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, BookDetailsActivity.class);
-            intent.putExtra("STORY_ID", story.getId());
-            context.startActivity(intent);
+            if (isSelectionMode) {
+                // Toggle chọn
+                if (selectedStoryIds.contains(story.getId())) {
+                    selectedStoryIds.remove(story.getId());
+                } else {
+                    selectedStoryIds.add(story.getId());
+                }
+                notifyItemChanged(position);
+                if (selectionChangeListener != null) {
+                    selectionChangeListener.onSelectionChanged(selectedStoryIds.size());
+                }
+            } else {
+                // Chế độ xem chi tiết bình thường
+                Intent intent = new Intent(context, BookDetailsActivity.class);
+                intent.putExtra("STORY_ID", story.getId());
+                context.startActivity(intent);
+            }
         });
     }
 
@@ -59,11 +104,13 @@ public class StoryGridAdapter extends RecyclerView.Adapter<StoryGridAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         RoundedImageView ivCover;
+        ImageView ivCheck;
         TextView tvTitle;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivCover = itemView.findViewById(R.id.iv_cover);
+            ivCheck = itemView.findViewById(R.id.iv_check);
             tvTitle = itemView.findViewById(R.id.tv_title);
         }
     }
