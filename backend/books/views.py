@@ -807,13 +807,8 @@ class BoSuuTapListCreateView(APIView):
         if err:
             return err
         bst_list = BoSuuTap.objects.filter(nguoi_dung=profile)
-        if not bst_list.exists():
-            return Response({
-                "message": "Bạn chưa có bộ sưu tập nào. Hãy tạo mới!",
-                "collections": []
-            })
-        serializer = BoSuuTapSerializer(bst_list, many=True)
-        return Response({"collections": serializer.data})
+        serializer = BoSuuTapSerializer(bst_list, many=True, context={'request': request})
+        return Response(serializer.data)
 
     def post(self, request):
         profile, err = get_nguoidung_or_error(request)

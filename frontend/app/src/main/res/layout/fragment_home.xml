@@ -21,17 +21,20 @@
         android:text="Không thể tải dữ liệu. Thử lại sau."
         android:visibility="gone" />
 
+    <!-- Thêm fillViewport="true" để ScrollView hoạt động tốt hơn -->
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
         android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="24dp">
+            android:paddingBottom="100dp"> <!-- Tăng padding để tránh bị che bởi BottomNav -->
 
             <!-- Section: Mới đăng -->
             <RelativeLayout
@@ -52,15 +55,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Xem Thêm ▸"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textColor="#D9A441"
                     android:textStyle="bold"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground"/>
-                </RelativeLayout>
+                    android:focusable="true"/>
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_new_stories"
@@ -69,6 +71,7 @@
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_story_horizontal"/>
 
@@ -76,7 +79,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
+                android:paddingTop="24dp"
                 android:paddingHorizontal="16dp"
                 android:paddingBottom="8dp">
                 <TextView
@@ -86,20 +89,15 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
-
                 <TextView
                     android:id="@+id/tv_xem_them_moi_cap_nhat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Xem Thêm ▸"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textColor="#D9A441"
-                    android:textStyle="bold"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground"/>
+                    android:layout_centerVertical="true"/>
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -109,11 +107,11 @@
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_story_horizontal"/>
 
-
-            <!-- Section: Truyện hoàn thành -->
+            <!-- Section: Truyện đã hoàn thành -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,20 +125,15 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
-
                 <TextView
                     android:id="@+id/tv_xem_them_hoan_thanh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Xem Thêm ▸"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textColor="#D9A441"
-                    android:textStyle="bold"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground"/>
+                    android:layout_centerVertical="true"/>
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -150,6 +143,7 @@
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_story_horizontal"/>
 
@@ -172,14 +166,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Xem Thêm ▸"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textColor="#D9A441"
-                    android:textStyle="bold"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground"/>
+                    android:layout_centerVertical="true"/>
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -189,6 +179,7 @@
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_story_horizontal"/>
 
