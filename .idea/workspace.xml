@@ -125,6 +125,16 @@
           <theme>@style/Theme.DocSachApp</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_admin_comment.xml">
+        <config>
+          <theme>@style/Theme.DocSachApp</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_admin_notification.xml">
+        <config>
+          <theme>@style/Theme.DocSachApp</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_author_profile.xml">
         <config>
           <theme>@style/Theme.DocSachApp</theme>
@@ -205,11 +215,6 @@
           <theme>@style/Theme.DocSachApp</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_post_stories.xml">
-        <config>
-          <theme>@style/Theme.DocSachApp</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_profile_details.xml">
         <config>
           <theme>@style/Theme.DocSachApp</theme>
@@ -225,11 +230,6 @@
           <theme>@style/Theme.DocSachApp</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_recently_read_stories.xml">
-        <config>
-          <theme>@style/Theme.DocSachApp</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_register_info.xml">
         <config>
           <theme>@style/Theme.DocSachApp</theme>
@@ -241,11 +241,6 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_register_password.xml">
-        <config>
-          <theme>@style/Theme.DocSachApp</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_update_stories.xml">
         <config>
           <theme>@style/Theme.DocSachApp</theme>
         </config>
@@ -295,31 +290,6 @@
           <theme>@style/Theme.DocSachApp</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_collection.xml">
-        <config>
-          <theme>@style/Theme.DocSachApp</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_recently_read.xml">
-        <config>
-          <theme>@style/Theme.DocSachApp</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_story_grid.xml">
-        <config>
-          <theme>@style/Theme.DocSachApp</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_story_horizontal.xml">
-        <config>
-          <theme>@style/Theme.DocSachApp</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_story_vertical.xml">
-        <config>
-          <theme>@style/Theme.DocSachApp</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/layout_bottom_navigation.xml">
         <config>
           <theme>@style/Theme.DocSachApp</theme>
@@ -337,10 +307,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b7e91935-87d7-436e-8a36-2c8d7a2a4c09" name="Changes" comment="app đọc sách">
-      <change beforePath="$PROJECT_DIR$/../.idea/DocSachApp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/DocSachApp.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/books/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/books/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/model/Collection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/item_collection.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/DocSachApp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DocSachApp.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/books/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/books/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/api/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/api/ApiService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -355,34 +328,22 @@
       <entry key="_D:/HocTap/Nam3kiII/androidstudio/DocSachApp" value="3BWUAEyLcSlt5p5s3b2K7j3ysnk" />
     </persistenceIdMap>
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[LocalEmulator::path=C:\Users\ASUS\.android\avd\Medium_Phone.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
   </component>
-  <component name="ExternalProjectsManager">
-    <system id="GRADLE">
-      <state>
-        <projects_view>
-          <tree_state>
-            <expand />
-            <select />
-          </tree_state>
-        </projects_view>
-      </state>
-    </system>
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="resourceFile" />
         <option value="layoutResourceFile" />
+        <option value="resourceFile" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -423,11 +384,16 @@
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;G:/DUE/MonHoc/LapTrinhMoblie/DocSachApp/frontend&quot;,
+    &quot;last_opened_file_path&quot;: &quot;G:/DUE/MonHoc/LapTrinhMoblie/DocSachApp&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;vcs.Git&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\DUE\MonHoc\LapTrinhMoblie\DocSachApp\frontend" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
       <module name="DocSachApp.app" />
@@ -502,6 +468,13 @@
       </method>
     </configuration>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-f2b7a9f6281b-6e1f45a539f7-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.29346.142" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="b7e91935-87d7-436e-8a36-2c8d7a2a4c09" name="Changes" comment="" />
@@ -574,12 +547,12 @@
       <map>
         <entry key="com.example.docsachapp">
           <value>
-            <CheckInfo lastCheckTimestamp="1775895398545" />
+            <CheckInfo lastCheckTimestamp="1775197899406" />
           </value>
         </entry>
         <entry key="com.example.docsachapp.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1775895398556" />
+            <CheckInfo lastCheckTimestamp="1775197899407" />
           </value>
         </entry>
       </map>
