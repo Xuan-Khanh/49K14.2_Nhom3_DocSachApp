@@ -4,3 +4,6 @@
 /app/build/intermediates/javac/debug/classes/
 /build/
 /local.properties
+.idea/
+__pycache__/
+*.pyc
