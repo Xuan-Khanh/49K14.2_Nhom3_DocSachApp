@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp">
+
+        <!-- Ảnh bìa truyện -->
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="100dp"
+            android:layout_height="145dp"
+            android:src="@drawable/image5"
+            android:scaleType="centerCrop"
+            app:riv_corner_radius="8dp" />
+
+        <!-- Thông tin bên phải -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/iv_cover"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/btn_more"
+                    android:text="Hai Vạn Năm Dưới Đáy Biển - Jules Verne"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
+
+                <ImageView
+                    android:id="@+id/btn_more"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:src="@android:drawable/ic_menu_more"
+                    app:tint="#CCCCCC"
+                    android:layout_marginTop="-4dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
+            </RelativeLayout>
+
+            <!-- Stats: Lượt xem, Bookmark, Chương -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/tv_views"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="👁 1,70 M"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+                <TextView
+                    android:id="@+id/tv_followers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="🔖 20,4 N"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+                <TextView
+                    android:id="@+id/tv_chapters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="≡ 45 chương"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+            </LinearLayout>
+
+            <!-- Thể loại (Chips) -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cg_genres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:chipSpacingHorizontal="8dp">
+                <!-- Ví dụ các chip mẫu -->
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="Khoa học"
+                    android:textSize="11sp"
+                    app:chipBackgroundColor="#F2F2F2"
+                    android:textColor="#999999"
+                    app:chipStrokeWidth="0dp"/>
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="Viễn tưởng"
+                    android:textSize="11sp"
+                    app:chipBackgroundColor="#F2F2F2"
+                    android:textColor="#999999"
+                    app:chipStrokeWidth="0dp"/>
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Trạng thái đang đọc -->
+            <TextView
+                android:id="@+id/tv_current_chapter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Đang xem: Chương 1"
+                android:textSize="13sp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Gạch ngang phân cách -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="#F5F5F5" />
+
+</LinearLayout>

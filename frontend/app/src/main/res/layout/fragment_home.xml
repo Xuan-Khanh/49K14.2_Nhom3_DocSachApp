@@ -47,7 +47,20 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
-            </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_xem_them_moi_dang"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xem Thêm ▸"
+                    android:textSize="14sp"
+                    android:textColor="#D9A441"
+                    android:textStyle="bold"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"/>
+                </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_new_stories"
@@ -58,6 +71,47 @@
                 android:clipToPadding="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_story_horizontal"/>
+
+            <!-- Section: Mới cập nhật -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mới cập nhật"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_xem_them_moi_cap_nhat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xem Thêm ▸"
+                    android:textSize="14sp"
+                    android:textColor="#D9A441"
+                    android:textStyle="bold"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"/>
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_update_stories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:clipToPadding="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_story_horizontal"/>
+
 
             <!-- Section: Truyện hoàn thành -->
             <RelativeLayout
@@ -73,6 +127,20 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_xem_them_hoan_thanh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xem Thêm ▸"
+                    android:textSize="14sp"
+                    android:textColor="#D9A441"
+                    android:textStyle="bold"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"/>
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -99,6 +167,19 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/tv_xem_them_doc_gday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xem Thêm ▸"
+                    android:textSize="14sp"
+                    android:textColor="#D9A441"
+                    android:textStyle="bold"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"/>
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView

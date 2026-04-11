@@ -207,18 +207,7 @@
             android:layout_marginBottom="12dp"
             android:fontFamily="@font/inter_bold"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_logout"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Đăng xuất"
-            android:textAllCaps="false"
-            android:background="@drawable/bg_button_black"
-            android:backgroundTint="#D9A441"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/inter_bold"/>
+
     </LinearLayout>
 
 </RelativeLayout>

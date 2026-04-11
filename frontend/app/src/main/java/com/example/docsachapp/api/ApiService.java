@@ -9,6 +9,7 @@ import com.example.docsachapp.model.UserProfile;
 import com.example.docsachapp.model.Comment;
 import com.example.docsachapp.model.ReadingHistoryItem;
 import com.example.docsachapp.model.Chapter;
+import com.example.docsachapp.model.Collection;
 
 import java.util.List;
 import java.util.Map;
@@ -88,4 +89,9 @@ public interface ApiService {
 
     @POST("comments")
     Call<Comment> postComment(@Header("Authorization") String authToken, @Body Map<String, Object> body);
+
+    // ==================== BỘ SƯU TẬP ====================
+
+    @GET("collections")
+    Call<Map<String, List<Collection>>> getCollections(@Header("Authorization") String authToken);
 }

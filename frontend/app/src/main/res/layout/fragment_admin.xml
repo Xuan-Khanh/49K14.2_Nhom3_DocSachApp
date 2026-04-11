@@ -136,45 +136,45 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Section: THÔNG BÁO -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="8dp"
-                    android:text="THÔNG BÁO"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="#999999" />
+<!--                &lt;!&ndash; Section: THÔNG BÁO &ndash;&gt;-->
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:paddingHorizontal="16dp"-->
+<!--                    android:paddingTop="20dp"-->
+<!--                    android:paddingBottom="8dp"-->
+<!--                    android:text="THÔNG BÁO"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:textColor="#999999" />-->
 
-                <RelativeLayout
-                    android:id="@+id/rl_notifications"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:paddingHorizontal="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground">
-                    <ImageView
-                        android:id="@+id/iv_icon_notif"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_centerVertical="true"
-                        android:src="@android:drawable/ic_popup_reminder"
-                        app:tint="#D9A441" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@+id/iv_icon_notif"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="16dp"
-                        android:text="Thông báo của tôi"
-                        android:textSize="15sp"
-                        android:textColor="@color/black" />
-                </RelativeLayout>
+<!--                <RelativeLayout-->
+<!--                    android:id="@+id/rl_notifications"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="56dp"-->
+<!--                    android:paddingHorizontal="16dp"-->
+<!--                    android:clickable="true"-->
+<!--                    android:focusable="true"-->
+<!--                    android:background="?attr/selectableItemBackground">-->
+<!--                    <ImageView-->
+<!--                        android:id="@+id/iv_icon_notif"-->
+<!--                        android:layout_width="24dp"-->
+<!--                        android:layout_height="24dp"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:src="@android:drawable/ic_popup_reminder"-->
+<!--                        app:tint="#D9A441" />-->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_toEndOf="@+id/iv_icon_notif"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:layout_marginStart="16dp"-->
+<!--                        android:text="Thông báo của tôi"-->
+<!--                        android:textSize="15sp"-->
+<!--                        android:textColor="@color/black" />-->
+<!--                </RelativeLayout>-->
 
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginHorizontal="16dp"/>
+<!--                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginHorizontal="16dp"/>-->
 
                 <!-- Section: THƯ VIỆN -->
                 <TextView
@@ -215,76 +215,90 @@
                 </RelativeLayout>
 
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginHorizontal="16dp"/>
-
-                <!-- Section: LỊCH SỬ TÀI KHOẢN -->
-                <TextView
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_logout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="8dp"
-                    android:text="LỊCH SỬ TÀI KHOẢN"
-                    android:textSize="12sp"
+                    android:layout_height="56dp"
+                    android:layout_marginLeft="30px"
+                    android:layout_marginRight="30px"
+                    android:layout_marginTop="280dp"
+                    android:text="Đăng xuất"
+                    android:textAllCaps="false"
+                    android:background="@drawable/bg_button_black"
+                    android:backgroundTint="#D9A441"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="#999999" />
+                    android:fontFamily="@font/inter_bold"/>
+<!--                &lt;!&ndash; Section: LỊCH SỬ TÀI KHOẢN &ndash;&gt;-->
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:paddingHorizontal="16dp"-->
+<!--                    android:paddingTop="20dp"-->
+<!--                    android:paddingBottom="8dp"-->
+<!--                    android:text="LỊCH SỬ TÀI KHOẢN"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:textColor="#999999" />-->
 
-                <RelativeLayout
-                    android:id="@+id/rl_comments"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:paddingHorizontal="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground">
-                    <ImageView
-                        android:id="@+id/iv_icon_comments"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_centerVertical="true"
-                        android:src="@android:drawable/btn_star_big_on"
-                        app:tint="#D9A441" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@+id/iv_icon_comments"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="16dp"
-                        android:text="Bình luận của tôi"
-                        android:textSize="15sp"
-                        android:textColor="@color/black" />
-                </RelativeLayout>
+<!--                <RelativeLayout-->
+<!--                    android:id="@+id/rl_comments"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="56dp"-->
+<!--                    android:paddingHorizontal="16dp"-->
+<!--                    android:clickable="true"-->
+<!--                    android:focusable="true"-->
+<!--                    android:background="?attr/selectableItemBackground">-->
+<!--                    <ImageView-->
+<!--                        android:id="@+id/iv_icon_comments"-->
+<!--                        android:layout_width="24dp"-->
+<!--                        android:layout_height="24dp"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:src="@android:drawable/btn_star_big_on"-->
+<!--                        app:tint="#D9A441" />-->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_toEndOf="@+id/iv_icon_comments"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:layout_marginStart="16dp"-->
+<!--                        android:text="Bình luận của tôi"-->
+<!--                        android:textSize="15sp"-->
+<!--                        android:textColor="@color/black" />-->
+<!--                </RelativeLayout>-->
 
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginHorizontal="16dp"/>
+<!--                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginHorizontal="16dp"/>-->
 
-                <!-- Nút Đăng xuất -->
-                <RelativeLayout
-                    android:id="@+id/rl_logout"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:paddingHorizontal="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground">
-                    <ImageView
-                        android:id="@+id/iv_icon_logout"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_centerVertical="true"
-                        android:src="@android:drawable/ic_menu_close_clear_cancel"
-                        app:tint="#FF4444" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@+id/iv_icon_logout"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="16dp"
-                        android:text="Đăng xuất"
-                        android:textSize="15sp"
-                        android:textColor="#FF4444"
-                        android:textStyle="bold" />
-                </RelativeLayout>
+<!--                &lt;!&ndash; Nút Đăng xuất &ndash;&gt;-->
+<!--                <RelativeLayout-->
+<!--                    android:id="@+id/rl_logout"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="56dp"-->
+<!--                    android:paddingHorizontal="16dp"-->
+<!--                    android:clickable="true"-->
+<!--                    android:focusable="true"-->
+<!--                    android:background="?attr/selectableItemBackground">-->
+<!--                    <ImageView-->
+<!--                        android:id="@+id/iv_icon_logout"-->
+<!--                        android:layout_width="24dp"-->
+<!--                        android:layout_height="24dp"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:src="@android:drawable/ic_menu_close_clear_cancel"-->
+<!--                        app:tint="#FF4444" />-->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_toEndOf="@+id/iv_icon_logout"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:layout_marginStart="16dp"-->
+<!--                        android:text="Đăng xuất"-->
+<!--                        android:textSize="15sp"-->
+<!--                        android:textColor="#FF4444"-->
+<!--                        android:textStyle="bold" />-->
+<!--                </RelativeLayout>-->
 
-                <View android:layout_width="match_parent" android:layout_height="24dp" />
+<!--                <View android:layout_width="match_parent" android:layout_height="24dp" />-->
 
             </LinearLayout>
         </ScrollView>
