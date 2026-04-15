@@ -1,0 +1,14 @@
+# Android
+.gradle/
+build/
+*/build/
+local.properties
+
+# IDE
+.idea/
+*.iml
+
+# Python
+__pycache__/
+*.pyc
+db.sqlite3
