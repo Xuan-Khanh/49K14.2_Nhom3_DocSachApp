@@ -42,6 +42,18 @@ public interface ApiService {
     @GET("users/{id}")
     Call<UserProfile> getPublicProfile(@Path("id") int userId);
 
+    @POST("users/follow")
+    Call<java.util.Map<String, Object>> followUser(@Header("Authorization") String authToken, @Body java.util.Map<String, Integer> body);
+
+    @retrofit2.http.HTTP(method = "DELETE", path = "users/unfollow", hasBody = true)
+    Call<java.util.Map<String, Object>> unfollowUser(@Header("Authorization") String authToken, @Body java.util.Map<String, Integer> body);
+
+    @GET("users/{id}/followers")
+    Call<java.util.List<com.example.docsachapp.model.UserSearchItem>> getFollowers(@Path("id") int userId);
+
+    @GET("users/{id}/following")
+    Call<java.util.List<com.example.docsachapp.model.UserSearchItem>> getFollowing(@Path("id") int userId);
+
     // ==================== TRUYỆN ====================
 
     @GET("stories")
@@ -53,6 +65,12 @@ public interface ApiService {
 
     @GET("stories")
     Call<List<Story>> searchStories(@Query("search") String keyword);
+
+    @GET("search")
+    Call<com.example.docsachapp.model.SearchResultResponse> searchAll(@Query("keyword") String keyword);
+
+    @GET("genres")
+    Call<List<Story.Genre>> getGenres();
 
     @GET("stories/{id}")
     Call<Story> getStoryDetail(@Path("id") int id);

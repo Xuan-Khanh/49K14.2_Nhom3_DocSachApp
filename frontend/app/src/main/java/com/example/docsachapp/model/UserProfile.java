@@ -50,6 +50,12 @@ public class UserProfile {
     @SerializedName("so_following")
     private int followingCount;
 
+    @SerializedName("truyen_da_dang")
+    private java.util.List<Story> publishedStories;
+
+    @SerializedName("is_following")
+    private boolean isFollowing;
+
     public int getId() { return id; }
     public String getUsername() { return username != null ? username : ""; }
     public String getEmail() { return email != null ? email : ""; }
@@ -59,4 +65,8 @@ public class UserProfile {
     public int getStoryCount() { return storyCount; }
     public int getFollowerCount() { return followerCount; }
     public int getFollowingCount() { return followingCount; }
+    public java.util.List<Story> getPublishedStories() { return publishedStories; }
+    public boolean isFollowing() { return isFollowing; }
+    public void setFollowing(boolean following) { this.isFollowing = following; }
+    public void setFollowerCount(int followerCount) { this.followerCount = followerCount; }
 }
