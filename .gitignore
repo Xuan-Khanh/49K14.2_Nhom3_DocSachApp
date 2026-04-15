@@ -1,14 +1,7 @@
-# Android
-.gradle/
-build/
-*/build/
-local.properties
-
-# IDE
+/.gradle/
+/app/build/
+/build/
+/local.properties
 .idea/
-*.iml
-
-# Python
 __pycache__/
 *.pyc
-db.sqlite3
