@@ -2,8 +2,11 @@ package com.example.docsachapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,26 +15,37 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.docsachapp.api.RetrofitClient;
+import com.example.docsachapp.api.SessionManager;
+import com.example.docsachapp.model.Collection;
 import com.example.docsachapp.model.Story;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BookDetailsActivity extends AppCompatActivity {
-    private boolean isFollowing = false;
     private int storyId;
     private int authorId = -1;
+    private SessionManager sessionManager;
+    private boolean isFollowing = false;
     
     private TextView tvTitle, tvAuthor, tvDescription, tvRating;
     private RoundedImageView ivCover, ivAuthorAvatar;
+    private MaterialButton btnFollow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_details);
 
+        sessionManager = new SessionManager(this);
         storyId = getIntent().getIntExtra("STORY_ID", -1);
         if (storyId == -1) {
             Toast.makeText(this, "Không tìm thấy truyện", Toast.LENGTH_SHORT).show();
@@ -41,6 +55,7 @@ public class BookDetailsActivity extends AppCompatActivity {
 
         initViews();
         loadStoryDetails();
+        // checkFollowStatus(); // Có thể bỏ qua vì đã lấy từ loadStoryDetails
     }
 
     private void initViews() {
@@ -50,14 +65,13 @@ public class BookDetailsActivity extends AppCompatActivity {
         tvRating = findViewById(R.id.tv_rating_score);
         ivCover = findViewById(R.id.iv_book_cover);
         ivAuthorAvatar = findViewById(R.id.iv_author_avatar);
+        btnFollow = findViewById(R.id.btn_follow_book);
         
-        ImageView btnBack = findViewById(R.id.btn_back);
-        btnBack.setOnClickListener(v -> finish());
+        findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         
-        // Sự kiện click vào tác giả
         View.OnClickListener authorClick = v -> {
             if (authorId != -1) {
-                Intent intent = new Intent(BookDetailsActivity.this, AuthorProfileActivity.class);
+                Intent intent = new Intent(this, AuthorProfileActivity.class);
                 intent.putExtra("AUTHOR_ID", authorId);
                 startActivity(intent);
             }
@@ -77,6 +91,131 @@ public class BookDetailsActivity extends AppCompatActivity {
             intent.putExtra("STORY_ID", storyId);
             startActivity(intent);
         });
+
+        findViewById(R.id.btn_collection).setOnClickListener(v -> showAddToCollectionDialog());
+        
+        btnFollow.setOnClickListener(v -> toggleFollow());
+    }
+
+    private void toggleFollow() {
+        String token = sessionManager.getAuthHeader();
+        if (token == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("story_id", storyId);
+
+        if (!isFollowing) {
+            RetrofitClient.getApi().followStory(token, body).enqueue(new Callback<Map<String, Object>>() {
+                @Override
+                public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                    if (response.isSuccessful()) {
+                        isFollowing = true;
+                        updateFollowButtonUI();
+                        Toast.makeText(BookDetailsActivity.this, "Đã theo dõi truyện", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(BookDetailsActivity.this, "Lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                @Override
+                public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                    Toast.makeText(BookDetailsActivity.this, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            RetrofitClient.getApi().unfollowStory(token, body).enqueue(new Callback<Map<String, Object>>() {
+                @Override
+                public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                    if (response.isSuccessful()) {
+                        isFollowing = false;
+                        updateFollowButtonUI();
+                        Toast.makeText(BookDetailsActivity.this, "Đã bỏ theo dõi", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(BookDetailsActivity.this, "Lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                @Override
+                public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                    Toast.makeText(BookDetailsActivity.this, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void updateFollowButtonUI() {
+        if (isFollowing) {
+            btnFollow.setText("BỎ THEO DÕI");
+            btnFollow.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.primary_light));
+            btnFollow.setIconResource(android.R.drawable.btn_star_big_on);
+        } else {
+            btnFollow.setText("THEO DÕI TRUYỆN");
+            btnFollow.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.primary));
+            btnFollow.setIconResource(android.R.drawable.btn_star_big_off);
+        }
+    }
+
+    private void showAddToCollectionDialog() {
+        String token = sessionManager.getAuthHeader();
+        if (token == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để sử dụng tính năng này", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_to_collection, null);
+        bottomSheetDialog.setContentView(dialogView);
+
+        RadioGroup rgCollections = dialogView.findViewById(R.id.rg_collections);
+        rgCollections.removeAllViews();
+
+        RetrofitClient.getApi().getBoSuuTap(token).enqueue(new Callback<List<Collection>>() {
+            @Override
+            public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
+                rgCollections.removeAllViews();
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Collection> collections = response.body();
+                    if (!collections.isEmpty()) {
+                        LayoutInflater inflater = LayoutInflater.from(BookDetailsActivity.this);
+                        for (Collection collection : collections) {
+                            RadioButton rb = (RadioButton) inflater.inflate(R.layout.item_collection_radio, rgCollections, false);
+                            rb.setId(collection.getId());
+                            rb.setText(collection.getName());
+                            rgCollections.addView(rb);
+                        }
+                    } else {
+                        TextView tvEmpty = new TextView(BookDetailsActivity.this);
+                        tvEmpty.setText("Bạn chưa có bộ sưu tập nào.");
+                        tvEmpty.setPadding(40, 40, 40, 40);
+                        rgCollections.addView(tvEmpty);
+                    }
+                }
+            }
+            @Override public void onFailure(Call<List<Collection>> call, Throwable t) {}
+        });
+
+        dialogView.findViewById(R.id.tv_done).setOnClickListener(v -> {
+            int selectedId = rgCollections.getCheckedRadioButtonId();
+            if (selectedId == -1) {
+                Toast.makeText(this, "Vui lòng chọn một danh sách", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Map<String, Object> body = new HashMap<>();
+            body.put("collection_id", selectedId);
+            body.put("story_id", storyId);
+            RetrofitClient.getApi().addStoryToCollection(token, body).enqueue(new Callback<Map<String, Object>>() {
+                @Override
+                public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(BookDetailsActivity.this, "Thêm vào BST thành công", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                    }
+                }
+                @Override public void onFailure(Call<Map<String, Object>> call, Throwable t) {}
+            });
+        });
+        bottomSheetDialog.show();
     }
 
     private void loadStoryDetails() {
@@ -85,7 +224,10 @@ public class BookDetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Story> call, Response<Story> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Story story = response.body();
-                    authorId = story.getAuthor().getId(); // Lưu authorId để dùng khi click
+                    authorId = story.getAuthor().getId();
+                    // Cập nhật trạng thái theo dõi từ dữ liệu Story
+                    isFollowing = story.isFollowing();
+                    updateFollowButtonUI();
                     displayStory(story);
                 }
             }

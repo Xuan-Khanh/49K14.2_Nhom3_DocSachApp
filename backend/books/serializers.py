@@ -135,6 +135,7 @@ class TruyenSerializer(serializers.ModelSerializer):
     diem_trung_binh = serializers.SerializerMethodField()
     tong_danh_gia = serializers.SerializerMethodField()
     so_chuong = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField() # THÊM TRƯỜNG NÀY
 
     class Meta:
         model = Truyen
@@ -142,7 +143,8 @@ class TruyenSerializer(serializers.ModelSerializer):
             'id', 'ten_truyen', 'mo_ta', 'trang_thai',
             'anh_bia', 'so_luot_doc',
             'tac_gia', 'the_loai', 'the_loai_ids',
-            'diem_trung_binh', 'tong_danh_gia', 'so_chuong'
+            'diem_trung_binh', 'tong_danh_gia', 'so_chuong',
+            'is_following' # THÊM VÀO ĐÂY
         ]
         read_only_fields = ['so_luot_doc']
 
@@ -154,6 +156,17 @@ class TruyenSerializer(serializers.ModelSerializer):
 
     def get_so_chuong(self, obj):
         return obj.chuong_list.count()
+
+    def get_is_following(self, obj):
+        """Kiểm tra user hiện tại có đang theo dõi truyện này không"""
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            try:
+                profile = request.user.nguoidung
+                return TheoDoiTruyen.objects.filter(nguoi_dung=profile, truyen=obj).exists()
+            except NguoiDung.DoesNotExist:
+                return False
+        return False
 
     def validate_trang_thai(self, value):
         """Khi trang_thai = 'da_dang' hoặc 'hoan_thanh', cần có thể loại"""
@@ -323,6 +336,14 @@ class BoSuuTapDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoSuuTap
         fields = ['id', 'ten_bo_suu_tap', 'truyen_list']
+
+class TruyenBoSuuTapSerializer(serializers.ModelSerializer):
+    """Serializer cho màn hình thêm truyện vào BST"""
+    is_added = serializers.BooleanField(read_only=True)
+
+    class Meta:
+        model = BoSuuTap
+        fields = ['id', 'ten_bo_suu_tap', 'is_added']
 
 
 # =============================================

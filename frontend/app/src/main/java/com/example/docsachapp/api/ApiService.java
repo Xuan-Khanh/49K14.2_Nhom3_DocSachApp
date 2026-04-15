@@ -17,6 +17,7 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -63,15 +64,17 @@ public interface ApiService {
     @GET("chapters/{id}")
     Call<Chapter> getChapterDetail(@Path("id") int chapterId);
 
-    // ==================== THEO DÕI ====================
+    // ==================== THEO DÕI TRUYỆN ====================
 
     @GET("user/following-stories")
     Call<List<Story>> getFollowingStories(@Header("Authorization") String authToken);
 
-    @POST("user/follow-story")
+    // Khớp với path('follow/story', ...)
+    @POST("follow/story")
     Call<Map<String, Object>> followStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
-    @POST("user/unfollow-story")
+    // Khớp với path('unfollow/story', ...) và dùng DELETE theo comment backend
+    @HTTP(method = "DELETE", path = "unfollow/story", hasBody = true)
     Call<Map<String, Object>> unfollowStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     // ==================== LỊCH SỬ ĐỌC ====================
@@ -92,11 +95,14 @@ public interface ApiService {
 
     // ==================== BỘ SƯU TẬP ====================
 
-    @GET("bosuutap")
+    @GET("collections")
     Call<List<Collection>> getBoSuuTap(@Header("Authorization") String authToken);
 
     @GET("collections/{id}")
     Call<Collection> getCollectionDetail(@Header("Authorization") String authToken, @Path("id") int collectionId);
+
+    @POST("collections/add-story")
+    Call<Map<String, Object>> addStoryToCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     @POST("collections")
     Call<Map<String, Object>> createCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);

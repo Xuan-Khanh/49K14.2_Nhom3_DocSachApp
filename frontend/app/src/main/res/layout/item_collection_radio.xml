@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rb_item"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:button="@null"
+    android:drawableStart="@android:drawable/ic_menu_agenda"
+    android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
+    android:drawablePadding="20dp"
+    android:drawableTint="@color/black"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="8dp"
+    android:text="Tên danh sách"
+    android:textColor="@color/black"
+    android:textSize="18sp"
+    android:buttonTint="#D9A441"
+    android:background="?attr/selectableItemBackground" />

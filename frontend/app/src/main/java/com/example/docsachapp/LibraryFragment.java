@@ -237,7 +237,6 @@ public class LibraryFragment extends Fragment {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;
 
-        // FIX: Gọi getBoSuuTap và nhận kết quả là List<Collection> trực tiếp
         RetrofitClient.getApi().getBoSuuTap(token).enqueue(new Callback<List<Collection>>() {
             @Override
             public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
