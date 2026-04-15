@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="27dp"
+    android:orientation="vertical"
+    android:paddingVertical="12dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/tv_chapter_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chương 1: Ngày đầu tiên ở nhà trẻ"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/tv_chapter_date"
+            android:layout_marginEnd="16dp" />
+
+
+        <TextView
+            android:id="@+id/tv_chapter_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6 Th1, 2026"
+            android:textColor="#BBBBBB"
+            android:textSize="13sp"
+            android:layout_alignParentEnd="true" />
+
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F0F0F0"
+        android:layout_marginTop="12dp" />
+
+
+</LinearLayout>
+

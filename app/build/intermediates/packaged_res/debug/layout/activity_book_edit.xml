@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.tools.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+    <!-- MÀN HÌNH CHÍNH SỬA TRUYỆN -->
+    <LinearLayout
+        android:id="@+id/layout_edit_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:paddingHorizontal="16dp"
+            android:layout_marginTop="27dp">
+
+
+            <ImageView
+                android:id="@+id/btn_close"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/black" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Sửa thông tin truyện"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+            <ImageView
+                android:id="@+id/btn_save"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_check"
+                app:tint="@color/black" />
+        </RelativeLayout>
+
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingBottom="40dp">
+
+
+                <!-- Bìa truyện -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/iv_book_cover"
+                        android:layout_width="64dp"
+                        android:layout_height="88dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img_book_cover_star"
+                        app:riv_corner_radius="6dp" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:text="Chỉnh sửa bìa truyện"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+
+                <!-- Tiêu đề -->
+                <RelativeLayout
+                    android:id="@+id/layout_edit_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="20dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tiêu đề " android:textColor="@color/black" android:textStyle="bold" android:textSize="15sp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="*" android:textColor="@color/error" android:textSize="15sp"/>
+                    </LinearLayout>
+                    <ImageView android:id="@+id/ic_arrow_1" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:src="@drawable/ic_chevron_right" app:tint="@color/black" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:layout_toStartOf="@id/ic_arrow_1" android:layout_centerVertical="true" android:text="Ngôi Sao Hy Vọng" android:textColor="#555555" android:textSize="15sp"/>
+                </RelativeLayout>
+
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+
+                <!-- Mô tả -->
+                <RelativeLayout
+                    android:id="@+id/layout_edit_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="12dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <LinearLayout android:id="@+id/label_desc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mô tả " android:textColor="@color/black" android:textStyle="bold" android:textSize="15sp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="*" android:textColor="@color/error" android:textSize="15sp"/>
+                    </LinearLayout>
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_chevron_right" app:tint="@color/black" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@id/label_desc" android:layout_marginTop="8dp" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Văn án:" android:textColor="@color/black" android:textStyle="bold" android:textSize="14sp"/>
+                        <TextView android:id="@+id/tv_book_desc" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Bạn đã bao giờ tự hỏi những ngôi sao đi đâu khi mặt trời mọc chưa? Đây là hành trình dịu dàng..." android:textColor="#666666" android:textSize="14sp" android:ellipsize="end" android:maxLines="2" android:lineSpacingExtra="4dp"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+
+                <!-- Thể loại -->
+                <RelativeLayout
+                    android:id="@+id/layout_edit_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="20dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <LinearLayout android:id="@+id/label_cat" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thể loại " android:textColor="@color/black" android:textStyle="bold" android:textSize="15sp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="*" android:textColor="@color/error" android:textSize="15sp"/>
+                    </LinearLayout>
+                    <ImageView android:id="@+id/ic_arrow_3" android:layout_width="20dp" android:layout_height="20dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:src="@drawable/ic_chevron_right" app:tint="@color/black" />
+                    <TextView android:id="@+id/tv_book_categories" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="12dp" android:layout_toStartOf="@id/ic_arrow_3" android:layout_toEndOf="@id/label_cat" android:gravity="end" android:text="Bí ẩn / Giật gân, Hài hước" android:textColor="#555555" android:textSize="15sp"/>
+                </RelativeLayout>
+
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+
+                <!-- Đã hoàn thành -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:text="Đã hoàn thành" android:textColor="@color/black" android:textStyle="bold" android:textSize="15sp"/>
+                    <Switch android:id="@+id/switch_status" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:thumbTint="@color/white" android:trackTint="@color/black" />
+                </RelativeLayout>
+
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+
+                <!-- Mục lục -->
+                <RelativeLayout
+                    android:id="@+id/btn_open_chapters_popup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="20dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:text="Mục lục" android:textColor="@color/black" android:textStyle="bold" android:textSize="15sp"/>
+                    <ImageView
+                        android:id="@+id/btn_settings"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_settings"
+                        app:tint="@color/black" />
+                </RelativeLayout>
+
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+
+                <!-- Danh sách chương truyện hiện có -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Chương 1: Giấc mộng đầu tiên" android:textColor="@color/black" android:textSize="15sp" />
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="#D9A441" android:paddingHorizontal="8dp" android:paddingVertical="3dp" android:text="Đã đăng tải" android:textColor="@color/white" android:textSize="10sp" android:textStyle="bold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:text="19 giờ trước" android:textColor="#888888" android:textSize="12sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="👁 777 N" android:textColor="#888888" android:textSize="12sp" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="🔖 11,4 N" android:textColor="#888888" android:textSize="12sp" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="💬 77" android:textColor="#888888" android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:src="@drawable/ic_chevron_right" app:tint="#888888" />
+                </RelativeLayout>
+
+
+                <!-- Bottom Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_add_chapter" android:layout_width="wrap_content" android:layout_height="52dp" android:layout_marginEnd="12dp" android:text="+ THÊM CHƯƠNG" android:textColor="@color/white" android:textStyle="bold" app:backgroundTint="#D9A441" app:cornerRadius="26dp" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_delete_book" android:layout_width="wrap_content" android:layout_height="52dp" android:layout_marginStart="12dp" android:text="XÓA TRUYỆN" android:textColor="@color/white" android:textStyle="bold" app:icon="@android:drawable/ic_menu_delete" app:iconTint="@color/white" app:backgroundTint="#D9A441" app:cornerRadius="26dp" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+
+    <!-- OVERLAY MỜ KHI HIỆN POPUP CHỌN CHƯƠNG -->
+    <View
+        android:id="@+id/popup_chapters_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone" />
+
+
+    <!-- POPUP: CHỌN CHƯƠNG TRUYỆN -->
+    <LinearLayout
+        android:id="@+id/popup_select_chapters"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="27dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+
+        <!-- Header Popup -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:paddingHorizontal="16dp">
+            <ImageView
+                android:id="@+id/btn_cancel_select_chapters"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/black" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Chọn chương truyện"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/btn_close_chapters_popup"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_check"
+                app:tint="@color/placeholder" />
+        </RelativeLayout>
+
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+
+                <!-- Item 1 -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp">
+                    <RadioButton
+                        android:id="@+id/rb_ch1"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_centerVertical="true" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/rb_ch1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Chương 1: Giấc mộng đầu tiên" android:textColor="@color/black" android:textSize="15sp" />
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="#D9A441" android:paddingHorizontal="8dp" android:paddingVertical="3dp" android:text="Đã đăng tải" android:textColor="@color/white" android:textSize="10sp" android:textStyle="bold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="19 giờ trước" android:textColor="#888888" android:textSize="12sp" />
+                        </LinearLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="👁 777 N  🔖 11,4 N  💬 77" android:textColor="#888888" android:textSize="12sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+                <!-- Item 2 -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <RadioButton
+                        android:id="@+id/rb_ch2"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_centerVertical="true" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/rb_ch2"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Chương 2: Giấc mộng thứ 2" android:textColor="@color/black" android:textSize="15sp" />
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="horizontal">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="#D9A441" android:paddingHorizontal="8dp" android:paddingVertical="3dp" android:text="Bản thảo" android:textColor="@color/white" android:textSize="10sp" android:textStyle="bold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="19 giờ trước" android:textColor="#888888" android:textSize="12sp" />
+                        </LinearLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="👁 777 N  🔖 11,4 N  💬 77" android:textColor="#888888" android:textSize="12sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+
+
+        <!-- Footer Popup -->
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+            <TextView
+                android:id="@+id/btn_popup_delete_chapter_trigger"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="XÓA"
+                android:textColor="@color/placeholder"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/btn_popup_publish"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="ĐĂNG"
+                android:textColor="@color/placeholder"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- Overlay mờ khi hiện popup xóa truyện/chương -->
+    <View
+        android:id="@+id/popup_delete_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone" />
+
+
+    <!-- Popup xác nhận xóa TRUYỆN -->
+    <LinearLayout
+        android:id="@+id/popup_delete_book_confirm"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_profile_card"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:visibility="gone">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bạn có muốn xóa Truyện này?"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="32dp"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/btn_delete_book_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="Hủy"
+                android:textColor="@color/placeholder"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/btn_delete_book_yes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:padding="12dp"
+                android:text="Đồng ý"
+                android:textColor="#D9A441"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- Popup xác nhận xóa CHƯƠNG -->
+    <LinearLayout
+        android:id="@+id/popup_delete_chapter_confirm"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_profile_card"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:visibility="gone">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bạn có muốn xóa Chương này?"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Xóa chương 1 ?"
+            android:textColor="@color/placeholder"
+            android:textSize="14sp" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/btn_delete_chapter_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="Hủy"
+                android:textColor="@color/placeholder"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/btn_delete_chapter_yes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:padding="12dp"
+                android:text="Đồng ý"
+                android:textColor="#D9A441"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</FrameLayout>
+

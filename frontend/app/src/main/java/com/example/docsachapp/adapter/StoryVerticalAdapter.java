@@ -41,7 +41,8 @@ public class StoryVerticalAdapter extends RecyclerView.Adapter<StoryVerticalAdap
         
         holder.tvTitle.setText(story.getTitle());
         holder.tvAuthor.setText(story.getAuthorName());
-        holder.tvViews.setText("👁 " + story.getViews());
+        holder.tvViews.setText("👁 " + formatNumber(story.getViews()));
+        // CẬP NHẬT: Hiển thị đúng số chương từ API
         holder.tvChapters.setText("  ≡ " + story.getChaptersCount() + " chương");
         holder.tvGenres.setText(story.getGenresText());
 
@@ -55,6 +56,12 @@ public class StoryVerticalAdapter extends RecyclerView.Adapter<StoryVerticalAdap
             intent.putExtra("STORY_ID", story.getId());
             context.startActivity(intent);
         });
+    }
+
+    private String formatNumber(int number) {
+        if (number >= 1000000) return String.format("%.1f M", number / 1000000.0);
+        if (number >= 1000) return String.format("%.1f N", number / 1000.0);
+        return String.valueOf(number);
     }
 
     @Override

@@ -113,13 +113,4 @@
         </ScrollView>
     </LinearLayout>
 
-    <!-- Bottom Navigation -->
-    <FrameLayout
-        android:id="@+id/bottom_navigation_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-        <include layout="@layout/layout_bottom_navigation" />
-    </FrameLayout>
-
 </RelativeLayout>

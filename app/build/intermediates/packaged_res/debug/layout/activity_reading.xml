@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="27dp"
+    android:background="@color/white">
+
+
+    <!-- Header Section -->
+    <LinearLayout
+        android:id="@+id/ll_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="@color/white">
+
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@android:drawable/ic_menu_revert"
+            android:rotation="0"
+            app:tint="@color/text_dark" />
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+
+            <TextView
+                android:id="@+id/tv_header_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chương 1: Ngày đầu tiên ở nhà trẻ"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/tv_header_meta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1/40  6 Th1, 2026"
+                android:textSize="12sp"
+                android:textColor="#999999" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- Content Section -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_header"
+        android:layout_above="@+id/ll_footer"
+        android:paddingHorizontal="24dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="40dp">
+
+
+            <TextView
+                android:id="@+id/tv_chapter_title_large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chương 1: Ngày đầu tiên ở nhà trẻ"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp" />
+
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="10dp"
+                android:text="[Hành khách số 1888 đã đến nơi, xin vui lòng rời tàu ngay lập tức.]\n\nCô gái trẻ quấn mình trong chiếc áo khoác hai màu đen đỏ đan xen, vội vàng xách vali lên rồi lao nhanh về phía khoang tàu đang mở cửa.\n\nMột con bạch tuộc đen lặng lẽ trườn ra từ dưới ghế ngồi của cô. Chỉ cần cô sơ sẩy một chút thôi, chắc chắn sẽ trượt ngã.\n\nNếu quá thời gian quy định mà vẫn chưa rời đi, cô gái đáng thương này sẽ bị xem là chống lệnh và bị robot chấp pháp xử lý ngay tại chỗ.\n\nỞ Tinh Tế, nơi tài nguyên khan hiếm, những cư dân bất hợp pháp không có căn cước hoàn toàn chẳng được hưởng chút quyền lợi nhân đạo nào.\n\nCô bước rất nhanh. Bàn chân giẫm mạnh lên thân con bạch tuộc mềm nhũn, đúng ngay vào giác hút của nó.\n\nBạch tuộc trên Hành tinh Khắc Lỗ nổi tiếng with lớp da cứng như thép, chỉ có phần giác hút là yếu ớt và nhạy cảm. Chủ nhân của nó còn chưa kịp phản ứng thì hàng chục ống kim loại màu bạc, dài và mảnh, đã chĩa thẳng vào mặt.\n\nĐó là súng photon của robot chấp pháp, chỉ cần một giây cũng đủ thiêu rụi con bạch tuộc khổng lồ thành tro bụi.\n\nCô gái trẻ không hề để tâm đến sự hỗn loạn phía sau, cũng chẳng buồn ngoái lại, cứ thế phóng thẳng ra cửa.\n\nKhuôn mặt đỏ gay của con bạch tuộc cố nặn ra một nụ cười lấy lòng. Nó cẩn trọng nhắc con bạch tuộc nhỏ của mình"
+                android:textColor="@color/text_dark"
+                android:textSize="17sp" />
+        </LinearLayout>
+    </ScrollView>
+
+
+    <!-- Footer Navigation Section -->
+    <LinearLayout
+        android:id="@+id/ll_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="@color/white">
+
+
+        <TextView
+            android:id="@+id/btn_first"
+            android:layout_width="45dp"
+            android:layout_height="40dp"
+            android:text="«"
+            android:textSize="20sp"
+            android:textColor="@color/primary"
+            android:gravity="center"
+            android:background="@drawable/bg_nav_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginEnd="8dp" />
+
+
+        <TextView
+            android:id="@+id/btn_prev"
+            android:layout_width="45dp"
+            android:layout_height="40dp"
+            android:text="‹"
+            android:textSize="22sp"
+            android:textColor="@color/primary"
+            android:gravity="center"
+            android:background="@drawable/bg_nav_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginEnd="8dp" />
+
+
+        <LinearLayout
+            android:id="@+id/btn_select_chapter"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_spinner_rounded"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginHorizontal="8dp">
+
+
+            <TextView
+                android:id="@+id/tv_current_chapter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginEnd="6dp" />
+
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_chevron_down"
+                app:tint="@color/black" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/btn_next"
+            android:layout_width="45dp"
+            android:layout_height="40dp"
+            android:text="›"
+            android:textSize="22sp"
+            android:textColor="@color/primary"
+            android:gravity="center"
+            android:background="@drawable/bg_nav_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginStart="8dp" />
+
+
+        <TextView
+            android:id="@+id/btn_last"
+            android:layout_width="45dp"
+            android:layout_height="40dp"
+            android:text="»"
+            android:textSize="20sp"
+            android:textColor="@color/primary"
+            android:gravity="center"
+            android:background="@drawable/bg_nav_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginStart="8dp" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+
+

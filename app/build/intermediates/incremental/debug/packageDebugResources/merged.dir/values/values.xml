@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="draft_yellow">#FFF9C4</color>
+    <color name="error">#C90000</color>
+    <color name="gray_bg">#F5F5F5</color>
+    <color name="placeholder">#8B8B8B</color>
+    <color name="primary">#D9A441</color>
+    <color name="primary_hover">#D9D9A4</color>
+    <color name="primary_transparent_25">#40D9A441</color>
+    <color name="published_yellow">#FFB300</color>
+    <color name="text_dark">#333333</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <string name="added_to_collection">Đã thêm vào bộ sưu tập</string>
+    <string name="app_name">DocSachApp</string>
+    <string name="follow_author">Theo dõi tác giả</string>
+    <string name="follow_book">Theo dõi truyện</string>
+    <string name="following">Đang theo dõi</string>
+    <string name="text_chapter_limit">&lt;</string>
+    <string name="text_chapter_limit1">| &lt;</string>
+    <string name="text_chapter_limit2">></string>
+    <string name="text_chapter_limit3">> |</string>
+    <string name="title_admin">Admin</string>
+    <string name="title_home">Trang chủ</string>
+    <string name="title_library">Thư viện</string>
+    <string name="title_search">Tìm kiếm</string>
+    <string name="unfollow_book">Bỏ theo dõi truyện</string>
+    <string name="your_rating">Đánh giá của bạn</string>
+    <style name="Theme.DocSachApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        
+        <item name="colorError">@color/error</item>
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+    </style>
+    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconTint">@color/bottom_nav_color</item>
+        <item name="itemTextColor">@color/bottom_nav_color</item>
+    </style>
+</resources>

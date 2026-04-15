@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:title="Home"
+        android:icon="@android:drawable/ic_menu_today" /> <!-- Thay bằng icon Home của bạn -->
+    <item
+        android:id="@+id/nav_search"
+        android:title="Search"
+        android:icon="@android:drawable/ic_menu_search" />
+    <item
+        android:id="@+id/nav_list"
+        android:title="List"
+        android:icon="@android:drawable/ic_menu_sort_by_size" />
+    <item
+        android:id="@+id/nav_write"
+        android:title="Write"
+        android:icon="@android:drawable/ic_menu_edit" />
+    <item
+        android:id="@+id/nav_profile"
+        android:title="Profile"
+        android:icon="@android:drawable/ic_menu_info_details" /> <!-- Thay bằng icon Profile của bạn -->
+</menu>

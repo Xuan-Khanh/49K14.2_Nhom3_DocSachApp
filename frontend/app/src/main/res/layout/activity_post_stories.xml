@@ -43,6 +43,6 @@
         android:layout_height="match_parent"
         android:paddingHorizontal="16dp"
         android:clipToPadding="false"
-        tools:listitem="@layout/item_recently_read" />
+        tools:listitem="@layout/item_story_vertical" />
 
 </LinearLayout>
