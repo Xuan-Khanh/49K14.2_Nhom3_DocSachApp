@@ -105,7 +105,7 @@ class NguoiDungNgoanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NguoiDung
-        fields = ['id', 'username', 'avatar']
+        fields = ['id', 'username', 'avatar', 'mo_ta']
 
 
 # =============================================

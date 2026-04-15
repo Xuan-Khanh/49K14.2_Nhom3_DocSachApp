@@ -33,7 +33,7 @@ from .models import (
 )
 from .serializers import (
     DangKySerializer, DangNhapSerializer,
-    NguoiDungSerializer, NguoiDungCapNhatSerializer,
+    NguoiDungSerializer, NguoiDungCapNhatSerializer, NguoiDungNgoanSerializer,
     TruyenSerializer, ChuongSerializer, ChuongNgoanSerializer,
     BinhLuanSerializer, DanhGiaSerializer,
     TheoDoiTruyenSerializer,
@@ -181,7 +181,53 @@ class UserDetailView(APIView):
 
         data = serializer.data
         data['truyen_da_dang'] = truyen_serializer.data
+
+        # Add is_following flag if user is authenticated
+        data['is_following'] = False
+        if request.user.is_authenticated:
+            try:
+                data['is_following'] = TheoDoiNguoiDung.objects.filter(
+                    nguoi_theo_doi=request.user.nguoidung,
+                    nguoi_duoc_theo_doi=profile
+                ).exists()
+            except Exception:
+                pass
+
         return Response(data)
+
+class FollowerListView(APIView):
+    """
+    GET /api/users/{id}/followers
+    Lấy danh sách người đang theo dõi user này
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request, pk):
+        try:
+            profile = NguoiDung.objects.get(pk=pk)
+        except NguoiDung.DoesNotExist:
+            return Response({"error": "Không tìm thấy người dùng."}, status=404)
+        
+        followers = [td.nguoi_theo_doi for td in profile.nguoi_theo_doi_list.select_related('nguoi_theo_doi')]
+        serializer = NguoiDungNgoanSerializer(followers, many=True)
+        return Response(serializer.data)
+
+class FollowingListView(APIView):
+    """
+    GET /api/users/{id}/following
+    Lấy danh sách người mà user này đang theo dõi
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request, pk):
+        try:
+            profile = NguoiDung.objects.get(pk=pk)
+        except NguoiDung.DoesNotExist:
+            return Response({"error": "Không tìm thấy người dùng."}, status=404)
+        
+        following = [td.nguoi_duoc_theo_doi for td in profile.dang_theo_doi.select_related('nguoi_duoc_theo_doi')]
+        serializer = NguoiDungNgoanSerializer(following, many=True)
+        return Response(serializer.data)
 
 
 class FollowUserView(APIView):

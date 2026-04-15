@@ -1,10 +1,10 @@
 package com.example.docsachapp;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.docsachapp.adapter.StorySearchAdapter;
 import com.example.docsachapp.api.RetrofitClient;
+import com.example.docsachapp.api.SessionManager;
 import com.example.docsachapp.model.UserProfile;
 import com.google.android.material.button.MaterialButton;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -30,6 +31,7 @@ import retrofit2.Response;
 public class AuthorProfileActivity extends AppCompatActivity {
     private boolean isFollowing = false;
     private int userId;
+    private SessionManager sessionManager;
     
     private RoundedImageView ivAvatar;
     private TextView tvStoryCount, tvFollowerCount, tvFollowingCount;
@@ -42,6 +44,7 @@ public class AuthorProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_author_profile);
 
+        sessionManager = new SessionManager(this);
         userId = getIntent().getIntExtra("USER_ID", -1);
         if (userId == -1) {
             finish();
@@ -70,11 +73,11 @@ public class AuthorProfileActivity extends AppCompatActivity {
 
         btnFollowAuthor.setOnClickListener(v -> toggleFollow());
 
-        android.widget.LinearLayout llFollowers = findViewById(R.id.ll_followers);
-        android.widget.LinearLayout llFollowing = findViewById(R.id.ll_following);
+        LinearLayout llFollowers = findViewById(R.id.ll_followers);
+        LinearLayout llFollowing = findViewById(R.id.ll_following);
 
         llFollowers.setOnClickListener(v -> {
-            android.content.Intent intent = new android.content.Intent(AuthorProfileActivity.this, FollowListActivity.class);
+            Intent intent = new Intent(AuthorProfileActivity.this, FollowListActivity.class);
             intent.putExtra("USER_ID", userId);
             intent.putExtra("USERNAME", tvUsername.getText().toString());
             intent.putExtra("TAB_INITIAL", 0); // 0 for followers
@@ -82,7 +85,7 @@ public class AuthorProfileActivity extends AppCompatActivity {
         });
 
         llFollowing.setOnClickListener(v -> {
-            android.content.Intent intent = new android.content.Intent(AuthorProfileActivity.this, FollowListActivity.class);
+            Intent intent = new Intent(AuthorProfileActivity.this, FollowListActivity.class);
             intent.putExtra("USER_ID", userId);
             intent.putExtra("USERNAME", tvUsername.getText().toString());
             intent.putExtra("TAB_INITIAL", 1); // 1 for following
@@ -91,7 +94,10 @@ public class AuthorProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserProfile() {
-        RetrofitClient.getApi().getPublicProfile(userId).enqueue(new Callback<UserProfile>() {
+        // Nếu đã đăng nhập, truyền token để biết mình có đang follow người này không
+        String authHeader = sessionManager.getAuthHeader();
+        
+        RetrofitClient.getApi().getPublicProfile(userId, authHeader).enqueue(new Callback<UserProfile>() {
             @Override
             public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -101,7 +107,7 @@ public class AuthorProfileActivity extends AppCompatActivity {
                     tvStoryCount.setText(String.valueOf(profile.getStoryCount()));
                     tvFollowerCount.setText(String.valueOf(profile.getFollowerCount()));
                     tvFollowingCount.setText(String.valueOf(profile.getFollowingCount()));
-                    tvBio.setText(profile.getBio());
+                    tvBio.setText(profile.getBio() == null || profile.getBio().isEmpty() ? "Chưa có mô tả" : profile.getBio());
 
                     if (profile.getAvatar() != null && !profile.getAvatar().isEmpty()) {
                         String fullUrl = profile.getAvatar().startsWith("http") ? profile.getAvatar() 
@@ -130,10 +136,15 @@ public class AuthorProfileActivity extends AppCompatActivity {
     }
 
     private void toggleFollow() {
-        SharedPreferences prefs = getSharedPreferences("AuthPrefs", Context.MODE_PRIVATE);
-        String token = prefs.getString("token", "");
-        if (token.isEmpty()) {
+        String authHeader = sessionManager.getAuthHeader();
+        if (authHeader == null) {
             Toast.makeText(this, "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Không cho tự follow chính mình
+        if (userId == sessionManager.getUserId()) {
+            Toast.makeText(this, "Bạn không thể theo dõi chính mình", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -141,13 +152,12 @@ public class AuthorProfileActivity extends AppCompatActivity {
         body.put("following_id", userId);
 
         if (isFollowing) {
-            RetrofitClient.getApi().unfollowUser("Token " + token, body).enqueue(new Callback<Map<String, Object>>() {
+            RetrofitClient.getApi().unfollowUser(authHeader, body).enqueue(new Callback<Map<String, Object>>() {
                 @Override
                 public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                     if (response.isSuccessful()) {
                         isFollowing = false;
                         updateFollowButtonUI();
-                        // Trừ một follow (tối thiểu 0)
                         int currentCount = Integer.parseInt(tvFollowerCount.getText().toString());
                         tvFollowerCount.setText(String.valueOf(Math.max(0, currentCount - 1)));
                     } else {
@@ -158,7 +168,7 @@ public class AuthorProfileActivity extends AppCompatActivity {
                 public void onFailure(Call<Map<String, Object>> call, Throwable t) { }
             });
         } else {
-            RetrofitClient.getApi().followUser("Token " + token, body).enqueue(new Callback<Map<String, Object>>() {
+            RetrofitClient.getApi().followUser(authHeader, body).enqueue(new Callback<Map<String, Object>>() {
                 @Override
                 public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                     if (response.isSuccessful()) {

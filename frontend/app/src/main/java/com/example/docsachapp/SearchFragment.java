@@ -228,7 +228,9 @@ public class SearchFragment extends Fragment {
         if (!data.isEmpty()) {
             recentSearches.addAll(Arrays.asList(data.split(",")));
         }
-        recentAdapter.updateData(recentSearches);
+        if (recentAdapter != null) {
+            recentAdapter.updateData(recentSearches);
+        }
     }
 
     private void saveRecentSearches() {
@@ -249,7 +251,9 @@ public class SearchFragment extends Fragment {
             recentSearches.remove(10);
         }
         saveRecentSearches();
-        recentAdapter.updateData(recentSearches);
+        if (recentAdapter != null) {
+            recentAdapter.updateData(recentSearches);
+        }
     }
 
     private void loadGenres() {
@@ -269,7 +273,6 @@ public class SearchFragment extends Fragment {
         cgCollapsed.removeAllViews();
         cgExpanded.removeAllViews();
         
-        // Define fallback tags if API only provides a few
         if (genres.isEmpty()) {
             return;
         }
@@ -277,17 +280,13 @@ public class SearchFragment extends Fragment {
         for (int i = 0; i < genres.size(); i++) {
             Story.Genre genre = genres.get(i);
             
-            // Collapsed only shows first 5
             if (i < 5) {
                 Chip chipCol = createChip(genre);
                 cgCollapsed.addView(chipCol);
             }
             
-            // Expanded shows all
             Chip chipExp = createChip(genre);
             cgExpanded.addView(chipExp);
-            
-            // Removed the default load for the first category here
         }
     }
 
@@ -296,9 +295,8 @@ public class SearchFragment extends Fragment {
         chip.setText(genre.getName());
         chip.setCheckable(true);
         chip.setClickable(true);
-        // TBD: customize colors for active state
         chip.setOnClickListener(v -> {
-            showState(llExploreView); // Hide expanded menu if it was open
+            showState(llExploreView);
             loadExploreStories(genre.getId());
         });
         return chip;
@@ -311,7 +309,9 @@ public class SearchFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     exploreList.clear();
                     exploreList.addAll(response.body());
-                    exploreAdapter.notifyDataSetChanged();
+                    if (exploreAdapter != null) {
+                        exploreAdapter.notifyDataSetChanged();
+                    }
                     tvCategoryStoryCount.setText(exploreList.size() + " Stories");
                 }
             }
@@ -339,8 +339,8 @@ public class SearchFragment extends Fragment {
                         searchUsersList.addAll(response.body().getUsers());
                     }
                     
-                    storiesResultAdapter.notifyDataSetChanged();
-                    usersResultAdapter.notifyDataSetChanged();
+                    if (storiesResultAdapter != null) storiesResultAdapter.notifyDataSetChanged();
+                    if (usersResultAdapter != null) usersResultAdapter.notifyDataSetChanged();
                 }
             }
             @Override

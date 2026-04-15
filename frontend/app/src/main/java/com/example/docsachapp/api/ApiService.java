@@ -40,7 +40,7 @@ public interface ApiService {
     Call<Map<String, Object>> updateUserProfile(@Header("Authorization") String authToken, @Body Map<String, String> body);
 
     @GET("users/{id}")
-    Call<UserProfile> getPublicProfile(@Path("id") int userId);
+    Call<UserProfile> getPublicProfile(@Path("id") int userId, @Header("Authorization") String authToken);
 
     @POST("users/follow")
     Call<java.util.Map<String, Object>> followUser(@Header("Authorization") String authToken, @Body java.util.Map<String, Integer> body);
@@ -49,10 +49,10 @@ public interface ApiService {
     Call<java.util.Map<String, Object>> unfollowUser(@Header("Authorization") String authToken, @Body java.util.Map<String, Integer> body);
 
     @GET("users/{id}/followers")
-    Call<java.util.List<com.example.docsachapp.model.UserSearchItem>> getFollowers(@Path("id") int userId);
+    Call<java.util.List<com.example.docsachapp.model.UserSearchItem>> getFollowers(@Path("id") int userId, @Header("Authorization") String authToken);
 
     @GET("users/{id}/following")
-    Call<java.util.List<com.example.docsachapp.model.UserSearchItem>> getFollowing(@Path("id") int userId);
+    Call<java.util.List<com.example.docsachapp.model.UserSearchItem>> getFollowing(@Path("id") int userId, @Header("Authorization") String authToken);
 
     // ==================== TRUYỆN ====================
 
