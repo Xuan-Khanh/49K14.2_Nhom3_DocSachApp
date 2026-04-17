@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -36,9 +37,10 @@ public class BookDetailsActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private boolean isFollowing = false;
     
-    private TextView tvTitle, tvAuthor, tvDescription, tvRating;
+    private TextView tvTitle, tvAuthor, tvDescription, tvRating, tvRatingCount;
     private RoundedImageView ivCover, ivAuthorAvatar;
     private MaterialButton btnFollow;
+    private ImageView[] stars = new ImageView[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,6 @@ public class BookDetailsActivity extends AppCompatActivity {
 
         initViews();
         loadStoryDetails();
-        // checkFollowStatus(); // Có thể bỏ qua vì đã lấy từ loadStoryDetails
     }
 
     private void initViews() {
@@ -63,9 +64,23 @@ public class BookDetailsActivity extends AppCompatActivity {
         tvAuthor = findViewById(R.id.tv_author);
         tvDescription = findViewById(R.id.tv_description);
         tvRating = findViewById(R.id.tv_rating_score);
+        tvRatingCount = findViewById(R.id.tv_rating_count);
         ivCover = findViewById(R.id.iv_book_cover);
         ivAuthorAvatar = findViewById(R.id.iv_author_avatar);
         btnFollow = findViewById(R.id.btn_follow_book);
+        
+        // Ánh xạ 5 ngôi sao
+        stars[0] = findViewById(R.id.iv_star1);
+        stars[1] = findViewById(R.id.iv_star2);
+        stars[2] = findViewById(R.id.iv_star3);
+        stars[3] = findViewById(R.id.iv_star4);
+        stars[4] = findViewById(R.id.iv_star5);
+
+        // Thiết lập sự kiện click cho từng ngôi sao
+        for (int i = 0; i < 5; i++) {
+            final int score = i + 1;
+            stars[i].setOnClickListener(v -> handleRatingClick(score));
+        }
         
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         
@@ -97,6 +112,50 @@ public class BookDetailsActivity extends AppCompatActivity {
         btnFollow.setOnClickListener(v -> toggleFollow());
     }
 
+    private void handleRatingClick(int score) {
+        String token = sessionManager.getAuthHeader();
+        if (token == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để đánh giá", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        updateStarsUI(score);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("story_id", storyId);
+        body.put("rating", score);
+
+        RetrofitClient.getApi().postRating(token, body).enqueue(new Callback<Map<String, Object>>() {
+            @Override
+            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(BookDetailsActivity.this, "Đánh giá thành công!", Toast.LENGTH_SHORT).show();
+                    loadStoryDetails();
+                } else {
+                    Log.e("API_ERROR", "Code: " + response.code());
+                    Toast.makeText(BookDetailsActivity.this, "Lỗi đánh giá: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                Toast.makeText(BookDetailsActivity.this, "Lỗi kết nối server", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateStarsUI(int score) {
+        for (int i = 0; i < 5; i++) {
+            if (i < score) {
+                stars[i].setImageResource(android.R.drawable.btn_star_big_on);
+                stars[i].setColorFilter(ContextCompat.getColor(this, R.color.published_yellow));
+            } else {
+                stars[i].setImageResource(android.R.drawable.btn_star_big_off);
+                stars[i].setColorFilter(ContextCompat.getColor(this, R.color.placeholder));
+            }
+        }
+    }
+
     private void toggleFollow() {
         String token = sessionManager.getAuthHeader();
         if (token == null) {
@@ -115,13 +174,11 @@ public class BookDetailsActivity extends AppCompatActivity {
                         isFollowing = true;
                         updateFollowButtonUI();
                         Toast.makeText(BookDetailsActivity.this, "Đã theo dõi truyện", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(BookDetailsActivity.this, "Lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
                     }
                 }
                 @Override
                 public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                    Toast.makeText(BookDetailsActivity.this, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BookDetailsActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -132,13 +189,11 @@ public class BookDetailsActivity extends AppCompatActivity {
                         isFollowing = false;
                         updateFollowButtonUI();
                         Toast.makeText(BookDetailsActivity.this, "Đã bỏ theo dõi", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(BookDetailsActivity.this, "Lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
                     }
                 }
                 @Override
                 public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                    Toast.makeText(BookDetailsActivity.this, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BookDetailsActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -192,7 +247,10 @@ public class BookDetailsActivity extends AppCompatActivity {
                     }
                 }
             }
-            @Override public void onFailure(Call<List<Collection>> call, Throwable t) {}
+            @Override
+            public void onFailure(Call<List<Collection>> call, Throwable t) {
+                Toast.makeText(BookDetailsActivity.this, "Lỗi tải bộ sưu tập", Toast.LENGTH_SHORT).show();
+            }
         });
 
         dialogView.findViewById(R.id.tv_done).setOnClickListener(v -> {
@@ -212,7 +270,10 @@ public class BookDetailsActivity extends AppCompatActivity {
                         bottomSheetDialog.dismiss();
                     }
                 }
-                @Override public void onFailure(Call<Map<String, Object>> call, Throwable t) {}
+                @Override
+                public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                    Toast.makeText(BookDetailsActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                }
             });
         });
         bottomSheetDialog.show();
@@ -225,14 +286,21 @@ public class BookDetailsActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Story story = response.body();
                     authorId = story.getAuthor().getId();
-                    // Cập nhật trạng thái theo dõi từ dữ liệu Story
                     isFollowing = story.isFollowing();
                     updateFollowButtonUI();
+                    
+                    tvRating.setText(String.format("%.1f/5.0", story.getRating()));
+                    tvRatingCount.setText(story.getTotalRatings() + " người đánh giá");
+                    
+                    updateStarsUI(Math.round(story.getRating()));
+                    
                     displayStory(story);
                 }
             }
             @Override
-            public void onFailure(Call<Story> call, Throwable t) {}
+            public void onFailure(Call<Story> call, Throwable t) {
+                Toast.makeText(BookDetailsActivity.this, "Lỗi tải thông tin truyện", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -240,7 +308,6 @@ public class BookDetailsActivity extends AppCompatActivity {
         tvTitle.setText(story.getTitle());
         tvAuthor.setText(story.getAuthorName());
         tvDescription.setText(story.getDescription());
-        tvRating.setText(String.valueOf(story.getRating()));
         
         Glide.with(this).load(story.getCoverUrl()).placeholder(R.drawable.biatruyen).into(ivCover);
         if (ivAuthorAvatar != null && story.getAuthor().getAvatar() != null) {

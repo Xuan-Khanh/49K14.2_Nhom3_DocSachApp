@@ -177,21 +177,36 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFC107"/>
-                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFC107"/>
-                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFC107"/>
-                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFC107"/>
-                    <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/btn_star_big_off" app:tint="#D3D3D3"/>
+                    <ImageView android:id="@+id/iv_star1" android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFC107" android:clickable="true" android:focusable="true"/>
+                    <ImageView android:id="@+id/iv_star2" android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFC107" android:clickable="true" android:focusable="true"/>
+                    <ImageView android:id="@+id/iv_star3" android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFC107" android:clickable="true" android:focusable="true"/>
+                    <ImageView android:id="@+id/iv_star4" android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFC107" android:clickable="true" android:focusable="true"/>
+                    <ImageView android:id="@+id/iv_star5" android:layout_width="32dp" android:layout_height="32dp" android:src="@android:drawable/btn_star_big_off" app:tint="#D3D3D3" android:clickable="true" android:focusable="true"/>
                 </LinearLayout>
-                <TextView
-                    android:id="@+id/tv_rating_score"
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4.0"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_marginStart="12dp"/>
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_rating_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4.0/5.0"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary" />
+
+                    <TextView
+                        android:id="@+id/tv_rating_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5 người đánh giá"
+                        android:textSize="12sp"
+                        android:textColor="#999999" />
+                </LinearLayout>
             </LinearLayout>
 
 

@@ -69,11 +69,9 @@ public interface ApiService {
     @GET("user/following-stories")
     Call<List<Story>> getFollowingStories(@Header("Authorization") String authToken);
 
-    // Khớp với path('follow/story', ...)
     @POST("follow/story")
     Call<Map<String, Object>> followStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
-    // Khớp với path('unfollow/story', ...) và dùng DELETE theo comment backend
     @HTTP(method = "DELETE", path = "unfollow/story", hasBody = true)
     Call<Map<String, Object>> unfollowStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
@@ -92,6 +90,11 @@ public interface ApiService {
 
     @POST("comments")
     Call<Comment> postComment(@Header("Authorization") String authToken, @Body Map<String, Object> body);
+
+    // ==================== ĐÁNH GIÁ ====================
+
+    @POST("ratings")
+    Call<Map<String, Object>> postRating(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     // ==================== BỘ SƯU TẬP ====================
 
