@@ -123,19 +123,19 @@ class TheLoaiSerializer(serializers.ModelSerializer):
 # =============================================
 
 class TruyenSerializer(serializers.ModelSerializer):
-    """Serializer truyện dạng danh sách (gọn)"""
+    """Serializer truyện đầy đủ và sạch sẽ"""
     tac_gia = NguoiDungNgoanSerializer(source='nguoi_dung', read_only=True)
     the_loai = TheLoaiSerializer(many=True, read_only=True)
     the_loai_ids = serializers.ListField(
         child=serializers.IntegerField(),
         write_only=True,
-        required=False,
-        help_text="Danh sách ID thể loại"
+        required=False
     )
     diem_trung_binh = serializers.SerializerMethodField()
     tong_danh_gia = serializers.SerializerMethodField()
     so_chuong = serializers.SerializerMethodField()
-    is_following = serializers.SerializerMethodField() # THÊM TRƯỜNG NÀY
+    is_following = serializers.SerializerMethodField()
+    user_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Truyen
@@ -144,7 +144,7 @@ class TruyenSerializer(serializers.ModelSerializer):
             'anh_bia', 'so_luot_doc',
             'tac_gia', 'the_loai', 'the_loai_ids',
             'diem_trung_binh', 'tong_danh_gia', 'so_chuong',
-            'is_following' # THÊM VÀO ĐÂY
+            'is_following', 'user_rating'
         ]
         read_only_fields = ['so_luot_doc']
 
@@ -158,62 +158,23 @@ class TruyenSerializer(serializers.ModelSerializer):
         return obj.chuong_list.count()
 
     def get_is_following(self, obj):
-        """Kiểm tra user hiện tại có đang theo dõi truyện này không"""
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             try:
                 profile = request.user.nguoidung
                 return TheoDoiTruyen.objects.filter(nguoi_dung=profile, truyen=obj).exists()
-            except NguoiDung.DoesNotExist:
-                return False
+            except: return False
         return False
 
-    def validate_trang_thai(self, value):
-        """Khi trang_thai = 'da_dang' hoặc 'hoan_thanh', cần có thể loại"""
-        return value
-
-    def validate(self, data):
-        # Nếu không phải bản thảo, phải có ảnh bìa
-        trang_thai = data.get('trang_thai', 'ban_thao')
-        if trang_thai != 'ban_thao':
-            # Kiểm tra instance update (PUT)
-            instance = self.instance
-            anh_bia = data.get('anh_bia') or (instance.anh_bia if instance else None)
-            if not anh_bia:
-                raise serializers.ValidationError(
-                    {"anh_bia": "Cần có ảnh bìa khi đăng truyện."}
-                )
-        return data
-
-    def create(self, validated_data):
-        the_loai_ids = validated_data.pop('the_loai_ids', [])
-        # nguoi_dung được gán từ view
-        truyen = Truyen.objects.create(**validated_data)
-        # Thêm thể loại
-        for tl_id in the_loai_ids:
+    def get_user_rating(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
             try:
-                tl = TheLoai.objects.get(id=tl_id)
-                TheLoaiTruyen.objects.create(truyen=truyen, the_loai=tl)
-            except TheLoai.DoesNotExist:
-                pass
-        return truyen
-
-    def update(self, instance, validated_data):
-        the_loai_ids = validated_data.pop('the_loai_ids', None)
-        # Cập nhật truyện
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-        # Cập nhật thể loại nếu có
-        if the_loai_ids is not None:
-            TheLoaiTruyen.objects.filter(truyen=instance).delete()
-            for tl_id in the_loai_ids:
-                try:
-                    tl = TheLoai.objects.get(id=tl_id)
-                    TheLoaiTruyen.objects.create(truyen=instance, the_loai=tl)
-                except TheLoai.DoesNotExist:
-                    pass
-        return instance
+                profile = request.user.nguoidung
+                dg = DanhGia.objects.filter(truyen=obj, nguoi_dung=profile).first()
+                return dg.sao_danh_gia if dg else 0
+            except: return 0
+        return 0
 
 
 # =============================================

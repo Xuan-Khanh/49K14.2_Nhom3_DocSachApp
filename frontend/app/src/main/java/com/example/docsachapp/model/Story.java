@@ -41,6 +41,9 @@ public class Story {
     @SerializedName("is_following")
     private boolean isFollowing;
 
+    @SerializedName("user_rating")
+    private int userRating;
+
     // Constructor mặc định cho GSON
     public Story() {}
 
@@ -63,6 +66,7 @@ public class Story {
     public int getTotalRatings() { return totalRatings; }
     public int getChaptersCount() { return chaptersCount; }
     public boolean isFollowing() { return isFollowing; }
+    public int getUserRating() { return userRating; }
 
     public String getAuthorName() {
         return author != null && author.getUsername() != null ? author.getUsername() : "Ẩn danh";

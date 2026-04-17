@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:layout_marginTop="27dp">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerVertical="true"
+            android:src="@android:drawable/ic_menu_revert"
+            app:tint="@color/black" />
+
+        <TextView
+            android:id="@+id/tv_story_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="60dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Tên Truyện"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/rl_header"
+        android:background="#EEEEEE" />
+
+    <!-- Chapters List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_chapters"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll_pagination"
+        android:layout_below="@id/divider"
+        android:paddingBottom="16dp" />
+
+    <!-- Pagination / Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/ll_pagination"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/btn_first_page"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_media_previous"
+            app:tint="#D9A441" />
+
+        <ImageView
+            android:id="@+id/btn_prev_page"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_media_play"
+            android:rotation="180"
+            app:tint="#D9A441" />
+
+        <TextView
+            android:id="@+id/tv_page_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="1/4"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btn_next_page"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_media_play"
+            app:tint="#D9A441" />
+
+        <ImageView
+            android:id="@+id/btn_last_page"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_media_next"
+            app:tint="#D9A441" />
+
+    </LinearLayout>
+
+</RelativeLayout>

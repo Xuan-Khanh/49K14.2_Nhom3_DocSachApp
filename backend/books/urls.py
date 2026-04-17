@@ -86,7 +86,6 @@ urlpatterns = [
     # GET /api/collections/{id}/stories – Lấy danh sách truyện trong một bộ sưu tập
     path('collections/<int:pk>/stories', views.TruyenInBoSuuTapView.as_view(), name='truyen-in-bosuutap'),
 
-    path('collections/add-story', views.ThemTruyenVaoBSTView.as_view(), name='collection-add-story'),
 
     # ==================== THỂ LOẠI ====================
     # GET /api/genres – Danh sách thể loại

@@ -36,6 +36,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     private int authorId = -1;
     private SessionManager sessionManager;
     private boolean isFollowing = false;
+    private int myRating = 0; // Biến lưu điểm đánh giá của chính người dùng
     
     private TextView tvTitle, tvAuthor, tvDescription, tvRating, tvRatingCount;
     private RoundedImageView ivCover, ivAuthorAvatar;
@@ -107,6 +108,14 @@ public class BookDetailsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // Thiết lập nút Mục lục
+        findViewById(R.id.btn_toc).setOnClickListener(v -> {
+            Intent intent = new Intent(BookDetailsActivity.this, TableOfContentsActivity.class);
+            intent.putExtra("STORY_ID", storyId);
+            intent.putExtra("STORY_TITLE", tvTitle.getText().toString());
+            startActivity(intent);
+        });
+
         findViewById(R.id.btn_collection).setOnClickListener(v -> showAddToCollectionDialog());
         
         btnFollow.setOnClickListener(v -> toggleFollow());
@@ -119,7 +128,9 @@ public class BookDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        updateStarsUI(score);
+        // 1. Cập nhật ngay lập tức lựa chọn của bạn
+        myRating = score;
+        updateStarsUI(myRating);
 
         Map<String, Object> body = new HashMap<>();
         body.put("story_id", storyId);
@@ -130,6 +141,7 @@ public class BookDetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(BookDetailsActivity.this, "Đánh giá thành công!", Toast.LENGTH_SHORT).show();
+                    // Tải lại để cập nhật con số trung bình 4.0/5.0, nhưng UI sao vẫn giữ theo myRating
                     loadStoryDetails();
                 } else {
                     Log.e("API_ERROR", "Code: " + response.code());
@@ -280,19 +292,32 @@ public class BookDetailsActivity extends AppCompatActivity {
     }
 
     private void loadStoryDetails() {
-        RetrofitClient.getApi().getStoryDetail(storyId).enqueue(new Callback<Story>() {
+        String token = sessionManager.getAuthHeader();
+        RetrofitClient.getApi().getStoryDetail(token, storyId).enqueue(new Callback<Story>() {
             @Override
             public void onResponse(Call<Story> call, Response<Story> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Story story = response.body();
                     authorId = story.getAuthor().getId();
                     isFollowing = story.isFollowing();
+                    
+                    // Cập nhật myRating từ server nếu có dữ liệu (>0)
+                    int serverRating = story.getUserRating();
+                    if (serverRating > 0) {
+                        myRating = serverRating;
+                    }
+                    
                     updateFollowButtonUI();
                     
                     tvRating.setText(String.format("%.1f/5.0", story.getRating()));
                     tvRatingCount.setText(story.getTotalRatings() + " người đánh giá");
                     
-                    updateStarsUI(Math.round(story.getRating()));
+                    // LOGIC HIỂN THỊ SAO VÀNG: 
+                    if (myRating > 0) {
+                        updateStarsUI(myRating);
+                    } else {
+                        updateStarsUI(Math.round(story.getRating()));
+                    }
                     
                     displayStory(story);
                 }

@@ -55,8 +55,9 @@ public interface ApiService {
     @GET("stories")
     Call<List<Story>> searchStories(@Query("search") String keyword);
 
+    // Cập nhật ở đây: Thêm Auth Header để lấy user_rating
     @GET("stories/{id}")
-    Call<Story> getStoryDetail(@Path("id") int id);
+    Call<Story> getStoryDetail(@Header("Authorization") String authToken, @Path("id") int id);
 
     @GET("stories/{id}/chapters")
     Call<List<Chapter>> getChapters(@Path("id") int storyId);
