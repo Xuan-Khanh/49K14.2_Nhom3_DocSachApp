@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- Nội dung chính cuộn được -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -134,6 +133,27 @@
 
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" />
 
+            <!-- PHẦN MỚI: BỘ SƯU TẬP CỦA TÔI -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="8dp"
+                android:text="BỘ SƯU TẬP CỦA TÔI"
+                android:textSize="12sp"
+                android:textColor="#BBBBBB" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_admin_collections"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" android:layout_marginTop="16dp"/>
+
             <!-- Section: THƯ VIỆN -->
             <TextView
                 android:layout_width="match_parent"
@@ -153,15 +173,15 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?attr/selectableItemBackground">
+
                 <ImageView
                     android:id="@+id/iv_icon_library"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="19dp"
+                    android:layout_height="17dp"
                     android:layout_centerVertical="true"
-                    android:src="@android:drawable/ic_menu_my_calendar"
-                    app:tint="#D9A441" />
+                    android:src="@drawable/ic_menu_lib"/>
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/iv_icon_library"
                     android:layout_centerVertical="true"
@@ -171,7 +191,7 @@
                     android:textColor="@color/black" />
             </RelativeLayout>
 
-            <!-- Thêm các mục ẩn để tránh lỗi code Java nếu cần -->
+            <!-- Mục ẩn cho code Java cũ -->
             <View android:id="@+id/rl_notifications" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
             <View android:id="@+id/rl_comments" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
             <View android:id="@+id/rl_logout" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>

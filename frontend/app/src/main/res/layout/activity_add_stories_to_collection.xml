@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <!-- Header Section -->
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#D9A441"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/btn_back"
+            android:layout_marginStart="24dp"
+            android:text="Chọn truyện muốn thêm"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btn_done"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/tick"
+            app:tint="@color/white"/>
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:visibility="gone" />
+
+    <!-- RecyclerView for selecting stories -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_add_stories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3"
+        tools:listitem="@layout/item_story_grid" />
+
+</LinearLayout>

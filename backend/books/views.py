@@ -833,6 +833,24 @@ class BoSuuTapListCreateView(APIView):
         return Response(BoSuuTapSerializer(bst).data, status=201)
 
 
+class UserBoSuuTapListView(APIView):
+    """
+    GET /api/users/{user_id}/collections
+    Lấy danh sách bộ sưu tập của một người dùng cụ thể.
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request, user_id):
+        try:
+            profile = NguoiDung.objects.get(pk=user_id)
+        except NguoiDung.DoesNotExist:
+            return Response({"error": "Không tìm thấy người dùng."}, status=status.HTTP_404_NOT_FOUND)
+
+        bst_list = BoSuuTap.objects.filter(nguoi_dung=profile)
+        serializer = BoSuuTapSerializer(bst_list, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
 class BoSuuTapDetailView(APIView):
     """
     GET    /api/collections/{id}  – Chi tiết BST kèm danh sách truyện
@@ -978,6 +996,24 @@ class TheLoaiListView(APIView):
 
     def get(self, request):
         the_loai_list = TheLoai.objects.all()
+        serializer = TheLoaiSerializer(the_loai_list, many=True)
+        return Response(serializer.data)
+
+
+class TruyenTheLoaiListView(APIView):
+    """
+    GET /api/stories/{story_id}/genres
+    Lấy danh sách thể loại của một truyện.
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request, story_id):
+        try:
+            truyen = Truyen.objects.get(pk=story_id)
+        except Truyen.DoesNotExist:
+            return Response({"error": "Không tìm thấy truyện."}, status=status.HTTP_404_NOT_FOUND)
+
+        the_loai_list = truyen.the_loai.all()
         serializer = TheLoaiSerializer(the_loai_list, many=True)
         return Response(serializer.data)
 

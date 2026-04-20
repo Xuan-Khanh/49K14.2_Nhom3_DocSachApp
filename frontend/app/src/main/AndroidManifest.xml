@@ -32,6 +32,7 @@
         <activity android:name=".ReadingActivity" />
         <activity android:name=".CommentsActivity" />
         <activity android:name=".CollectionDetailsActivity" />
+        <activity android:name=".AddStoriesToCollectionActivity" />
         <activity android:name=".BookCreateActivity" />
         <activity android:name=".BookCreateStep2Activity" />
         <activity android:name=".AuthorWorksActivity" />
@@ -41,4 +42,3 @@
         <activity android:name=".AuthorProfileActivity" />
     </application>
 </manifest>
-

@@ -26,8 +26,7 @@
             android:layout_height="24dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@android:drawable/ic_menu_more"
-            app:tint="@color/text_dark"/>
+            android:src="@drawable/ic_menu_lib" />
     </RelativeLayout>
 
     <ProgressBar
@@ -67,6 +66,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="8dp"
-        tools:listitem="@layout/item_story_vertical" />
+        tools:listitem="@layout/item_story_vertical_manage" />
 
 </LinearLayout>

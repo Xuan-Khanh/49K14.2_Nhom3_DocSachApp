@@ -25,6 +25,8 @@ urlpatterns = [
     path('users/follow', views.FollowUserView.as_view(), name='user-follow'),
     # DELETE /api/users/unfollow  – Bỏ theo dõi người dùng
     path('users/unfollow', views.UnfollowUserView.as_view(), name='user-unfollow'),
+    # GET /api/users/{user_id}/collections - Lấy danh sách bộ sưu tập của người dùng
+    path('users/<int:user_id>/collections', views.UserBoSuuTapListView.as_view(), name='user-collection-list'),
 
     # ==================== TRUYỆN ====================
     # GET  /api/stories           – Danh sách truyện (public, có filter)
@@ -34,6 +36,8 @@ urlpatterns = [
     # PUT    /api/stories/{id}    – Sửa truyện
     # DELETE /api/stories/{id}    – Xóa truyện
     path('stories/<int:pk>', views.TruyenDetailView.as_view(), name='story-detail'),
+    # GET /api/stories/{story_id}/genres - Lấy danh sách thể loại của một truyện
+    path('stories/<int:story_id>/genres', views.TruyenTheLoaiListView.as_view(), name='story-genre-list'),
 
     # ==================== CHƯƠNG ====================
     # GET /api/stories/{id}/chapters  – Danh sách chương của truyện

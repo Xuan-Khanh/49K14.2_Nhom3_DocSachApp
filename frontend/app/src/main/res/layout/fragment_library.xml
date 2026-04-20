@@ -41,10 +41,9 @@
 
                     <ImageView
                         android:id="@+id/btn_add_collection"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@android:drawable/ic_menu_add"
-                        app:tint="#D9A441"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/plus"
                         android:layout_marginEnd="16dp"
                         android:visibility="gone" />
 
@@ -108,14 +107,26 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
-            <ImageView
-                android:id="@+id/btn_bulk_delete"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@android:drawable/ic_menu_delete"
-                app:tint="@color/white"/>
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/btn_bulk_add"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/plus"
+                    app:tint="@color/white"
+                    android:layout_marginEnd="16dp"/>
+                <ImageView
+                    android:id="@+id/btn_bulk_delete"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_menu_delete"
+                    app:tint="@color/white"/>
+            </LinearLayout>
         </RelativeLayout>
 
         <FrameLayout

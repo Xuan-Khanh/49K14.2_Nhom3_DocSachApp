@@ -2,6 +2,7 @@ package com.example.docsachapp.model;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
+import java.util.Objects;
 
 public class Story {
 
@@ -38,10 +39,8 @@ public class Story {
     @SerializedName("so_chuong")
     private int chaptersCount;
 
-    // Constructor mặc định cho GSON
     public Story() {}
 
-    // Constructor để tạo nhanh từ lịch sử đọc
     public Story(int id, String title, String coverUrl) {
         this.id = id;
         this.title = title;
@@ -74,6 +73,20 @@ public class Story {
             }
         }
         return builder.toString();
+    }
+
+    // ✅ FIX: Thêm hàm equals để hàm remove() trong List có thể tìm thấy truyện theo ID
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Story story = (Story) o;
+        return id == story.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public static class Author {

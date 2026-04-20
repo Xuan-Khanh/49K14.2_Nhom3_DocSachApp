@@ -26,6 +26,7 @@ import com.example.docsachapp.api.RetrofitClient;
 import com.example.docsachapp.api.SessionManager;
 import com.example.docsachapp.model.Collection;
 import com.example.docsachapp.model.Story;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,8 +50,12 @@ public class LibraryFragment extends Fragment {
     private SessionManager sessionManager;
     private LinearLayout llTopBar;
     private RelativeLayout bulkActionBar;
-    private TextView tvSelectionCount, tabFollowing, tabCollections;
-    private ImageView btnAddCollection;
+    private TextView tvSelectionCount;
+    private TextView tabFollowing, tabCollections;
+    private ImageView btnAddCollection, btnMore, btnBulkAdd, btnBulkDelete;
+
+    private boolean isFollowingTab = true;
+    private int selectedCollectionId = -1; // Lưu BST được tích chọn
 
     @Nullable
     @Override
@@ -59,57 +64,60 @@ public class LibraryFragment extends Fragment {
 
         sessionManager = new SessionManager(requireContext());
 
-        // View mapping
         llTopBar = view.findViewById(R.id.ll_topbar);
         bulkActionBar = view.findViewById(R.id.bulk_action_bar);
         tvSelectionCount = view.findViewById(R.id.tv_selection_count);
         btnAddCollection = view.findViewById(R.id.btn_add_collection);
-        
+        btnMore = view.findViewById(R.id.btn_more);
+        btnBulkAdd = view.findViewById(R.id.btn_bulk_add);
+        btnBulkDelete = view.findViewById(R.id.btn_bulk_delete);
+
         tabFollowing = view.findViewById(R.id.tab_following);
         tabCollections = view.findViewById(R.id.tab_collections);
         
         rvFollowing = view.findViewById(R.id.rv_following);
         rvCollections = view.findViewById(R.id.rv_collections);
 
-        ImageView btnMore = view.findViewById(R.id.btn_more);
         ImageView btnCancelBulk = view.findViewById(R.id.btn_cancel_bulk);
-        ImageView btnBulkDelete = view.findViewById(R.id.btn_bulk_delete);
 
         setupRecyclerViews();
         setupTabListeners();
 
-        // ─── Menu 3 chấm ──────────────────────────────────────────────────────
         btnMore.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(requireContext(), btnMore);
             popup.getMenu().add("Sắp xếp truyện");
             popup.getMenu().add("Cập nhật thư viện");
             popup.setOnMenuItemClickListener(item -> {
-                if (item.getTitle().equals("Sắp xếp truyện")) {
-                    showSortDialog();
-                } else if (item.getTitle().equals("Cập nhật thư viện")) {
-                    enterSelectionMode();
-                }
+                if (item.getTitle().equals("Sắp xếp truyện")) showSortDialog();
+                else if (item.getTitle().equals("Cập nhật thư viện")) enterSelectionMode();
                 return true;
             });
             popup.show();
         });
 
-        // ─── Nút Thêm Bộ Sưu Tập ─────────────────────────────────────────────
-        btnAddCollection.setOnClickListener(v -> showCreateCollectionDialog());
-
-        // ─── Thoát chế độ chọn ────────────────────────────────────────────────
-        btnCancelBulk.setOnClickListener(v -> exitSelectionMode());
-
-        // ─── Xóa hàng loạt ────────────────────────────────────────────────────
-        btnBulkDelete.setOnClickListener(v -> {
+        btnBulkAdd.setOnClickListener(v -> {
             Set<Integer> selectedIds = followingAdapter.getSelectedStoryIds();
             if (!selectedIds.isEmpty()) {
-                showDeleteConfirmDialog(selectedIds.size());
+                showSelectCollectionBottomSheet(selectedIds);
+            } else {
+                Toast.makeText(getContext(), "Vui lòng chọn truyện trước", Toast.LENGTH_SHORT).show();
             }
         });
 
-        loadFollowingStories();
+        btnAddCollection.setOnClickListener(v -> showCreateCollectionDialog());
+        btnCancelBulk.setOnClickListener(v -> exitSelectionMode());
+        btnBulkDelete.setOnClickListener(v -> {
+            Set<Integer> selectedIds = followingAdapter.getSelectedStoryIds();
+            if (!selectedIds.isEmpty()) showDeleteConfirmDialog(selectedIds);
+        });
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isFollowingTab) loadFollowingStories(); else loadCollections();
     }
 
     private void setupRecyclerViews() {
@@ -132,91 +140,31 @@ public class LibraryFragment extends Fragment {
     }
 
     private void switchTab(boolean isFollowing) {
+        this.isFollowingTab = isFollowing;
         tabFollowing.setTextColor(getResources().getColor(isFollowing ? R.color.primary : R.color.placeholder));
         tabCollections.setTextColor(getResources().getColor(isFollowing ? R.color.placeholder : R.color.primary));
-        
         rvFollowing.setVisibility(isFollowing ? View.VISIBLE : View.GONE);
         rvCollections.setVisibility(isFollowing ? View.GONE : View.VISIBLE);
         btnAddCollection.setVisibility(isFollowing ? View.GONE : View.VISIBLE);
-        
+        btnMore.setVisibility(isFollowing ? View.VISIBLE : View.GONE);
         exitSelectionMode();
         if (isFollowing) loadFollowingStories(); else loadCollections();
     }
 
-    // ─── Popup Xóa Truyện ─────────────────────────────────────────────────────
-    private void showDeleteConfirmDialog(int count) {
-        AlertDialog dialog = new AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create();
-        View view = getLayoutInflater().inflate(R.layout.dialog_confirm_delete, null);
-        
-        TextView tvSubMessage = view.findViewById(R.id.tv_sub_message);
-        tvSubMessage.setText("Xóa " + (count < 10 ? "0" + count : count) + " truyện?");
-        
-        view.findViewById(R.id.btn_cancel).setOnClickListener(v -> dialog.dismiss());
-        view.findViewById(R.id.btn_confirm).setOnClickListener(v -> {
-            // TODO: Call API unfollow
-            Toast.makeText(getContext(), "Đã xóa thành công", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
-            exitSelectionMode();
-            loadFollowingStories();
-        });
-
-        dialog.setView(view);
-        dialog.show();
-    }
-
-    // ─── Popup Tạo Bộ Sưu Tập ────────────────────────────────────────────────
-    private void showCreateCollectionDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create();
-        View view = getLayoutInflater().inflate(R.layout.dialog_create_collection, null);
-        
-        EditText etName = view.findViewById(R.id.et_collection_name);
-        
-        view.findViewById(R.id.btn_skip).setOnClickListener(v -> dialog.dismiss());
-        view.findViewById(R.id.btn_write).setOnClickListener(v -> {
-            String name = etName.getText().toString().trim();
-            if (!name.isEmpty()) {
-                createCollectionApi(name, dialog);
-            }
-        });
-
-        dialog.setView(view);
-        dialog.show();
-    }
-
-    private void createCollectionApi(String name, AlertDialog dialog) {
-        String token = sessionManager.getAuthHeader();
-        Map<String, Object> body = new HashMap<>();
-        body.put("ten_bo_suu_tap", name);
-
-        RetrofitClient.getApi().createCollection(token, body).enqueue(new Callback<Map<String, Object>>() {
+    private void loadCollections() {
+        int userId = sessionManager.getUserId();
+        if (userId == -1) return;
+        RetrofitClient.getApi().getUserCollections(userId).enqueue(new Callback<List<Collection>>() {
             @Override
-            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Đã tạo bộ sưu tập", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                    loadCollections();
+            public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
+                if (isAdded() && response.isSuccessful() && response.body() != null) {
+                    collections.clear();
+                    collections.addAll(response.body());
+                    collectionAdapter.notifyDataSetChanged();
                 }
             }
-            @Override public void onFailure(Call<Map<String, Object>> call, Throwable t) {}
+            @Override public void onFailure(Call<List<Collection>> call, Throwable t) {}
         });
-    }
-
-    private void showSortDialog() {
-        String[] options = {"Mới cập nhật", "Tên truyện (A-Z)", "Đọc gần đây"};
-        new AlertDialog.Builder(requireContext()).setTitle("Sắp xếp theo")
-                .setItems(options, (d, i) -> Toast.makeText(getContext(), options[i], 0).show()).show();
-    }
-
-    private void enterSelectionMode() {
-        llTopBar.setVisibility(View.GONE);
-        bulkActionBar.setVisibility(View.VISIBLE);
-        followingAdapter.setSelectionMode(true);
-    }
-
-    private void exitSelectionMode() {
-        bulkActionBar.setVisibility(View.GONE);
-        llTopBar.setVisibility(View.VISIBLE);
-        followingAdapter.setSelectionMode(false);
     }
 
     private void loadFollowingStories() {
@@ -233,27 +181,151 @@ public class LibraryFragment extends Fragment {
         });
     }
 
-    private void loadCollections() {
-        String token = sessionManager.getAuthHeader();
-        if (token == null) return;
+    private void enterSelectionMode() {
+        llTopBar.setVisibility(View.GONE);
+        bulkActionBar.setVisibility(View.VISIBLE);
+        followingAdapter.setSelectionMode(true);
+        loadCollections(); 
+    }
 
-        // FIX: Gọi getBoSuuTap và nhận kết quả là List<Collection> trực tiếp
-        RetrofitClient.getApi().getBoSuuTap(token).enqueue(new Callback<List<Collection>>() {
-            @Override
-            public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
-                if (isAdded() && response.isSuccessful() && response.body() != null) {
-                    collections.clear();
-                    collections.addAll(response.body());
-                    collectionAdapter.notifyDataSetChanged();
-                }
+    private void exitSelectionMode() {
+        bulkActionBar.setVisibility(View.GONE);
+        llTopBar.setVisibility(View.VISIBLE);
+        followingAdapter.setSelectionMode(false);
+    }
+
+    private void showSelectCollectionBottomSheet(Set<Integer> storyIds) {
+        selectedCollectionId = -1; // Reset lựa chọn
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_to_collection, null);
+        
+        RecyclerView rv = dialogView.findViewById(R.id.rv_collections_select);
+        TextView btnDone = dialogView.findViewById(R.id.btn_done);
+
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecyclerView.Adapter adapterSelect = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            @NonNull @Override public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup p, int t) {
+                View v = LayoutInflater.from(p.getContext()).inflate(R.layout.item_collection_select, p, false);
+                return new RecyclerView.ViewHolder(v) {};
             }
+            @Override public void onBindViewHolder(@NonNull RecyclerView.ViewHolder h, int p) {
+                Collection col = collections.get(p);
+                ((TextView)h.itemView.findViewById(R.id.tv_collection_name)).setText(col.getName());
+                
+                View ivTick = h.itemView.findViewById(R.id.iv_tick);
+                ivTick.setVisibility(col.getId() == selectedCollectionId ? View.VISIBLE : View.GONE);
 
-            @Override
-            public void onFailure(Call<List<Collection>> call, Throwable t) {
-                if (isAdded()) {
-                    Toast.makeText(getContext(), "Lỗi tải bộ sưu tập", Toast.LENGTH_SHORT).show();
-                }
+                h.itemView.setOnClickListener(v -> {
+                    selectedCollectionId = col.getId();
+                    notifyDataSetChanged();
+                });
+            }
+            @Override public int getItemCount() { return collections.size(); }
+        };
+        rv.setAdapter(adapterSelect);
+
+        btnDone.setOnClickListener(v -> {
+            if (selectedCollectionId != -1) {
+                addStoriesToCollectionApi(selectedCollectionId, storyIds);
+                bottomSheet.dismiss();
+            } else {
+                Toast.makeText(getContext(), "Vui lòng chọn 1 bộ sưu tập", Toast.LENGTH_SHORT).show();
             }
         });
+
+        bottomSheet.setContentView(dialogView);
+        bottomSheet.show();
+    }
+
+    private void addStoriesToCollectionApi(int collectionId, Set<Integer> storyIds) {
+        String token = sessionManager.getAuthHeader();
+        for (Integer sId : storyIds) {
+            Map<String, Object> body = new HashMap<>();
+            body.put("collection_id", collectionId);
+            body.put("story_id", sId);
+            RetrofitClient.getApi().addStoryToCollection(token, body).enqueue(new Callback<Map<String, Object>>() {
+                @Override public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                    if (response.isSuccessful()) Toast.makeText(getContext(), "Đã thêm vào bộ sưu tập", Toast.LENGTH_SHORT).show();
+                }
+                @Override public void onFailure(Call<Map<String, Object>> call, Throwable t) {}
+            });
+        }
+        exitSelectionMode();
+    }
+
+    private void showDeleteConfirmDialog(Set<Integer> storyIds) {
+        int count = storyIds.size();
+        AlertDialog dialog = new AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create();
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirm_delete, null);
+        TextView tvSubMessage = dialogView.findViewById(R.id.tv_sub_message);
+        tvSubMessage.setText("Xóa " + (count < 10 ? "0" + count : count) + " truyện?");
+        
+        dialogView.findViewById(R.id.btn_cancel).setOnClickListener(v -> dialog.dismiss());
+        dialogView.findViewById(R.id.btn_confirm).setOnClickListener(v -> {
+            unfollowStoriesApi(storyIds, dialog);
+        });
+        
+        dialog.setView(dialogView); 
+        dialog.show();
+    }
+
+    private void unfollowStoriesApi(Set<Integer> storyIds, AlertDialog dialog) {
+        String token = sessionManager.getAuthHeader();
+        int total = storyIds.size();
+        final int[] successCount = {0};
+
+        for (Integer id : storyIds) {
+            Map<String, Object> body = new HashMap<>();
+            body.put("story_id", id);
+            
+            RetrofitClient.getApi().unfollowStory(token, body).enqueue(new Callback<Map<String, Object>>() {
+                @Override
+                public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                    successCount[0]++;
+                    if (successCount[0] == total) {
+                        Toast.makeText(getContext(), "Đã xóa thành công", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        exitSelectionMode();
+                        loadFollowingStories();
+                    }
+                }
+                @Override public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                    dialog.dismiss();
+                }
+            });
+        }
+    }
+
+    private void showCreateCollectionDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create();
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_create_collection, null);
+        EditText etName = dialogView.findViewById(R.id.et_collection_name);
+        dialogView.findViewById(R.id.btn_skip).setOnClickListener(v -> dialog.dismiss());
+        dialogView.findViewById(R.id.btn_write).setOnClickListener(v -> {
+            String name = etName.getText().toString().trim();
+            if (!name.isEmpty()) createCollectionApi(name, dialog);
+        });
+        dialog.setView(dialogView); dialog.show();
+    }
+
+    private void createCollectionApi(String name, AlertDialog dialog) {
+        String token = sessionManager.getAuthHeader();
+        Map<String, Object> body = new HashMap<>();
+        body.put("ten_bo_suu_tap", name);
+        RetrofitClient.getApi().createCollection(token, body).enqueue(new Callback<Map<String, Object>>() {
+            @Override public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Đã tạo bộ sưu tập", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss(); loadCollections();
+                }
+            }
+            @Override public void onFailure(Call<Map<String, Object>> call, Throwable t) {}
+        });
+    }
+
+    private void showSortDialog() {
+        String[] options = {"Mới cập nhật", "Tên truyện (A-Z)", "Đọc gần đây"};
+        new AlertDialog.Builder(requireContext()).setTitle("Sắp xếp theo")
+                .setItems(options, (d, i) -> Toast.makeText(getContext(), options[i], 0).show()).show();
     }
 }

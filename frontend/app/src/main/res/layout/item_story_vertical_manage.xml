@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:padding="12dp"
     android:clickable="true"
     android:focusable="true"
@@ -18,22 +17,39 @@
         app:riv_corner_radius="6dp" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:layout_marginStart="12dp">
+        android:layout_toEndOf="@id/iv_cover"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tên truyện"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:maxLines="2"
-            android:ellipsize="end"/>
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/btn_item_more"
+                android:text="Tên truyện"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+
+            <ImageView
+                android:id="@+id/btn_item_more"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_menu_lib"
+                android:padding="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_author"
@@ -67,36 +83,26 @@
                 android:layout_marginStart="8dp"/>
         </LinearLayout>
 
-        <!-- Thể loại dạng Chip -->
+        <!-- Thể loại dạng thẻ bo tròn (Chip) -->
         <LinearLayout
             android:id="@+id/layout_genres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="8dp">
-
+            <!-- Thẻ mẫu -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thể loại"
-                android:textSize="11sp"
+                android:text="Tag"
+                android:textSize="10sp"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
                 android:background="@drawable/bg_chip_unselected"
                 android:textColor="#999999" />
-
-            <TextView
-                android:id="@+id/tv_more_genres"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="+ 1 thẻ khác"
-                android:textSize="12sp"
-                android:textColor="#999999"
-                android:visibility="gone"/>
         </LinearLayout>
 
-        <!-- Giữ lại để code Java không lỗi, nhưng ẩn đi -->
+        <!-- Ẩn TextView cũ đi để tránh lỗi Java -->
         <TextView android:id="@+id/tv_genres" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

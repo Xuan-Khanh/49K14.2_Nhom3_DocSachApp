@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.example.docsachapp.api.RetrofitClient;
 import com.example.docsachapp.model.Story;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import retrofit2.Call;
@@ -26,6 +28,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     
     private TextView tvTitle, tvAuthor, tvDescription, tvRating;
     private RoundedImageView ivCover, ivAuthorAvatar;
+    private ChipGroup cgGenres;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         tvRating = findViewById(R.id.tv_rating_score);
         ivCover = findViewById(R.id.iv_book_cover);
         ivAuthorAvatar = findViewById(R.id.iv_author_avatar);
+        cgGenres = findViewById(R.id.cg_genres); // Ánh xạ ChipGroup thể loại
         
         ImageView btnBack = findViewById(R.id.btn_back);
         btnBack.setOnClickListener(v -> finish());
@@ -85,7 +89,7 @@ public class BookDetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Story> call, Response<Story> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Story story = response.body();
-                    authorId = story.getAuthor().getId(); // Lưu authorId để dùng khi click
+                    if (story.getAuthor() != null) authorId = story.getAuthor().getId();
                     displayStory(story);
                 }
             }
@@ -101,10 +105,25 @@ public class BookDetailsActivity extends AppCompatActivity {
         tvRating.setText(String.valueOf(story.getRating()));
         
         Glide.with(this).load(story.getCoverUrl()).placeholder(R.drawable.biatruyen).into(ivCover);
-        if (ivAuthorAvatar != null && story.getAuthor().getAvatar() != null) {
+        if (ivAuthorAvatar != null && story.getAuthor() != null && story.getAuthor().getAvatar() != null) {
             Glide.with(this).load(story.getAuthor().getAvatar())
                     .placeholder(android.R.drawable.ic_menu_gallery)
                     .circleCrop().into(ivAuthorAvatar);
+        }
+
+        // Đổ dữ liệu Thể loại vào ChipGroup
+        if (cgGenres != null && story.getGenres() != null) {
+            cgGenres.removeAllViews(); // Xóa các chip cũ
+            for (Story.Genre genre : story.getGenres()) {
+                Chip chip = new Chip(this);
+                chip.setText(genre.getName());
+                chip.setChipBackgroundColorResource(R.color.gray_bg); // Màu nền xám nhạt
+                chip.setTextColor(ContextCompat.getColor(this, R.color.text_dark));
+                chip.setTextSize(12);
+                chip.setClickable(true);
+                // Bạn có thể thêm sự kiện click vào chip để tìm kiếm theo thể loại ở đây
+                cgGenres.addView(chip);
+            }
         }
     }
 }

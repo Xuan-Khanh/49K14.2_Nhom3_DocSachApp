@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_profile_card"
+    android:paddingTop="24dp"
+    android:paddingBottom="16dp">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thêm vào"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/btn_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Xong"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#D9A441"
+            android:padding="4dp"
+            android:clickable="true"
+            android:focusable="true"/>
+    </RelativeLayout>
+
+    <!-- Danh sách - Bỏ maxHeight không hợp lệ -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_collections_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp" />
+
+</LinearLayout>

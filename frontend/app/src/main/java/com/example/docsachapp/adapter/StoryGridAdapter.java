@@ -27,6 +27,7 @@ public class StoryGridAdapter extends RecyclerView.Adapter<StoryGridAdapter.View
     private Context context;
     private boolean isSelectionMode = false;
     private Set<Integer> selectedStoryIds = new HashSet<>();
+    private Set<Integer> alreadyAddedIds = new HashSet<>();
     private OnSelectionChangeListener selectionChangeListener;
 
     public interface OnSelectionChangeListener {
@@ -41,6 +42,11 @@ public class StoryGridAdapter extends RecyclerView.Adapter<StoryGridAdapter.View
     public void setSelectionMode(boolean isMode) {
         this.isSelectionMode = isMode;
         if (!isMode) selectedStoryIds.clear();
+        notifyDataSetChanged();
+    }
+
+    public void setAlreadyAddedIds(Set<Integer> ids) {
+        this.alreadyAddedIds = ids;
         notifyDataSetChanged();
     }
 
@@ -69,8 +75,11 @@ public class StoryGridAdapter extends RecyclerView.Adapter<StoryGridAdapter.View
                 .placeholder(R.drawable.image5)
                 .into(holder.ivCover);
 
-        // Hiển thị/Ẩn dấu tick chọn
-        if (isSelectionMode && selectedStoryIds.contains(story.getId())) {
+        // Hiển thị/Ẩn dấu tick chọn và lớp phủ tối
+        boolean isSelected = selectedStoryIds.contains(story.getId());
+        boolean isAlreadyAdded = alreadyAddedIds.contains(story.getId());
+
+        if (isSelectionMode && (isSelected || isAlreadyAdded)) {
             holder.ivCheck.setVisibility(View.VISIBLE);
         } else {
             holder.ivCheck.setVisibility(View.GONE);
@@ -78,6 +87,9 @@ public class StoryGridAdapter extends RecyclerView.Adapter<StoryGridAdapter.View
 
         holder.itemView.setOnClickListener(v -> {
             if (isSelectionMode) {
+                // Nếu truyện đã được thêm rồi thì không cho chọn lại
+                if (isAlreadyAdded) return;
+
                 // Toggle chọn
                 if (selectedStoryIds.contains(story.getId())) {
                     selectedStoryIds.remove(story.getId());
