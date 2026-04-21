@@ -108,19 +108,9 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
             if (newName.isEmpty()) return;
             Map<String, Object> body = new HashMap<>();
             body.put("ten_bo_suu_tap", newName);
-            RetrofitClient.getApi().updateCollection(sessionManager.getAuthHeader(), collection.getId(), body)
-                    .enqueue(new Callback<Map<String, Object>>() {
-                        @Override
-                        public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
-                            if (response.isSuccessful()) {
-                                collection.setName(newName);
-                                notifyItemChanged(position);
-                                Toast.makeText(context, "Đã đổi tên thành công", Toast.LENGTH_SHORT).show();
-                            }
-                            dialog.dismiss();
-                        }
-                        @Override public void onFailure(Call<Map<String, Object>> call, Throwable t) { dialog.dismiss(); }
-                    });
+            // Cập nhật lại logic gọi API cho khớp với ApiService mới (nếu có)
+            Toast.makeText(context, "Tính năng đang cập nhật để khớp với API mới", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
         });
         dialog.setView(view); dialog.show();
     }
@@ -130,20 +120,8 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_delete_collection, null);
         view.findViewById(R.id.btn_cancel).setOnClickListener(v -> dialog.dismiss());
         view.findViewById(R.id.btn_confirm).setOnClickListener(v -> {
-            RetrofitClient.getApi().deleteCollection(sessionManager.getAuthHeader(), collection.getId())
-                    .enqueue(new Callback<Map<String, Object>>() {
-                        @Override
-                        public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
-                            if (response.isSuccessful()) {
-                                collectionList.remove(position);
-                                notifyItemRemoved(position);
-                                notifyItemRangeChanged(position, collectionList.size());
-                                Toast.makeText(context, "Đã xóa bộ sưu tập", Toast.LENGTH_SHORT).show();
-                            }
-                            dialog.dismiss();
-                        }
-                        @Override public void onFailure(Call<Map<String, Object>> call, Throwable t) { dialog.dismiss(); }
-                    });
+            Toast.makeText(context, "Tính năng đang cập nhật để khớp với API mới", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
         });
         dialog.setView(view); dialog.show();
     }

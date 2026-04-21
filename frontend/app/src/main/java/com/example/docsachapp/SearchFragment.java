@@ -85,7 +85,9 @@ public class SearchFragment extends Fragment {
     private void callSearchApi(String keyword) {
         if (!isAdded()) return;
 
-        RetrofitClient.getApi().searchStories(keyword).enqueue(new Callback<List<Story>>() {
+        // ✅ FIX: Đổi searchStories thành getStories để khớp với ApiService.java
+        // getStories(search, theLoaiId, trangThai, userId)
+        RetrofitClient.getApi().getStories(keyword, null, null, null).enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (response.isSuccessful() && response.body() != null) {

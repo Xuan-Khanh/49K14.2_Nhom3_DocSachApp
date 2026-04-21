@@ -262,10 +262,22 @@ class TruyenListCreateView(APIView):
     parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def get(self, request):
-        # Mặc định chỉ hiển thị truyện đã đăng cho public
-        queryset = Truyen.objects.filter(trang_thai='da_dang')
+        queryset = Truyen.objects.all()
 
-        # Filter theo thể loại
+        # Lọc theo người dùng (tác giả)
+        nguoi_dung_id = request.query_params.get('nguoi_dung_id')
+        if nguoi_dung_id:
+            queryset = queryset.filter(nguoi_dung_id=nguoi_dung_id)
+
+        # Lọc theo trạng thái. Nếu không có trạng thái và không chỉ định tác giả,
+        # mặc định chỉ hiển thị truyện đã đăng (public).
+        trang_thai = request.query_params.get('trang_thai')
+        if trang_thai:
+            queryset = queryset.filter(trang_thai=trang_thai)
+        elif not nguoi_dung_id:
+            queryset = queryset.filter(trang_thai='da_dang')
+
+        # Lọc theo thể loại
         theloai_id = request.query_params.get('theloai')
         if theloai_id:
             queryset = queryset.filter(the_loai__id=theloai_id)
@@ -286,7 +298,17 @@ class TruyenListCreateView(APIView):
         if err:
             return err
 
-        serializer = TruyenSerializer(data=request.data, context={'request': request})
+        data_copy = request.data.copy() if hasattr(request.data, 'copy') else dict(request.data)
+        if 'the_loai' in request.data:
+            the_loai_list = request.data.getlist('the_loai') if hasattr(request.data, 'getlist') else request.data.get('the_loai')
+            if not isinstance(the_loai_list, list):
+                the_loai_list = [the_loai_list]
+            if hasattr(data_copy, 'setlist'):
+                data_copy.setlist('the_loai_ids', the_loai_list)
+            else:
+                data_copy['the_loai_ids'] = the_loai_list
+
+        serializer = TruyenSerializer(data=data_copy, context={'request': request})
         if serializer.is_valid():
             truyen = serializer.save(nguoi_dung=profile)
             return Response(
@@ -333,8 +355,18 @@ class TruyenDetailView(APIView):
         if truyen.nguoi_dung != profile:
             return Response({"error": "Bạn không có quyền sửa truyện này."}, status=403)
 
+        data_copy = request.data.copy() if hasattr(request.data, 'copy') else dict(request.data)
+        if 'the_loai' in request.data:
+            the_loai_list = request.data.getlist('the_loai') if hasattr(request.data, 'getlist') else request.data.get('the_loai')
+            if not isinstance(the_loai_list, list):
+                the_loai_list = [the_loai_list]
+            if hasattr(data_copy, 'setlist'):
+                data_copy.setlist('the_loai_ids', the_loai_list)
+            else:
+                data_copy['the_loai_ids'] = the_loai_list
+
         serializer = TruyenSerializer(
-            truyen, data=request.data, partial=True, context={'request': request}
+            truyen, data=data_copy, partial=True, context={'request': request}
         )
         if serializer.is_valid():
             serializer.save()

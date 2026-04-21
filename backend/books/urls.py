@@ -42,12 +42,12 @@ urlpatterns = [
     # ==================== CHƯƠNG ====================
     # GET /api/stories/{id}/chapters  – Danh sách chương của truyện
     path('stories/<int:story_id>/chapters', views.ChuongListView.as_view(), name='chapter-list'),
-    # GET /api/chapters/{id}          – Chi tiết chương
-    path('chapters/<int:pk>', views.ChuongDetailView.as_view(), name='chapter-detail'),
+    # GET /api/chapters/{id}/detail          – Chi tiết chương
+    path('chapters/<int:pk>/detail', views.ChuongDetailView.as_view(), name='chapter-detail'),
     # POST /api/chapters              – Tạo chương mới
     path('chapters', views.ChuongCreateView.as_view(), name='chapter-create'),
     # PUT/DELETE /api/chapters/{id}   – Sửa/xóa chương
-    path('chapters/<int:pk>/edit', views.ChuongUpdateDeleteView.as_view(), name='chapter-edit'),
+    path('chapters/<int:pk>', views.ChuongUpdateDeleteView.as_view(), name='chapter-update-delete'),
     # POST /api/chapters/batch-action – Thao tác nhiều chương
     path('chapters/batch-action', views.ChuongBatchActionView.as_view(), name='chapter-batch'),
 

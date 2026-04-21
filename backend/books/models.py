@@ -191,6 +191,11 @@ class Chuong(models.Model):
         blank=True,
         verbose_name='Thời gian đăng'
     )
+    
+    # Các thống kê thực
+    so_luot_doc = models.PositiveIntegerField(default=0, verbose_name='Số lượt đọc')
+    so_luot_binh_luan = models.PositiveIntegerField(default=0, verbose_name='Số bình luận')
+    so_luot_luu = models.PositiveIntegerField(default=0, verbose_name='Số lượt lưu')
 
     class Meta:
         verbose_name = 'Chương'

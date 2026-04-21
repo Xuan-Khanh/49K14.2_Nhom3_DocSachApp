@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.tools.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -30,14 +30,18 @@
 
 
         <LinearLayout
+            android:id="@+id/btn_edit_meo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="32dp">
+            android:layout_marginBottom="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
             <com.makeramen.roundedimageview.RoundedImageView
                 android:layout_width="80dp"
                 android:layout_height="100dp"
-                android:src="@android:drawable/ic_menu_gallery"
+                android:src="@drawable/anhtruyen"
                 android:scaleType="centerCrop"
                 app:riv_corner_radius="4dp" />
             <LinearLayout
@@ -58,7 +62,9 @@
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="@color/black"
-                    android:layout_marginTop="4dp"/>
+                    android:layout_marginTop="4dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -136,18 +142,8 @@
         </RelativeLayout>
         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
         <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-                <!-- Item 1 -->
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="24dp">
-                    <com.makeramen.roundedimageview.RoundedImageView android:layout_width="80dp" android:layout_height="110dp" android:src="@android:drawable/ic_menu_gallery" android:scaleType="centerCrop" app:riv_corner_radius="8dp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginStart="16dp">
-                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Tiếng meo này, anh dịch được không?" android:textStyle="bold" android:textSize="16sp" android:textColor="@color/black" />
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="4dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="👁 777 N" android:textSize="11sp" android:textColor="@color/text_dark"/>
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="  🔖 11,4 N" android:textSize="11sp" android:textColor="@color/text_dark" android:layout_marginStart="8dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
+            <LinearLayout android:id="@+id/container_my_works_list" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                <!-- Items added dynamically -->
             </LinearLayout>
         </ScrollView>
         <View android:layout_width="match_parent" android:layout_height="60dp" />
@@ -171,23 +167,24 @@
         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
         <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:layout_marginBottom="32dp">
+                <LinearLayout android:id="@+id/layout_add_cover" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:layout_marginBottom="32dp" android:clickable="true" android:focusable="true">
                     <FrameLayout android:id="@+id/btn_add_cover" android:layout_width="60dp" android:layout_height="80dp" android:background="#E0E0E0">
-                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@android:drawable/ic_input_add" app:tint="@color/text_dark"/>
+                        <ImageView android:id="@+id/iv_add_icon" android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@android:drawable/ic_input_add" app:tint="@color/text_dark"/>
+                        <ImageView android:id="@+id/iv_cover_preview" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:visibility="gone" />
                     </FrameLayout>
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="24dp" android:text="Thêm bìa truyện" android:textColor="@color/black" android:textSize="16sp" android:textStyle="bold" />
                 </LinearLayout>
                 <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tiêu đề Truyện " android:textColor="@color/placeholder" android:textSize="14sp" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tiêu đề Truyện " android:textColor="@color/black" android:textSize="14sp" />
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="*" android:textColor="@color/error" android:textSize="14sp" />
                 </LinearLayout>
-                <EditText android:id="@+id/et_book_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@null" android:paddingVertical="12dp" android:textColor="@color/black" android:textSize="16sp" />
+                <EditText android:id="@+id/et_book_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@null" android:paddingVertical="12dp" android:textColor="@color/black" android:textSize="13sp" android:hint="Nhập tiêu đề..." android:textColorHint="@color/placeholder"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#DDDDDD" android:layout_marginBottom="24dp"/>
                 <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Viết mô tả cho câu chuyện của bạn " android:textColor="@color/placeholder" android:textSize="14sp" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mô tả " android:textColor="@color/black" android:textSize="14sp" />
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="*" android:textColor="@color/error" android:textSize="14sp" />
                 </LinearLayout>
-                <EditText android:id="@+id/et_book_description" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@null" android:minHeight="100dp" android:gravity="top" android:paddingVertical="12dp" android:textColor="@color/black" android:textSize="16sp" />
+                <EditText android:id="@+id/et_book_description" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@null" android:minHeight="100dp" android:gravity="top" android:paddingVertical="12dp" android:textColor="@color/black" android:textSize="13sp" android:hint="Viết mô tả..." android:textColorHint="@color/placeholder"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
@@ -205,35 +202,114 @@
         <RelativeLayout android:layout_width="match_parent" android:layout_height="56dp" android:paddingHorizontal="16dp">
             <ImageView android:id="@+id/btn_close_create2" android:layout_width="24dp" android:layout_height="24dp" android:layout_centerVertical="true" android:src="@android:drawable/ic_menu_close_clear_cancel" app:tint="@color/black" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" android:text="Thêm thông tin truyện" android:textColor="@color/black" android:textSize="18sp" android:textStyle="bold" />
-            <ImageView android:id="@+id/btn_done_create2" android:layout_width="24dp" android:layout_height="24dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:src="@drawable/ic_check" app:tint="@color/placeholder" />
+            <ImageView android:id="@+id/btn_done_create2" android:layout_width="24dp" android:layout_height="24dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:src="@drawable/tick" android:alpha="0.3" android:enabled="false" />
         </RelativeLayout>
         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
         <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                <RelativeLayout android:id="@+id/layout_edit_title_pop" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tiêu đề*" android:textColor="@color/black" android:textStyle="bold" android:textSize="16sp" />
-                    <TextView android:id="@+id/tv_book_title_display" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_marginEnd="32dp" android:text="Ngôi Sao Hy Vọng" android:textColor="@color/text_dark" android:textSize="16sp" />
-                    <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_chevron_right" app:tint="@color/black" />
-                </RelativeLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="4dp">
+                
+                <!-- Phần Bìa truyện -->
+                <LinearLayout
+                    android:id="@+id/layout_edit_cover_step2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/iv_book_cover_step2"
+                        android:layout_width="64dp"
+                        android:layout_height="88dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/anhtruyen"
+                        app:riv_corner_radius="6dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:text="Chỉnh sửa bìa truyện"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginHorizontal="16dp"/>
-                <RelativeLayout android:id="@+id/layout_edit_desc_pop" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mô tả*" android:textColor="@color/black" android:textStyle="bold" android:textSize="16sp" />
-                    <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_chevron_right" app:tint="@color/black" />
+                
+                <!-- Tiêu đề -->
+                <RelativeLayout
+                    android:id="@+id/layout_edit_title_pop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <TextView android:id="@+id/label_title_step2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tiêu đề *" android:textColor="@color/black" android:textStyle="bold" android:textSize="15sp"/>
+                    <ImageView android:id="@+id/ic_arrow_1_step2" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:src="@drawable/ic_chevron_right" app:tint="@color/black" />
+                    <TextView android:id="@+id/tv_book_title_display" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_toEndOf="@id/label_title_step2" android:layout_toStartOf="@id/ic_arrow_1_step2" android:layout_centerVertical="true" android:gravity="end" android:layout_marginEnd="8dp" android:text="Chưa nhập" android:textColor="#555555" android:textSize="15sp" android:singleLine="true" android:ellipsize="end"/>
                 </RelativeLayout>
+
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginHorizontal="16dp"/>
-                <RelativeLayout android:id="@+id/layout_edit_category_pop" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thể loại*" android:textColor="@color/black" android:textStyle="bold" android:textSize="16sp" />
-                    <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_chevron_right" app:tint="@color/black" />
+
+                <!-- Mô tả -->
+                <RelativeLayout
+                    android:id="@+id/layout_edit_desc_pop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <TextView android:id="@+id/label_desc_step2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mô tả *" android:textColor="@color/black" android:textStyle="bold" android:textSize="15sp"/>
+                    <ImageView android:id="@+id/ic_arrow_2_step2" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_chevron_right" app:tint="@color/black" />
+                    <TextView android:id="@+id/tv_book_desc_display" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@id/label_desc_step2" android:layout_marginTop="8dp" android:text="Chưa nhập" android:textColor="#666666" android:textSize="14sp" android:ellipsize="end" android:maxLines="3" android:lineSpacingExtra="4dp"/>
                 </RelativeLayout>
+
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginHorizontal="16dp"/>
-                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Đã hoàn thành" android:textColor="@color/black" android:textStyle="bold" android:textSize="16sp" />
-                    <Switch android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:trackTint="@color/black" android:thumbTint="@color/white" tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                <!-- Thể loại -->
+                <RelativeLayout
+                    android:id="@+id/layout_edit_category_pop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <TextView android:id="@+id/label_cat_step2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thể loại *" android:textColor="@color/black" android:textStyle="bold" android:textSize="15sp"/>
+                    <ImageView android:id="@+id/ic_arrow_3_step2" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:src="@drawable/ic_chevron_right" app:tint="@color/black" />
+                    <TextView android:id="@+id/tv_book_categories_display" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_toEndOf="@id/label_cat_step2" android:layout_toStartOf="@id/ic_arrow_3_step2" android:layout_centerVertical="true" android:gravity="end" android:layout_marginEnd="8dp" android:text="Chưa chọn" android:textColor="#555555" android:textSize="15sp" android:singleLine="true" android:ellipsize="end"/>
+                </RelativeLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginHorizontal="16dp"/>
+
+                <!-- Đã hoàn thành -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp">
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" android:layout_centerVertical="true">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Đã hoàn thành" android:textColor="@color/black" android:textStyle="bold" android:textSize="15sp"/>
+                        <TextView android:id="@+id/tv_status_label_create" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Đang tiến hành" android:textColor="#888888" android:textSize="12sp" />
+                    </LinearLayout>
+                    <Switch android:id="@+id/switch_status_create" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_centerVertical="true" tools:ignore="UseSwitchCompatOrMaterialXml" />
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:padding="24dp">
-            <TextView android:id="@+id/btn_add_chapter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_status_proceeding" android:backgroundTint="#D9A441" android:paddingHorizontal="24dp" android:paddingVertical="12dp" android:text="+ THÊM CHƯƠNG" android:textColor="@color/white" android:textStyle="bold" android:textSize="14sp" />
+            <TextView android:id="@+id/btn_add_chapter_new" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_status_proceeding" android:backgroundTint="#D9A441" android:paddingHorizontal="24dp" android:paddingVertical="12dp" android:text="+ THÊM CHƯƠNG" android:textColor="@color/white" android:textStyle="bold" android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -253,50 +329,44 @@
         </RelativeLayout>
         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
         <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="24dp">
-                <TextView android:layout_width="match_parent" android:layout_height="50dp" android:gravity="center_vertical" android:text="Lãng mạn" android:textColor="@color/black" android:textSize="16sp" />
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
-                <TextView android:layout_width="match_parent" android:layout_height="50dp" android:gravity="center_vertical" android:text="Hành động" android:textColor="@color/black" android:textSize="16sp" />
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+            <LinearLayout android:id="@+id/container_categories" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="24dp">
+                <!-- Dynamically added -->
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
 
-
-    <!-- 6. POPUP SỬA TIÊU ĐỀ -->
+    <!-- 6. POPUP SỬA TIÊU ĐỀ STEP 2 -->
     <LinearLayout
-        android:id="@+id/popup_edit_title"
+        android:id="@+id/popup_edit_title_step2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="27dp"
         android:background="@color/white"
         android:orientation="vertical"
-        android:layout_marginTop="27dp"
         android:visibility="gone">
         <RelativeLayout android:layout_width="match_parent" android:layout_height="56dp" android:paddingHorizontal="16dp">
-            <ImageView android:id="@+id/btn_back_title" android:layout_width="24dp" android:layout_height="24dp" android:layout_centerVertical="true" android:src="@drawable/ic_back_arrow" app:tint="@color/black" />
+            <ImageView android:id="@+id/btn_back_title_step2" android:layout_width="24dp" android:layout_height="24dp" android:layout_centerVertical="true" android:src="@drawable/ic_back_arrow" app:tint="@color/black" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" android:text="Tiêu đề" android:textColor="@color/black" android:textSize="18sp" android:textStyle="bold" />
         </RelativeLayout>
         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
-        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="16dp" android:background="@null" android:hint="Nhập tiêu đề" android:textColor="@color/black" android:textSize="16sp" />
+        <EditText android:id="@+id/et_edit_title_step2" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="16dp" android:background="@null" android:hint="Nhập tiêu đề" android:paddingVertical="8dp" android:textColor="@color/black" android:textSize="16sp" android:inputType="text" />
     </LinearLayout>
 
-
-    <!-- 7. POPUP SỬA MÔ TẢ -->
+    <!-- 7. POPUP SỬA MÔ TẢ STEP 2 -->
     <LinearLayout
-        android:id="@+id/popup_edit_description"
+        android:id="@+id/popup_edit_desc_step2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="27dp"
         android:background="@color/white"
         android:orientation="vertical"
-        android:layout_marginTop="27dp"
         android:visibility="gone">
         <RelativeLayout android:layout_width="match_parent" android:layout_height="56dp" android:paddingHorizontal="16dp">
-            <ImageView android:id="@+id/btn_back_desc" android:layout_width="24dp" android:layout_height="24dp" android:layout_centerVertical="true" android:src="@drawable/ic_back_arrow" app:tint="@color/black" />
+            <ImageView android:id="@+id/btn_back_desc_step2" android:layout_width="24dp" android:layout_height="24dp" android:layout_centerVertical="true" android:src="@drawable/ic_back_arrow" app:tint="@color/black" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" android:text="Mô tả" android:textColor="@color/black" android:textSize="18sp" android:textStyle="bold" />
         </RelativeLayout>
         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
-        <EditText android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="16dp" android:background="@null" android:gravity="top" android:hint="Viết mô tả..." android:textColor="@color/black" android:textSize="16sp" android:inputType="textMultiLine" />
+        <EditText android:id="@+id/et_edit_desc_step2" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="16dp" android:background="@null" android:hint="Viết mô tả cho câu chuyện của bạn..." android:gravity="top" android:paddingVertical="8dp" android:textColor="@color/black" android:textSize="16sp" android:inputType="textMultiLine" />
     </LinearLayout>
-
 
 </FrameLayout>

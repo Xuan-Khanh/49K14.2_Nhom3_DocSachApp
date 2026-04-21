@@ -217,9 +217,10 @@ class ChuongSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'truyen_id', 'ten_truyen',
             'tieu_de', 'noi_dung', 'trang_thai',
-            'thoi_gian_tao', 'thoi_gian_dang'
+            'thoi_gian_tao', 'thoi_gian_dang',
+            'so_luot_doc', 'so_luot_binh_luan', 'so_luot_luu'
         ]
-        read_only_fields = ['thoi_gian_tao', 'thoi_gian_dang']
+        read_only_fields = ['thoi_gian_tao', 'thoi_gian_dang', 'so_luot_doc', 'so_luot_binh_luan', 'so_luot_luu']
 
     def validate(self, data):
         """Không cho đăng chương nếu thiếu tiêu đề hoặc nội dung"""
@@ -240,7 +241,7 @@ class ChuongNgoanSerializer(serializers.ModelSerializer):
     """Serializer chương dạng gọn (dùng trong danh sách)"""
     class Meta:
         model = Chuong
-        fields = ['id', 'tieu_de', 'trang_thai', 'thoi_gian_tao', 'thoi_gian_dang']
+        fields = ['id', 'tieu_de', 'trang_thai', 'thoi_gian_tao', 'thoi_gian_dang', 'so_luot_doc', 'so_luot_binh_luan', 'so_luot_luu']
 
 
 # =============================================

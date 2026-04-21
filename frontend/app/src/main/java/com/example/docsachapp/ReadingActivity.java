@@ -95,7 +95,8 @@ public class ReadingActivity extends AppCompatActivity {
     private void loadChapters(int requestedChapterId) {
         showLoading(true);
 
-        RetrofitClient.getApi().getChapters(storyId).enqueue(new Callback<List<Chapter>>() {
+        String token = sessionManager.getAuthHeader();
+        RetrofitClient.getApi().getChapters(token, storyId).enqueue(new Callback<List<Chapter>>() {
             @Override
             public void onResponse(Call<List<Chapter>> call, Response<List<Chapter>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
