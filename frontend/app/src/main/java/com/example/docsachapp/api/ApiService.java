@@ -33,7 +33,19 @@ public interface ApiService {
     Call<Map<String, Object>> updateUserProfile(@Header("Authorization") String authToken, @Body Map<String, String> body);
 
     @GET("users/{id}")
-    Call<UserProfile> getPublicProfile(@Path("id") int userId);
+    Call<UserProfile> getPublicProfile(@Path("id") int userId, @Header("Authorization") String authToken);
+
+    @POST("users/follow")
+    Call<java.util.Map<String, Object>> followUser(@Header("Authorization") String authToken, @Body java.util.Map<String, Integer> body);
+
+    @retrofit2.http.HTTP(method = "DELETE", path = "users/unfollow", hasBody = true)
+    Call<java.util.Map<String, Object>> unfollowUser(@Header("Authorization") String authToken, @Body java.util.Map<String, Integer> body);
+
+    @GET("users/{id}/followers")
+    Call<java.util.List<com.example.docsachapp.model.UserSearchItem>> getFollowers(@Path("id") int userId, @Header("Authorization") String authToken);
+
+    @GET("users/{id}/following")
+    Call<java.util.List<com.example.docsachapp.model.UserSearchItem>> getFollowing(@Path("id") int userId, @Header("Authorization") String authToken);
 
     @GET("users/{user_id}/collections")
     Call<List<Collection>> getUserCollections(@Path("user_id") int userId);
@@ -49,7 +61,16 @@ public interface ApiService {
     @GET("stories")
     Call<List<Story>> searchStories(@Query("search") String keyword);
 
+<<<<<<< HEAD
     // Cập nhật ở đây: Thêm Auth Header để lấy user_rating
+=======
+    @GET("search")
+    Call<com.example.docsachapp.model.SearchResultResponse> searchAll(@Query("keyword") String keyword);
+
+    @GET("genres")
+    Call<List<Story.Genre>> getGenres();
+
+>>>>>>> origin/phuong
     @GET("stories/{id}")
     Call<Story> getStoryDetail(@Header("Authorization") String authToken, @Path("id") int id);
 

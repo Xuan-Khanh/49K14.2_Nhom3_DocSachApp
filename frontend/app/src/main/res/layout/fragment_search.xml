@@ -1,54 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
+    <!-- Search Header Section -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_marginTop="27dp"
+        android:gravity="center_vertical">
 
-        <!-- Search Bar Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_search_bar"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:drawablePadding="10dp"
+            android:hint="Tìm sách hoặc người"
+            android:paddingHorizontal="16dp"
+            android:textColorHint="@color/placeholder"
+            android:textSize="14sp"
+            android:imeOptions="actionSearch"
+            android:inputType="text"/>
+
+        <TextView
+            android:id="@+id/tv_cancel_search"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_marginTop="27dp"
+            android:layout_marginStart="12dp"
+            android:text="Bỏ qua"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- LAYER 1: Explore View (Default) -->
+        <LinearLayout
+            android:id="@+id/ll_explore_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/et_search"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_search_bar"
-                android:hint="Tìm sách hoặc người"
-                android:paddingHorizontal="16dp"
-                android:drawableStart="@android:drawable/ic_menu_search"
-                android:drawablePadding="10dp"
-                android:textSize="14sp"
-                android:textColorHint="@color/placeholder" />
-        </LinearLayout>
-
-        <!-- Categories Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical">
+                android:paddingHorizontal="16dp">
 
                 <HorizontalScrollView
                     android:id="@+id/hsv_categories"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="40dp"
+                    android:layout_toStartOf="@+id/iv_toggle_categories_down"
                     android:scrollbars="none">
 
                     <com.google.android.material.chip.ChipGroup
@@ -57,61 +71,152 @@
                         android:layout_height="wrap_content"
                         app:chipSpacingHorizontal="8dp"
                         app:singleLine="true">
-
-                        <com.google.android.material.chip.Chip
-                            style="@style/Widget.MaterialComponents.Chip.Action"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Lãng mạn"
-                            android:textColor="@color/white"
-                            app:chipBackgroundColor="@color/black" />
-
-                        <com.google.android.material.chip.Chip
-                            style="@style/Widget.MaterialComponents.Chip.Action"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Thiếu nhi"
-                            app:chipBackgroundColor="@color/gray_bg" />
-
-                        <com.google.android.material.chip.Chip
-                            style="@style/Widget.MaterialComponents.Chip.Action"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Truyện Ngắn"
-                            app:chipBackgroundColor="@color/gray_bg" />
-
-                        <com.google.android.material.chip.Chip
-                            style="@style/Widget.MaterialComponents.Chip.Action"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Tiểu thuyết"
-                            app:chipBackgroundColor="@color/gray_bg" />
+                        <!-- Chips loaded from API -->
                     </com.google.android.material.chip.ChipGroup>
                 </HorizontalScrollView>
 
                 <ImageView
+<<<<<<< HEAD
                     android:id="@+id/iv_toggle_categories"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_menu_lib" />
+=======
+                    android:id="@+id/iv_toggle_categories_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:padding="4dp"
+                    android:src="@android:drawable/arrow_down_float"
+                    app:tint="@color/black"/>
+>>>>>>> origin/phuong
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="#EEEEEE" />
+
+            <TextView
+                android:id="@+id/tv_category_story_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:text="13,9N Stories"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_explore_results"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                tools:listitem="@layout/item_story_search" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#EEEEEE"
-            android:layout_marginTop="12dp"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_search_results"
+        <!-- LAYER 2: Expanded Categories -->
+        <ScrollView
+            android:id="@+id/sv_expanded_categories"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp"
-            tools:listitem="@layout/item_story_vertical" />
+            android:visibility="gone">
 
-    </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
 
-</RelativeLayout>
+                <ImageView
+                    android:id="@+id/iv_toggle_categories_up"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:paddingTop="8dp"
+                    android:paddingStart="8dp"
+                    android:src="@android:drawable/arrow_up_float"
+                    app:tint="@color/black"/>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cg_categories_expanded"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/iv_toggle_categories_up"
+                    app:chipSpacingHorizontal="8dp"
+                    app:chipSpacingVertical="8dp">
+                    <!-- Chips loaded from API -->
+                </com.google.android.material.chip.ChipGroup>
+            </RelativeLayout>
+        </ScrollView>
+
+        <!-- LAYER 3: Recent Searches -->
+        <LinearLayout
+            android:id="@+id/ll_recent_searches_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="16dp"
+                android:background="#EEEEEE" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LẦN TÌM KIẾM GẦN ĐÂY"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recent_searches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                tools:listitem="@layout/item_recent_search" />
+        </LinearLayout>
+
+        <!-- LAYER 4: Search Results (Text Search) -->
+        <LinearLayout
+            android:id="@+id/ll_search_results_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_search_results"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabIndicatorColor="@color/black"
+                app:tabSelectedTextColor="@color/black"
+                app:tabTextColor="#666666">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Truyện" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hồ sơ" />
+            </com.google.android.material.tabs.TabLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_search_results"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
