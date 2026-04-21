@@ -188,6 +188,7 @@ public class LibraryFragment extends Fragment {
         loadCollections(); 
     }
 
+<<<<<<< HEAD
     private void exitSelectionMode() {
         bulkActionBar.setVisibility(View.GONE);
         llTopBar.setVisibility(View.VISIBLE);
@@ -207,6 +208,16 @@ public class LibraryFragment extends Fragment {
             @NonNull @Override public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup p, int t) {
                 View v = LayoutInflater.from(p.getContext()).inflate(R.layout.item_collection_select, p, false);
                 return new RecyclerView.ViewHolder(v) {};
+=======
+        RetrofitClient.getApi().getBoSuuTap(token).enqueue(new Callback<List<Collection>>() {
+            @Override
+            public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
+                if (isAdded() && response.isSuccessful() && response.body() != null) {
+                    collections.clear();
+                    collections.addAll(response.body());
+                    collectionAdapter.notifyDataSetChanged();
+                }
+>>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
             }
             @Override public void onBindViewHolder(@NonNull RecyclerView.ViewHolder h, int p) {
                 Collection col = collections.get(p);

@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.HTTP;
 import retrofit2.http.POST;
@@ -48,8 +49,9 @@ public interface ApiService {
     @GET("stories")
     Call<List<Story>> searchStories(@Query("search") String keyword);
 
+    // Cập nhật ở đây: Thêm Auth Header để lấy user_rating
     @GET("stories/{id}")
-    Call<Story> getStoryDetail(@Path("id") int id);
+    Call<Story> getStoryDetail(@Header("Authorization") String authToken, @Path("id") int id);
 
     @GET("stories/{story_id}/genres")
     Call<List<Story.Genre>> getStoryGenres(@Path("story_id") int storyId);
@@ -62,15 +64,35 @@ public interface ApiService {
     Call<Chapter> getChapterDetail(@Path("id") int chapterId);
 
     // ==================== THEO DÕI TRUYỆN ====================
+<<<<<<< HEAD
+    @POST("follow/story")
+    Call<Map<String, Object>> followStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
+
+    @HTTP(method = "DELETE", path = "unfollow/story", hasBody = true)
+    Call<Map<String, Object>> unfollowStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
+=======
+>>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
+
+    @GET("user/following-stories")
+    Call<List<Story>> getFollowingStories(@Header("Authorization") String authToken);
+
+<<<<<<< HEAD
+=======
     @POST("follow/story")
     Call<Map<String, Object>> followStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     @HTTP(method = "DELETE", path = "unfollow/story", hasBody = true)
     Call<Map<String, Object>> unfollowStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
-    @GET("user/following-stories")
-    Call<List<Story>> getFollowingStories(@Header("Authorization") String authToken);
+    // ==================== LỊCH SỬ ĐỌC ====================
 
+    @GET("reading-history")
+    Call<List<ReadingHistoryItem>> getReadingHistory(@Header("Authorization") String authToken);
+
+    @POST("reading-history/update")
+    Call<Map<String, Object>> updateReadingHistory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
+
+>>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
     // ==================== BÌNH LUẬN ====================
     @GET("stories/{id}/comments")
     Call<List<Comment>> getComments(@Path("id") int storyId);
@@ -78,12 +100,25 @@ public interface ApiService {
     @POST("comments")
     Call<Comment> postComment(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
+    // ==================== ĐÁNH GIÁ ====================
+
+    @POST("ratings")
+    Call<Map<String, Object>> postRating(@Header("Authorization") String authToken, @Body Map<String, Object> body);
+
     // ==================== BỘ SƯU TẬP ====================
+<<<<<<< HEAD
     @GET("bosuutap")
+=======
+
+    @GET("collections")
+>>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
     Call<List<Collection>> getBoSuuTap(@Header("Authorization") String authToken);
 
     @GET("collections/{id}")
     Call<Collection> getCollectionDetail(@Header("Authorization") String authToken, @Path("id") int collectionId);
+
+    @POST("collections/add-story")
+    Call<Map<String, Object>> addStoryToCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     @POST("collections")
     Call<Map<String, Object>> createCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);

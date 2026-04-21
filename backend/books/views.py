@@ -389,6 +389,14 @@ class ChuongListView(APIView):
         serializer = ChuongNgoanSerializer(chuong_list, many=True)
         return Response(serializer.data)
 
+    serializer_class = ChuongNgoanSerializer
+
+    def get_queryset(self):
+        # Lấy story_id từ URL (stories/<int:story_id>/chapters)
+        story_id = self.kwargs['story_id']
+        # Trả về danh sách chương của truyện đó, sắp xếp theo thứ tự id (hoặc số chương)
+        return Chuong.objects.filter(truyen_id=story_id, trang_thai='da_dang').order_by('id')
+
 
 class ChuongDetailView(APIView):
     """

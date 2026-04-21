@@ -5,46 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="466cd12a-cec8-43e1-a823-39e37fbafab0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/AddStoriesToCollectionActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/adapter/StoryManageAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/drawable/bosuutap.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/drawable/plus.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/drawable/tick.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/activity_add_stories_to_collection.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/dialog_add_to_collection.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/dialog_delete_collection.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/dialog_edit_collection.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/dialog_remove_story.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/item_collection_select.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/item_story_vertical_manage.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/layout_genre_chip_small.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/books/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/books/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/books/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/books/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/backend/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.idea/deploymentTargetSelector.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/AdminFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/AdminFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/BookDetailsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/BookDetailsActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/CollectionDetailsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/CollectionDetailsActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/LibraryFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/LibraryFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/adapter/CollectionAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/adapter/CollectionAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/adapter/StoryGridAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/adapter/StoryGridAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/adapter/StoryVerticalAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/adapter/StoryVerticalAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/api/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/api/ApiService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/model/Collection.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/model/Collection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/model/Story.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/java/com/example/docsachapp/model/Story.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/res/layout/activity_collection_details.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/activity_collection_details.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/res/layout/fragment_admin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/fragment_admin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/res/layout/fragment_library.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/fragment_library.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/res/layout/fragment_search.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/fragment_search.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/res/layout/item_collection.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/item_collection.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/res/layout/item_story_grid.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/item_story_grid.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/src/main/res/layout/item_story_vertical.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/src/main/res/layout/item_story_vertical.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

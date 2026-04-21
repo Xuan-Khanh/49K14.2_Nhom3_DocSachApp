@@ -25,6 +25,7 @@
         <activity android:name=".RegisterInfoActivity" />
         <activity android:name=".RegisterPasswordActivity" />
         <activity android:name=".ForgotPasswordEmailActivity" />
+        <activity android:name=".TableOfContentsActivity" />
         <activity android:name=".ForgotPasswordOtpActivity" />
         <activity android:name=".ForgotPasswordResetActivity" />
         <activity android:name=".ForgotPasswordSuccessActivity" />
@@ -41,4 +42,8 @@
         <activity android:name=".ProfileEditActivity" />
         <activity android:name=".AuthorProfileActivity" />
     </application>
+<<<<<<< HEAD
 </manifest>
+=======
+</manifest>
+>>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083

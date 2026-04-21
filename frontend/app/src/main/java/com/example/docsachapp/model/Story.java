@@ -39,6 +39,16 @@ public class Story {
     @SerializedName("so_chuong")
     private int chaptersCount;
 
+<<<<<<< HEAD
+=======
+    @SerializedName("is_following")
+    private boolean isFollowing;
+
+    @SerializedName("user_rating")
+    private int userRating;
+
+    // Constructor mặc định cho GSON
+>>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
     public Story() {}
 
     public Story(int id, String title, String coverUrl) {
@@ -58,6 +68,8 @@ public class Story {
     public float getRating() { return rating; }
     public int getTotalRatings() { return totalRatings; }
     public int getChaptersCount() { return chaptersCount; }
+    public boolean isFollowing() { return isFollowing; }
+    public int getUserRating() { return userRating; }
 
     public String getAuthorName() {
         return author != null && author.getUsername() != null ? author.getUsername() : "Ẩn danh";

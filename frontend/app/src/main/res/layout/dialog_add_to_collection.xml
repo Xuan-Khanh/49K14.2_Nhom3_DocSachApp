@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+<<<<<<< HEAD
     android:orientation="vertical"
     android:background="@drawable/bg_profile_card"
     android:paddingTop="24dp"
@@ -13,10 +14,21 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="24dp"
         android:layout_marginBottom="16dp">
+=======
+    android:background="@drawable/bg_bottom_sheet"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp">
+>>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:text="Thêm vào"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -42,5 +54,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="100dp" />
+=======
+            android:layout_centerVertical="true"
+            android:text="Thêm vào"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:text="Xong"
+            android:textColor="#D9A441"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/rg_collections"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!-- Các RadioButton sẽ được thêm động vào đây từ code Java -->
+    </RadioGroup>
+>>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
 
 </LinearLayout>

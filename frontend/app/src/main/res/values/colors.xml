@@ -4,7 +4,8 @@
     <color name="primary">#D9A441</color>
     <color name="primary_hover">#D9D9A4</color>
     <color name="primary_transparent_25">#40D9A441</color>
-    
+    <color name="primary_light">#F2D7A1</color>
+
     <!-- Status / Semantic Colors -->
     <color name="error">#C90000</color>
     
