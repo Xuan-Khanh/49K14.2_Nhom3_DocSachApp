@@ -83,14 +83,20 @@ public class BookDetailsActivity extends AppCompatActivity {
         RetrofitClient.getApi().getStoryDetail(storyId).enqueue(new Callback<Story>() {
             @Override
             public void onResponse(Call<Story> call, Response<Story> response) {
+                android.util.Log.d("STORY", "storyId gửi lên: " + storyId);
+                android.util.Log.d("STORY", "Response code: " + response.code());
                 if (response.isSuccessful() && response.body() != null) {
                     Story story = response.body();
-                    authorId = story.getAuthor().getId(); // Lưu authorId để dùng khi click
+                    android.util.Log.d("STORY", "Title nhận về: " + story.getTitle());
+                    android.util.Log.d("STORY", "ID nhận về: " + story.getId());
+                    authorId = story.getAuthor().getId();
                     displayStory(story);
                 }
             }
             @Override
-            public void onFailure(Call<Story> call, Throwable t) {}
+            public void onFailure(Call<Story> call, Throwable t) {
+                android.util.Log.e("STORY", "Lỗi: " + t.getMessage());
+            }
         });
     }
 

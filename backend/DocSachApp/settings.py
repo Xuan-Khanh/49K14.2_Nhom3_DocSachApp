@@ -101,3 +101,29 @@ REST_FRAMEWORK = {
 # CORS – Cho phép Android Studio gọi API
 # =============================================
 CORS_ALLOW_ALL_ORIGINS = True  # Chỉ dùng khi dev
+
+# =============================================
+# EMAIL CONFIGURATION (GMAIL SMTP)
+# =============================================
+# Khi chạy thật, bạn hãy điền EMAIL_HOST_USER và EMAIL_HOST_PASSWORD (App Password)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'anhphuong07062005@gmail.com' # Email gửi đi
+EMAIL_HOST_PASSWORD = 'bpyk eeqk qukn akob' # Mã 16 ký tự "Mật khẩu ứng dụng"
+DEFAULT_FROM_EMAIL = f"DocSachApp <{EMAIL_HOST_USER}>"
+
+# Nếu muốn test nhanh mà không cần gửi email thật, hãy bỏ comment dòng dưới:
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# =============================================
+# CACHE CONFIGURATION
+# =============================================
+# Sử dụng LocMemCache cho đơn giản nếu chưa cài Redis
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}

@@ -11,8 +11,19 @@ from .models import (
 
 @admin.register(NguoiDung)
 class NguoiDungAdmin(admin.ModelAdmin):
-    list_display = ['id', 'ten_dang_nhap', 'email', 'ngay_sinh']
+    # list_display không trực tiếp dùng property được nếu không chỉ định rõ
+    list_display = ['id', 'get_username', 'get_email', 'ngay_sinh']
     search_fields = ['user__username', 'user__email']
+
+    def get_username(self, obj):
+        return obj.user.username
+    get_username.short_description = 'Tên đăng nhập'
+    get_username.admin_order_field = 'user__username'
+
+    def get_email(self, obj):
+        return obj.user.email
+    get_email.short_description = 'Email'
+    get_email.admin_order_field = 'user__email'
 
 
 @admin.register(TheLoai)
@@ -23,7 +34,7 @@ class TheLoaiAdmin(admin.ModelAdmin):
 
 @admin.register(Truyen)
 class TruyenAdmin(admin.ModelAdmin):
-    list_display = ['id', 'ten_truyen', 'nguoi_dung', 'trang_thai', 'so_luot_doc']
+    list_display = ['id', 'ten_truyen', 'nguoi_dung', 'trang_thai', 'so_luot_doc', 'created_at']
     list_filter = ['trang_thai']
     search_fields = ['ten_truyen']
 

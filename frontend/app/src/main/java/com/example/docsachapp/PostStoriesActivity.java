@@ -1,8 +1,6 @@
 package com.example.docsachapp;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +18,6 @@ public class PostStoriesActivity extends AppCompatActivity {
     private RecyclerView rvStories;
     private StoryVerticalAdapter adapter;
     private List<Story> storyList = new ArrayList<>();
-    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +27,6 @@ public class PostStoriesActivity extends AppCompatActivity {
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         
         rvStories = findViewById(R.id.rv_recently_read);
-        progressBar = findViewById(R.id.progress_bar); // Đảm bảo ID này tồn tại hoặc xóa dòng này
-        
         rvStories.setLayoutManager(new LinearLayoutManager(this));
         adapter = new StoryVerticalAdapter(storyList, this);
         rvStories.setAdapter(adapter);
@@ -40,22 +35,19 @@ public class PostStoriesActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        // Gọi API lấy tất cả truyện, server thường trả về truyện mới nhất trước
-        RetrofitClient.getApi().getStories(null, null, null).enqueue(new Callback<List<Story>>() {
+        // Đồng bộ với trang chủ: Sử dụng API new-releases
+        RetrofitClient.getApi().getNewReleases().enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     storyList.clear();
                     storyList.addAll(response.body());
                     adapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(PostStoriesActivity.this, "Không thể tải dữ liệu", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<List<Story>> call, Throwable t) {
-                Toast.makeText(PostStoriesActivity.this, "Lỗi kết nối server", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostStoriesActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
             }
         });
     }

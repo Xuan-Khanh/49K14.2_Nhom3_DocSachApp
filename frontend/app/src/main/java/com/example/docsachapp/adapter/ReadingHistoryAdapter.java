@@ -22,7 +22,7 @@ import java.util.List;
 public class ReadingHistoryAdapter extends RecyclerView.Adapter<ReadingHistoryAdapter.ViewHolder> {
     private List<ReadingHistoryItem> historyList;
     private Context context;
-    private boolean isHistoryView; // Xác định xem đang hiển thị lịch sử hay danh sách hoàn thành
+    private boolean isHistoryView;
 
     public ReadingHistoryAdapter(List<ReadingHistoryItem> historyList, Context context, boolean isHistoryView) {
         this.historyList = historyList;
@@ -46,8 +46,6 @@ public class ReadingHistoryAdapter extends RecyclerView.Adapter<ReadingHistoryAd
         holder.tvFollowers.setText("🔖 " + formatNumber(item.getFollowers()));
         holder.tvChapters.setText("≡ " + item.getChaptersCount() + " chương");
         
-        // XỬ LÝ LOGIC TRẠNG THÁI / TIẾN ĐỘ ĐỌC
-        // Nếu là view lịch sử đọc -> Hiện "Đang xem: Chương..."
         if (isHistoryView) {
             if (item.getCurrentChapter() != null) {
                 holder.tvCurrentChapter.setText("Đang xem: " + item.getCurrentChapter().getTitle());
@@ -56,26 +54,20 @@ public class ReadingHistoryAdapter extends RecyclerView.Adapter<ReadingHistoryAd
                 holder.tvCurrentChapter.setText("Chưa bắt đầu đọc");
                 holder.tvCurrentChapter.setTextColor(Color.GRAY);
             }
-        } 
-        // Nếu không phải view lịch sử (ví dụ danh sách Hoàn thành) -> Hiện trạng thái truyện
-        else {
-             // Giả sử status được trả về trong ReadingHistoryItem hoặc ta hiển thị "Hoàn thành" 
-             // nếu truyện đã kết thúc
+        } else {
              holder.tvCurrentChapter.setText("Trạng thái: Hoàn thành");
-             holder.tvCurrentChapter.setTextColor(context.getResources().getColor(R.color.main_color)); // Dùng màu thương hiệu
+             holder.tvCurrentChapter.setTextColor(context.getResources().getColor(R.color.primary));
              holder.tvCurrentChapter.setTypeface(null, android.graphics.Typeface.BOLD);
         }
 
-        // ChipGroup cho thể loại
         holder.cgGenres.removeAllViews();
         if (item.getGenres() != null) {
             for (String genreName : item.getGenres()) {
                 Chip chip = new Chip(context);
                 chip.setText(genreName);
                 chip.setTextSize(10);
-                chip.setChipMinHeight(60f);
                 chip.setChipBackgroundColorResource(android.R.color.transparent);
-                chip.setChipStrokeColorResource(R.color.grey_light);
+                chip.setChipStrokeColorResource(R.color.placeholder); // Dùng placeholder có sẵn
                 chip.setChipStrokeWidth(1f);
                 holder.cgGenres.addView(chip);
             }

@@ -99,21 +99,15 @@ public class HomeFragment extends Fragment {
         showLoading(true);
         String token = sessionManager.getAuthHeader();
         
-        // 1. Load Mới đăng & Mới cập nhật (Mặc định lấy tất cả truyện)
-        RetrofitClient.getApi().getStories(null, null, null).enqueue(new Callback<List<Story>>() {
+        // 1. Load Mới đăng
+        RetrofitClient.getApi().getNewReleases().enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
                     newStories.clear();
                     newStories.addAll(response.body());
                     newStoriesAdapter.notifyDataSetChanged();
-
-                    updateStories.clear();
-                    updateStories.addAll(response.body());
-                    updateStoriesAdapter.notifyDataSetChanged();
-                    checkLoadComplete();
-                } else if (isAdded()) {
-                    showError();
+                    showLoading(false);
                 }
             }
             @Override
@@ -122,8 +116,22 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // 2. Load Hoàn thành
-        RetrofitClient.getApi().getStories(null, null, "Hoàn thành").enqueue(new Callback<List<Story>>() {
+        // 2. Load Mới cập nhật
+        RetrofitClient.getApi().getRecentlyUpdated().enqueue(new Callback<List<Story>>() {
+            @Override
+            public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
+                if (isAdded() && response.isSuccessful() && response.body() != null) {
+                    updateStories.clear();
+                    updateStories.addAll(response.body());
+                    updateStoriesAdapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Story>> call, Throwable t) {}
+        });
+
+        // 3. Load Hoàn thành
+        RetrofitClient.getApi().getCompletedStories().enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
@@ -136,7 +144,7 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<List<Story>> call, Throwable t) {}
         });
 
-        // 3. Load Đọc gần đây
+        // 4. Load Đọc gần đây
         if (token != null) {
             RetrofitClient.getApi().getReadingHistory(token).enqueue(new Callback<List<ReadingHistoryItem>>() {
                 @Override
@@ -153,11 +161,6 @@ public class HomeFragment extends Fragment {
                 public void onFailure(Call<List<ReadingHistoryItem>> call, Throwable t) {}
             });
         }
-    }
-
-    private void checkLoadComplete() {
-        // Tạm thời dừng loading khi danh sách đầu tiên tải xong
-        showLoading(false);
     }
 
     private void showLoading(boolean isLoading) {

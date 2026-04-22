@@ -57,9 +57,15 @@ public class AdminFragment extends Fragment {
                 });
 
         setupClickListeners(view);
-        loadProfile();
-
+        
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        android.util.Log.d("PROFILE", "=== onResume called ===");
+        loadProfile();
     }
 
     private void setupClickListeners(View view) {
@@ -68,7 +74,6 @@ public class AdminFragment extends Fragment {
         View llStoryCount = view.findViewById(R.id.ll_story_count);
         View llFollowers = view.findViewById(R.id.ll_followers);
         View llFollowing = view.findViewById(R.id.ll_following);
-        View btnLogout = view.findViewById(R.id.btn_logout);
 
         if (rlUserInfo != null) {
             rlUserInfo.setOnClickListener(v -> {
@@ -78,44 +83,19 @@ public class AdminFragment extends Fragment {
         }
 
         if (rlLibrary != null) {
-            rlLibrary.setOnClickListener(v -> {
-                switchTab(R.id.nav_list);
-            });
+            rlLibrary.setOnClickListener(v -> switchTab(R.id.nav_list));
         }
 
-        // Tác phẩm -> Tủ sách (nav_write)
         if (llStoryCount != null) {
-            llStoryCount.setOnClickListener(v -> {
-                switchTab(R.id.nav_write);
-            });
+            llStoryCount.setOnClickListener(v -> switchTab(R.id.nav_write));
         }
 
-        // Người theo dõi -> FollowersFragment
         if (llFollowers != null) {
-            llFollowers.setOnClickListener(v -> {
-                replaceFragment(new FollowersFragment());
-            });
+            llFollowers.setOnClickListener(v -> replaceFragment(new FollowersFragment()));
         }
 
-        // Đang theo dõi -> FollowingFragment
         if (llFollowing != null) {
-            llFollowing.setOnClickListener(v -> {
-                replaceFragment(new FollowingFragment());
-            });
-        }
-
-        if (btnLogout != null) {
-            btnLogout.setOnClickListener(v -> new AlertDialog.Builder(requireContext())
-                    .setTitle("Đăng xuất")
-                    .setMessage("Bạn có chắc muốn đăng xuất không?")
-                    .setPositiveButton("Đăng xuất", (dialog, which) -> {
-                        sessionManager.logout();
-                        Intent intent = new Intent(requireContext(), LoginActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    })
-                    .setNegativeButton("Hủy", null)
-                    .show());
+            llFollowing.setOnClickListener(v -> replaceFragment(new FollowingFragment()));
         }
     }
 
@@ -135,6 +115,7 @@ public class AdminFragment extends Fragment {
         transaction.commit();
     }
 
+
     private void loadProfile() {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;
@@ -147,13 +128,21 @@ public class AdminFragment extends Fragment {
                 }
             }
             @Override
-            public void onFailure(Call<UserProfile> call, Throwable t) {}
+            public void onFailure(Call<UserProfile> call, Throwable t) {
+                if (isAdded()) {
+                    Toast.makeText(getContext(), "Không thể tải thông tin cá nhân", Toast.LENGTH_SHORT).show();
+                }
+            }
         });
     }
 
+
+
     private void displayProfile(UserProfile profile) {
         if (tvUsername != null) tvUsername.setText(profile.getUsername());
-        if (tvBio != null) tvBio.setText(profile.getBio().isEmpty() ? "Chưa có mô tả" : profile.getBio());
+        if (tvBio != null) tvBio.setText(profile.getBio() == null || profile.getBio().isEmpty() ? "Chưa có mô tả" : profile.getBio());
+        
+        // CẬP NHẬT CÁC CON SỐ THỰC TẾ TỪ API
         if (tvFollowers != null) tvFollowers.setText(String.valueOf(profile.getFollowerCount()));
         if (tvFollowing != null) tvFollowing.setText(String.valueOf(profile.getFollowingCount()));
         if (tvStoryCount != null) tvStoryCount.setText(String.valueOf(profile.getStoryCount()));
@@ -164,4 +153,6 @@ public class AdminFragment extends Fragment {
                     .circleCrop().into(ivAvatar);
         }
     }
+
+
 }

@@ -35,21 +35,19 @@ public class UpdateStoriesActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        // Tương tự truyện mới cập nhật
-        RetrofitClient.getApi().getStories(null, null, null).enqueue(new Callback<List<Story>>() {
+        // Đồng bộ với trang chủ: Sử dụng API recently-updated
+        RetrofitClient.getApi().getRecentlyUpdated().enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     storyList.clear();
                     storyList.addAll(response.body());
                     adapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(UpdateStoriesActivity.this, "Không thể tải dữ liệu", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onFailure(Call<List<Story>> call, Throwable t) {
-                Toast.makeText(UpdateStoriesActivity.this, "Lỗi kết nối server", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UpdateStoriesActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
             }
         });
     }
