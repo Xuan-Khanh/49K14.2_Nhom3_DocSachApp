@@ -11,7 +11,6 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.Header;
-import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -36,16 +35,16 @@ public interface ApiService {
     Call<UserProfile> getPublicProfile(@Path("id") int userId, @Header("Authorization") String authToken);
 
     @POST("users/follow")
-    Call<java.util.Map<String, Object>> followUser(@Header("Authorization") String authToken, @Body java.util.Map<String, Integer> body);
+    Call<Map<String, Object>> followUser(@Header("Authorization") String authToken, @Body Map<String, Integer> body);
 
-    @retrofit2.http.HTTP(method = "DELETE", path = "users/unfollow", hasBody = true)
-    Call<java.util.Map<String, Object>> unfollowUser(@Header("Authorization") String authToken, @Body java.util.Map<String, Integer> body);
+    @HTTP(method = "DELETE", path = "users/unfollow", hasBody = true)
+    Call<Map<String, Object>> unfollowUser(@Header("Authorization") String authToken, @Body Map<String, Integer> body);
 
     @GET("users/{id}/followers")
-    Call<java.util.List<com.example.docsachapp.model.UserSearchItem>> getFollowers(@Path("id") int userId, @Header("Authorization") String authToken);
+    Call<List<UserSearchItem>> getFollowers(@Path("id") int userId, @Header("Authorization") String authToken);
 
     @GET("users/{id}/following")
-    Call<java.util.List<com.example.docsachapp.model.UserSearchItem>> getFollowing(@Path("id") int userId, @Header("Authorization") String authToken);
+    Call<List<UserSearchItem>> getFollowing(@Path("id") int userId, @Header("Authorization") String authToken);
 
     @GET("users/{user_id}/collections")
     Call<List<Collection>> getUserCollections(@Path("user_id") int userId);
@@ -61,16 +60,12 @@ public interface ApiService {
     @GET("stories")
     Call<List<Story>> searchStories(@Query("search") String keyword);
 
-<<<<<<< HEAD
-    // Cập nhật ở đây: Thêm Auth Header để lấy user_rating
-=======
     @GET("search")
-    Call<com.example.docsachapp.model.SearchResultResponse> searchAll(@Query("keyword") String keyword);
+    Call<SearchResultResponse> searchAll(@Query("keyword") String keyword);
 
     @GET("genres")
     Call<List<Story.Genre>> getGenres();
 
->>>>>>> origin/phuong
     @GET("stories/{id}")
     Call<Story> getStoryDetail(@Header("Authorization") String authToken, @Path("id") int id);
 
@@ -85,35 +80,22 @@ public interface ApiService {
     Call<Chapter> getChapterDetail(@Path("id") int chapterId);
 
     // ==================== THEO DÕI TRUYỆN ====================
-<<<<<<< HEAD
     @POST("follow/story")
     Call<Map<String, Object>> followStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     @HTTP(method = "DELETE", path = "unfollow/story", hasBody = true)
     Call<Map<String, Object>> unfollowStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
-=======
->>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
 
     @GET("user/following-stories")
     Call<List<Story>> getFollowingStories(@Header("Authorization") String authToken);
 
-<<<<<<< HEAD
-=======
-    @POST("follow/story")
-    Call<Map<String, Object>> followStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
-
-    @HTTP(method = "DELETE", path = "unfollow/story", hasBody = true)
-    Call<Map<String, Object>> unfollowStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
-
     // ==================== LỊCH SỬ ĐỌC ====================
-
     @GET("reading-history")
     Call<List<ReadingHistoryItem>> getReadingHistory(@Header("Authorization") String authToken);
 
     @POST("reading-history/update")
     Call<Map<String, Object>> updateReadingHistory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
->>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
     // ==================== BÌNH LUẬN ====================
     @GET("stories/{id}/comments")
     Call<List<Comment>> getComments(@Path("id") int storyId);
@@ -122,24 +104,15 @@ public interface ApiService {
     Call<Comment> postComment(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     // ==================== ĐÁNH GIÁ ====================
-
     @POST("ratings")
     Call<Map<String, Object>> postRating(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     // ==================== BỘ SƯU TẬP ====================
-<<<<<<< HEAD
-    @GET("bosuutap")
-=======
-
     @GET("collections")
->>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
     Call<List<Collection>> getBoSuuTap(@Header("Authorization") String authToken);
 
     @GET("collections/{id}")
     Call<Collection> getCollectionDetail(@Header("Authorization") String authToken, @Path("id") int collectionId);
-
-    @POST("collections/add-story")
-    Call<Map<String, Object>> addStoryToCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     @POST("collections")
     Call<Map<String, Object>> createCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);
@@ -155,14 +128,4 @@ public interface ApiService {
 
     @HTTP(method = "DELETE", path = "collections/remove-story", hasBody = true)
     Call<Map<String, Object>> removeStoryFromCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);
-
-    // ==================== LỊCH SỬ & THỂ LOẠI ====================
-    @GET("reading-history")
-    Call<List<ReadingHistoryItem>> getReadingHistory(@Header("Authorization") String authToken);
-
-    @POST("reading-history/update")
-    Call<Map<String, Object>> updateReadingHistory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
-
-    @GET("genres")
-    Call<List<Story.Genre>> getGenres();
 }

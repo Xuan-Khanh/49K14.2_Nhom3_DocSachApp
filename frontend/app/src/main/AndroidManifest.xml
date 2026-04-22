@@ -43,8 +43,4 @@
         <activity android:name=".AuthorProfileActivity" />
         <activity android:name=".FollowListActivity" />
     </application>
-<<<<<<< HEAD
 </manifest>
-=======
-</manifest>
->>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083

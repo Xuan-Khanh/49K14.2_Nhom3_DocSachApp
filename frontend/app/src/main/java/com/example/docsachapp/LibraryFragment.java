@@ -152,9 +152,9 @@ public class LibraryFragment extends Fragment {
     }
 
     private void loadCollections() {
-        int userId = sessionManager.getUserId();
-        if (userId == -1) return;
-        RetrofitClient.getApi().getUserCollections(userId).enqueue(new Callback<List<Collection>>() {
+        String token = sessionManager.getAuthHeader();
+        if (token == null) return;
+        RetrofitClient.getApi().getBoSuuTap(token).enqueue(new Callback<List<Collection>>() {
             @Override
             public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
@@ -188,7 +188,6 @@ public class LibraryFragment extends Fragment {
         loadCollections(); 
     }
 
-<<<<<<< HEAD
     private void exitSelectionMode() {
         bulkActionBar.setVisibility(View.GONE);
         llTopBar.setVisibility(View.VISIBLE);
@@ -201,23 +200,14 @@ public class LibraryFragment extends Fragment {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_to_collection, null);
         
         RecyclerView rv = dialogView.findViewById(R.id.rv_collections_select);
-        TextView btnDone = dialogView.findViewById(R.id.btn_done);
+        rv.setVisibility(View.VISIBLE);
+        TextView btnDone = dialogView.findViewById(R.id.tv_done); // Đổi ID thành tv_done cho khớp với XML mới
 
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         RecyclerView.Adapter adapterSelect = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             @NonNull @Override public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup p, int t) {
                 View v = LayoutInflater.from(p.getContext()).inflate(R.layout.item_collection_select, p, false);
                 return new RecyclerView.ViewHolder(v) {};
-=======
-        RetrofitClient.getApi().getBoSuuTap(token).enqueue(new Callback<List<Collection>>() {
-            @Override
-            public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
-                if (isAdded() && response.isSuccessful() && response.body() != null) {
-                    collections.clear();
-                    collections.addAll(response.body());
-                    collectionAdapter.notifyDataSetChanged();
-                }
->>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
             }
             @Override public void onBindViewHolder(@NonNull RecyclerView.ViewHolder h, int p) {
                 Collection col = collections.get(p);

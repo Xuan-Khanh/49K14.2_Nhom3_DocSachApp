@@ -19,13 +19,10 @@ import com.example.docsachapp.api.RetrofitClient;
 import com.example.docsachapp.api.SessionManager;
 import com.example.docsachapp.model.Collection;
 import com.example.docsachapp.model.Story;
-<<<<<<< HEAD
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-=======
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
->>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.HashMap;
@@ -45,12 +42,9 @@ public class BookDetailsActivity extends AppCompatActivity {
     
     private TextView tvTitle, tvAuthor, tvDescription, tvRating, tvRatingCount;
     private RoundedImageView ivCover, ivAuthorAvatar;
-<<<<<<< HEAD
     private ChipGroup cgGenres;
-=======
     private MaterialButton btnFollow;
     private ImageView[] stars = new ImageView[5];
->>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +71,8 @@ public class BookDetailsActivity extends AppCompatActivity {
         tvRatingCount = findViewById(R.id.tv_rating_count);
         ivCover = findViewById(R.id.iv_book_cover);
         ivAuthorAvatar = findViewById(R.id.iv_author_avatar);
-<<<<<<< HEAD
-        cgGenres = findViewById(R.id.cg_genres); // Ánh xạ ChipGroup thể loại
-=======
+        cgGenres = findViewById(R.id.cg_genres);
         btnFollow = findViewById(R.id.btn_follow_book);
->>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
         
         // Ánh xạ 5 ngôi sao
         stars[0] = findViewById(R.id.iv_star1);
@@ -121,7 +112,6 @@ public class BookDetailsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Thiết lập nút Mục lục
         findViewById(R.id.btn_toc).setOnClickListener(v -> {
             Intent intent = new Intent(BookDetailsActivity.this, TableOfContentsActivity.class);
             intent.putExtra("STORY_ID", storyId);
@@ -131,7 +121,9 @@ public class BookDetailsActivity extends AppCompatActivity {
 
         findViewById(R.id.btn_collection).setOnClickListener(v -> showAddToCollectionDialog());
         
-        btnFollow.setOnClickListener(v -> toggleFollow());
+        if (btnFollow != null) {
+            btnFollow.setOnClickListener(v -> toggleFollow());
+        }
     }
 
     private void handleRatingClick(int score) {
@@ -141,7 +133,6 @@ public class BookDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        // 1. Cập nhật ngay lập tức lựa chọn của bạn
         myRating = score;
         updateStarsUI(myRating);
 
@@ -154,7 +145,6 @@ public class BookDetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(BookDetailsActivity.this, "Đánh giá thành công!", Toast.LENGTH_SHORT).show();
-                    // Tải lại để cập nhật con số trung bình 4.0/5.0, nhưng UI sao vẫn giữ theo myRating
                     loadStoryDetails();
                 } else {
                     Log.e("API_ERROR", "Code: " + response.code());
@@ -171,6 +161,7 @@ public class BookDetailsActivity extends AppCompatActivity {
 
     private void updateStarsUI(int score) {
         for (int i = 0; i < 5; i++) {
+            if (stars[i] == null) continue;
             if (i < score) {
                 stars[i].setImageResource(android.R.drawable.btn_star_big_on);
                 stars[i].setColorFilter(ContextCompat.getColor(this, R.color.published_yellow));
@@ -225,6 +216,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     }
 
     private void updateFollowButtonUI() {
+        if (btnFollow == null) return;
         if (isFollowing) {
             btnFollow.setText("BỎ THEO DÕI");
             btnFollow.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.primary_light));
@@ -248,6 +240,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         bottomSheetDialog.setContentView(dialogView);
 
         RadioGroup rgCollections = dialogView.findViewById(R.id.rg_collections);
+        rgCollections.setVisibility(View.VISIBLE); // Đảm bảo RadioGroup được hiển thị
         rgCollections.removeAllViews();
 
         RetrofitClient.getApi().getBoSuuTap(token).enqueue(new Callback<List<Collection>>() {
@@ -311,13 +304,9 @@ public class BookDetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Story> call, Response<Story> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Story story = response.body();
-<<<<<<< HEAD
                     if (story.getAuthor() != null) authorId = story.getAuthor().getId();
-=======
-                    authorId = story.getAuthor().getId();
                     isFollowing = story.isFollowing();
                     
-                    // Cập nhật myRating từ server nếu có dữ liệu (>0)
                     int serverRating = story.getUserRating();
                     if (serverRating > 0) {
                         myRating = serverRating;
@@ -325,17 +314,15 @@ public class BookDetailsActivity extends AppCompatActivity {
                     
                     updateFollowButtonUI();
                     
-                    tvRating.setText(String.format("%.1f/5.0", story.getRating()));
-                    tvRatingCount.setText(story.getTotalRatings() + " người đánh giá");
+                    if (tvRating != null) tvRating.setText(String.format("%.1f/5.0", story.getRating()));
+                    if (tvRatingCount != null) tvRatingCount.setText(story.getTotalRatings() + " người đánh giá");
                     
-                    // LOGIC HIỂN THỊ SAO VÀNG: 
                     if (myRating > 0) {
                         updateStarsUI(myRating);
                     } else {
-                        updateStarsUI(Math.round(story.getRating()));
+                        updateStarsUI((int) Math.round(story.getRating()));
                     }
                     
->>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
                     displayStory(story);
                 }
             }
@@ -358,17 +345,15 @@ public class BookDetailsActivity extends AppCompatActivity {
                     .circleCrop().into(ivAuthorAvatar);
         }
 
-        // Đổ dữ liệu Thể loại vào ChipGroup
         if (cgGenres != null && story.getGenres() != null) {
-            cgGenres.removeAllViews(); // Xóa các chip cũ
+            cgGenres.removeAllViews();
             for (Story.Genre genre : story.getGenres()) {
                 Chip chip = new Chip(this);
                 chip.setText(genre.getName());
-                chip.setChipBackgroundColorResource(R.color.gray_bg); // Màu nền xám nhạt
+                chip.setChipBackgroundColorResource(R.color.gray_bg);
                 chip.setTextColor(ContextCompat.getColor(this, R.color.text_dark));
                 chip.setTextSize(12);
                 chip.setClickable(true);
-                // Bạn có thể thêm sự kiện click vào chip để tìm kiếm theo thể loại ở đây
                 cgGenres.addView(chip);
             }
         }

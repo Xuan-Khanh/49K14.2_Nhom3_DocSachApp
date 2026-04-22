@@ -25,15 +25,12 @@ urlpatterns = [
     path('users/follow', views.FollowUserView.as_view(), name='user-follow'),
     # DELETE /api/users/unfollow  – Bỏ theo dõi người dùng
     path('users/unfollow', views.UnfollowUserView.as_view(), name='user-unfollow'),
-<<<<<<< HEAD
     # GET /api/users/{user_id}/collections - Lấy danh sách bộ sưu tập của người dùng
     path('users/<int:user_id>/collections', views.UserBoSuuTapListView.as_view(), name='user-collection-list'),
-=======
     # GET    /api/users/{id}/followers – Lấy danh sách người đang theo dõi user này
     path('users/<int:pk>/followers', views.FollowerListView.as_view(), name='user-followers'),
     # GET    /api/users/{id}/following – Lấy danh sách người mà user này đang theo dõi
     path('users/<int:pk>/following', views.FollowingListView.as_view(), name='user-following'),
->>>>>>> origin/phuong
 
     # ==================== TRUYỆN ====================
     # GET  /api/stories           – Danh sách truyện (public, có filter)

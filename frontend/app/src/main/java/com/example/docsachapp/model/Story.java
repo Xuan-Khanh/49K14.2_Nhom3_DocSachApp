@@ -39,8 +39,6 @@ public class Story {
     @SerializedName("so_chuong")
     private int chaptersCount;
 
-<<<<<<< HEAD
-=======
     @SerializedName("is_following")
     private boolean isFollowing;
 
@@ -48,7 +46,6 @@ public class Story {
     private int userRating;
 
     // Constructor mặc định cho GSON
->>>>>>> 9e9e0374c631cf9fdb04375ca856218821bba083
     public Story() {}
 
     public Story(int id, String title, String coverUrl) {
