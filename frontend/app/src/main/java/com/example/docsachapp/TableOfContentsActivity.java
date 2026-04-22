@@ -2,7 +2,6 @@ package com.example.docsachapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.docsachapp.adapter.ChapterAdapter;
 import com.example.docsachapp.api.RetrofitClient;
+import com.example.docsachapp.api.SessionManager;
 import com.example.docsachapp.model.Chapter;
 
 import java.util.ArrayList;
@@ -29,12 +29,14 @@ public class TableOfContentsActivity extends AppCompatActivity {
     private ChapterAdapter adapter;
     private List<Chapter> chapterList = new ArrayList<>();
     private TextView tvStoryTitle, tvPageNumber;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_table_of_contents);
 
+        sessionManager = new SessionManager(this);
         storyId = getIntent().getIntExtra("STORY_ID", -1);
         storyTitle = getIntent().getStringExtra("STORY_TITLE");
 
@@ -71,7 +73,8 @@ public class TableOfContentsActivity extends AppCompatActivity {
     }
 
     private void loadChapters() {
-        RetrofitClient.getApi().getChapters(storyId).enqueue(new Callback<List<Chapter>>() {
+        String token = sessionManager.getAuthHeader();
+        RetrofitClient.getApi().getChapters(token, storyId).enqueue(new Callback<List<Chapter>>() {
             @Override
             public void onResponse(Call<List<Chapter>> call, Response<List<Chapter>> response) {
                 if (response.isSuccessful() && response.body() != null) {

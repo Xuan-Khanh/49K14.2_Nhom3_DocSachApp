@@ -49,10 +49,10 @@ public class SearchFragment extends Fragment {
     private TextView tvCancelSearch, tvCategoryStoryCount;
     private LinearLayout llExploreView, llRecentSearchesView, llSearchResultsView;
     private ScrollView svExpandedCategories;
-    
+
     private ChipGroup cgCollapsed, cgExpanded;
     private ImageView ivToggleDown, ivToggleUp;
-    
+
     private RecyclerView rvExploreResults, rvRecentSearches, rvSearchResults;
     private TabLayout tabSearchResults;
 
@@ -78,11 +78,11 @@ public class SearchFragment extends Fragment {
         setupAdapters();
         loadRecentSearches();
         setupListeners();
-        
+
         // Initial data loads
         loadExploreStories(null); // Load all stories by default
         loadGenres();
-        
+
         return view;
     }
 
@@ -90,7 +90,7 @@ public class SearchFragment extends Fragment {
         etSearch = view.findViewById(R.id.et_search);
         tvCancelSearch = view.findViewById(R.id.tv_cancel_search);
         tvCategoryStoryCount = view.findViewById(R.id.tv_category_story_count);
-        
+
         llExploreView = view.findViewById(R.id.ll_explore_view);
         svExpandedCategories = view.findViewById(R.id.sv_expanded_categories);
         llRecentSearchesView = view.findViewById(R.id.ll_recent_searches_view);
@@ -116,7 +116,7 @@ public class SearchFragment extends Fragment {
 
         storiesResultAdapter = new StorySearchAdapter(searchStoriesList, getContext());
         usersResultAdapter = new UserSearchAdapter(searchUsersList, getContext());
-        
+
         rvSearchResults.setLayoutManager(new LinearLayoutManager(getContext()));
         rvSearchResults.setAdapter(storiesResultAdapter); // Default tab
 
@@ -209,7 +209,7 @@ public class SearchFragment extends Fragment {
         svExpandedCategories.setVisibility(View.GONE);
         llRecentSearchesView.setVisibility(View.GONE);
         llSearchResultsView.setVisibility(View.GONE);
-        
+
         visibleView.setVisibility(View.VISIBLE);
     }
 
@@ -272,19 +272,19 @@ public class SearchFragment extends Fragment {
     private void populateCategories(List<Story.Genre> genres) {
         cgCollapsed.removeAllViews();
         cgExpanded.removeAllViews();
-        
+
         if (genres.isEmpty()) {
             return;
         }
 
         for (int i = 0; i < genres.size(); i++) {
             Story.Genre genre = genres.get(i);
-            
+
             if (i < 5) {
                 Chip chipCol = createChip(genre);
                 cgCollapsed.addView(chipCol);
             }
-            
+
             Chip chipExp = createChip(genre);
             cgExpanded.addView(chipExp);
         }
@@ -303,7 +303,8 @@ public class SearchFragment extends Fragment {
     }
 
     private void loadExploreStories(Integer genreId) {
-        RetrofitClient.getApi().getStories(null, genreId, "da_dang").enqueue(new Callback<List<Story>>() {
+        // Updated to 4 parameters to match ApiService
+        RetrofitClient.getApi().getStories(null, genreId, "da_dang", null).enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -324,21 +325,21 @@ public class SearchFragment extends Fragment {
         hideKeyboard();
         addRecentSearch(keyword);
         showState(llSearchResultsView);
-        
+
         RetrofitClient.getApi().searchAll(keyword).enqueue(new Callback<SearchResultResponse>() {
             @Override
             public void onResponse(Call<SearchResultResponse> call, Response<SearchResultResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     searchStoriesList.clear();
                     searchUsersList.clear();
-                    
+
                     if (response.body().getStories() != null) {
                         searchStoriesList.addAll(response.body().getStories());
                     }
                     if (response.body().getUsers() != null) {
                         searchUsersList.addAll(response.body().getUsers());
                     }
-                    
+
                     if (storiesResultAdapter != null) storiesResultAdapter.notifyDataSetChanged();
                     if (usersResultAdapter != null) usersResultAdapter.notifyDataSetChanged();
                 }

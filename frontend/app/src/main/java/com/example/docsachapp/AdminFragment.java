@@ -134,7 +134,8 @@ public class AdminFragment extends Fragment {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;
 
-        RetrofitClient.getApi().getBoSuuTap(token).enqueue(new Callback<List<Collection>>() {
+        // ✅ FIX: Đổi getBoSuuTap thành getCollections để khớp với ApiService.java
+        RetrofitClient.getApi().getCollections(token).enqueue(new Callback<List<Collection>>() {
             @Override
             public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {

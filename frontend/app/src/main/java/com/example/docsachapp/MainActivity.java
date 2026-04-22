@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
             if (selectedFragment != null) {
                 // Ẩn/Hiện Top Bar dựa trên Fragment được chọn
-                if (selectedFragment instanceof LibraryFragment) {
+                // Ẩn khi vào trang Thư viện (LibraryFragment) hoặc trang Viết (TuSachFragment)
+                if (selectedFragment instanceof LibraryFragment || selectedFragment instanceof TuSachFragment) {
                     llTopBar.setVisibility(View.GONE);
                     vDivider.setVisibility(View.GONE);
                 } else {

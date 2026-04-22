@@ -34,6 +34,15 @@ public class Chapter {
     @SerializedName("thoi_gian_dang")
     private String publishedAt;
 
+    @SerializedName("so_luot_doc")
+    private int views;
+
+    @SerializedName("so_luot_binh_luan")
+    private int comments;
+
+    @SerializedName("so_luot_luu")
+    private int bookmarks;
+
     public int getId() { return id; }
     public int getStoryId() { return storyId; }
     public String getStoryTitle() { return storyTitle != null ? storyTitle : ""; }
@@ -42,6 +51,10 @@ public class Chapter {
     public String getStatus() { return status != null ? status : ""; }
     public String getCreatedAt() { return createdAt; }
     public String getPublishedAt() { return publishedAt; }
+
+    public int getViews() { return views; }
+    public int getComments() { return comments; }
+    public int getBookmarks() { return bookmarks; }
 
     public boolean isPublished() {
         return "da_dang".equals(status);

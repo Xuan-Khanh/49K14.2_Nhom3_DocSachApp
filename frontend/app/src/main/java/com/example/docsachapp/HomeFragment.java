@@ -83,8 +83,8 @@ public class HomeFragment extends Fragment {
         showLoading(true);
         String token = sessionManager.getAuthHeader();
         
-        // 1. Load Mới đăng & Mới cập nhật
-        RetrofitClient.getApi().getStories(null, null, null).enqueue(new Callback<List<Story>>() {
+        // 1. Load Mới đăng & Mới cập nhật (FIXED: Thêm null cho tham số userId thứ 4)
+        RetrofitClient.getApi().getStories(null, null, null, null).enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
@@ -105,8 +105,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // 2. Load Hoàn thành
-        RetrofitClient.getApi().getStories(null, null, "Hoàn thành").enqueue(new Callback<List<Story>>() {
+        // 2. Load Hoàn thành (FIXED: Thêm null cho tham số userId thứ 4)
+        RetrofitClient.getApi().getStories(null, null, "hoan_thanh", null).enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<List<Story>> call, Throwable t) {}
         });
 
-        // 3. Load Đọc gần đây (FIXED: Mapping dữ liệu)
+        // 3. Load Đọc gần đây
         if (token != null) {
             RetrofitClient.getApi().getReadingHistory(token).enqueue(new Callback<List<ReadingHistoryItem>>() {
                 @Override
@@ -127,7 +127,6 @@ public class HomeFragment extends Fragment {
                     if (isAdded() && response.isSuccessful() && response.body() != null) {
                         recentStories.clear();
                         for (ReadingHistoryItem item : response.body()) {
-                            // Chuyển đổi từ ReadingHistoryItem sang Story để hiển thị lên UI
                             Story s = new Story(item.getBookId(), item.getTitle(), item.getCoverUrl());
                             recentStories.add(s);
                         }

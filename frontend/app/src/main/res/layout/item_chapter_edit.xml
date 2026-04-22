@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="12dp"
+        android:gravity="center_vertical">
+
+        <!-- Checkbox chọn chương (Ẩn khi xem bình thường) -->
+        <ImageView
+            android:id="@+id/iv_checkbox"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_circle_outline"
+            android:visibility="gone"
+            app:tint="@color/text_dark" />
+
+        <!-- Nội dung chương -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_chapter_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chương 1: Tiêu đề chương"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="6dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_status_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_status_proceeding"
+                    android:backgroundTint="#D9A441"
+                    android:text="Bản thảo"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"/>
+
+                <TextView
+                    android:id="@+id/tv_chapter_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="19 giờ trước"
+                    android:textColor="#333333"
+                    android:textSize="13sp"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Stats Mẫu -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="6dp"
+                android:gravity="center_vertical">
+
+                <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_eye" app:tint="#555555" />
+                <TextView android:id="@+id/tv_chapter_views" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="12sp" android:textColor="#555555" android:layout_marginStart="4dp" />
+
+                <ImageView android:layout_width="12dp" android:layout_height="14dp" android:src="@drawable/ic_bookmark" app:tint="#555555" android:layout_marginStart="12dp"/>
+                <TextView android:id="@+id/tv_chapter_bookmarks" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="12sp" android:textColor="#555555" android:layout_marginStart="4dp" />
+
+                <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_comment" app:tint="#555555" android:layout_marginStart="12dp"/>
+                <TextView android:id="@+id/tv_chapter_comments" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="12sp" android:textColor="#555555" android:layout_marginStart="4dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Mũi tên phải (Ẩn khi chọn) -->
+        <ImageView
+            android:id="@+id/iv_chevron"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/black" />
+            
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#EEEEEE" />
+
+</LinearLayout>
