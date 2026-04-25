@@ -105,13 +105,16 @@ public interface ApiService {
     Call<List<Chapter>> getChapters(@Header("Authorization") String authToken, @Path("id") int storyId);
 
     @GET("chapters/{id}/detail")
-    Call<Chapter> getChapterDetail(@Path("id") int chapterId);
+    Call<Chapter> getChapterDetail(@Header("Authorization") String authToken, @Path("id") int chapterId);
 
     @POST("chapters")
-    Call<Chapter> createChapter(@Body Map<String, Object> body);
+    Call<Chapter> createChapter(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     @PUT("chapters/{id}")
-    Call<Chapter> updateChapter(@Path("id") int chapterId, @Body Map<String, Object> body);
+    Call<Chapter> updateChapter(@Header("Authorization") String authToken, @Path("id") int chapterId, @Body Map<String, Object> body);
+
+    @DELETE("chapters/{id}")
+    Call<Map<String, Object>> deleteChapter(@Header("Authorization") String authToken, @Path("id") int chapterId);
 
     @POST("chapters/batch-action")
     Call<Map<String, Object>> batchActionChapters(@Header("Authorization") String authToken, @Body Map<String, Object> body);
