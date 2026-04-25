@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +26,7 @@ import com.example.docsachapp.api.RetrofitClient;
 import com.example.docsachapp.api.SessionManager;
 import com.example.docsachapp.model.Collection;
 import com.example.docsachapp.model.UserProfile;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
@@ -39,12 +41,12 @@ public class AdminFragment extends Fragment {
     private SessionManager sessionManager;
     private TextView tvUsername, tvBio, tvFollowers, tvFollowing, tvStoryCount;
     private RoundedImageView ivAvatar;
-    
+
     private RecyclerView rvCollections;
     private CollectionAdapter collectionAdapter;
     private List<Collection> collectionList = new ArrayList<>();
 
-    private ActivityResultLauncher<Intent> editProfileLauncher;
+    private ActivityResultLauncher<Intent> profileLauncher;
 
     @Nullable
     @Override
@@ -68,8 +70,7 @@ public class AdminFragment extends Fragment {
         rvCollections.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         rvCollections.setAdapter(collectionAdapter);
 
-        // Launcher để detect quay về từ ProfileEditActivity
-        editProfileLauncher = registerForActivityResult(
+        profileLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
@@ -84,20 +85,42 @@ public class AdminFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        android.util.Log.d("PROFILE", "=== onResume called ===");
+        loadProfile();
+    }
+
     private void setupClickListeners(View view) {
         View rlUserInfo = view.findViewById(R.id.rl_user_info);
         View rlLibrary = view.findViewById(R.id.rl_library);
         Button btnLogout = view.findViewById(R.id.btn_logout);
+        View llStoryCount = view.findViewById(R.id.ll_story_count);
+        View llFollowers = view.findViewById(R.id.ll_followers);
+        View llFollowing = view.findViewById(R.id.ll_following);
 
         if (rlUserInfo != null) {
             rlUserInfo.setOnClickListener(v -> {
-                Intent intent = new Intent(requireContext(), ProfileEditActivity.class);
-                editProfileLauncher.launch(intent);
+                Intent intent = new Intent(requireContext(), ProfileDetailsActivity.class);
+                profileLauncher.launch(intent);
             });
         }
 
         if (rlLibrary != null) {
-            rlLibrary.setOnClickListener(v -> Toast.makeText(requireContext(), "Thư viện", Toast.LENGTH_SHORT).show());
+            rlLibrary.setOnClickListener(v -> switchTab(R.id.nav_list));
+        }
+
+        if (llStoryCount != null) {
+            llStoryCount.setOnClickListener(v -> switchTab(R.id.nav_write));
+        }
+
+        if (llFollowers != null) {
+            llFollowers.setOnClickListener(v -> replaceFragment(new FollowersFragment()));
+        }
+
+        if (llFollowing != null) {
+            llFollowing.setOnClickListener(v -> replaceFragment(new FollowingFragment()));
         }
 
         if (btnLogout != null) {
@@ -115,6 +138,22 @@ public class AdminFragment extends Fragment {
         }
     }
 
+    private void switchTab(int navId) {
+        if (getActivity() instanceof MainActivity) {
+            BottomNavigationView bottomNav = getActivity().findViewById(R.id.bottom_navigation);
+            if (bottomNav != null) {
+                bottomNav.setSelectedItemId(navId);
+            }
+        }
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
     private void loadProfile() {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;
@@ -126,7 +165,12 @@ public class AdminFragment extends Fragment {
                     displayProfile(response.body());
                 }
             }
-            @Override public void onFailure(Call<UserProfile> call, Throwable t) {}
+            @Override
+            public void onFailure(Call<UserProfile> call, Throwable t) {
+                if (isAdded()) {
+                    Toast.makeText(getContext(), "Không thể tải thông tin cá nhân", Toast.LENGTH_SHORT).show();
+                }
+            }
         });
     }
 
@@ -134,7 +178,6 @@ public class AdminFragment extends Fragment {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;
 
-        // ✅ FIX: Đổi getBoSuuTap thành getCollections để khớp với ApiService.java
         RetrofitClient.getApi().getCollections(token).enqueue(new Callback<List<Collection>>() {
             @Override
             public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
@@ -149,14 +192,20 @@ public class AdminFragment extends Fragment {
     }
 
     private void displayProfile(UserProfile profile) {
-        tvUsername.setText(profile.getUsername());
-        tvBio.setText(profile.getBio().isEmpty() ? "Chưa có mô tả" : profile.getBio());
-        tvFollowers.setText(String.valueOf(profile.getFollowerCount()));
-        tvFollowing.setText(String.valueOf(profile.getFollowingCount()));
-        tvStoryCount.setText(String.valueOf(profile.getStoryCount()));
+        if (tvUsername != null) tvUsername.setText(profile.getUsername());
+        if (tvBio != null) tvBio.setText(profile.getBio() == null || profile.getBio().isEmpty() ? "Chưa có mô tả" : profile.getBio());
 
-        Glide.with(this).load(profile.getAvatar())
-                .placeholder(android.R.drawable.ic_menu_gallery)
-                .circleCrop().into(ivAvatar);
+        // CẬP NHẬT CÁC CON SỐ THỰC TẾ TỪ API
+        if (tvFollowers != null) tvFollowers.setText(String.valueOf(profile.getFollowerCount()));
+        if (tvFollowing != null) tvFollowing.setText(String.valueOf(profile.getFollowingCount()));
+        if (tvStoryCount != null) tvStoryCount.setText(String.valueOf(profile.getStoryCount()));
+
+        if (ivAvatar != null && profile.getAvatar() != null) {
+            Glide.with(this).load(profile.getAvatar())
+                    .placeholder(android.R.drawable.ic_menu_gallery)
+                    .circleCrop().into(ivAvatar);
+        }
     }
+
+
 }

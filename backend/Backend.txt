@@ -1,1 +1,23 @@
+2. Cài đặt thư viện hỗ trợ
+pip install requests google-auth
 
+
+//    private void loadProfile() {
+//        String token = sessionManager.getAuthHeader();
+//        if (token == null) return;
+//
+//        RetrofitClient.getApi().getUserProfile(token).enqueue(new Callback<UserProfile>() {
+//            @Override
+//            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+//                if (isAdded() && response.isSuccessful() && response.body() != null) {
+//                    displayProfile(response.body());
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<UserProfile> call, Throwable t) {
+//                if (isAdded()) {
+//                    Toast.makeText(getContext(), "Không thể tải thông tin cá nhân", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }

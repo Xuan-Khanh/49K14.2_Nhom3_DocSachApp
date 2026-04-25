@@ -95,11 +95,15 @@
                 android:gravity="center">
 
                 <LinearLayout
+                    android:id="@+id/ll_story_count"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
                     <TextView
                         android:id="@+id/tv_story_count"
                         android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/black"/>
@@ -107,11 +111,15 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_followers"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
                     <TextView
                         android:id="@+id/tv_followers"
                         android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/black"/>
@@ -119,11 +127,15 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_following"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
                     <TextView
                         android:id="@+id/tv_following"
                         android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/black"/>
@@ -199,20 +211,20 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Nút Đăng xuất ở dưới cùng -->
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_logout"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="24dp"
-        android:text="Đăng xuất"
-        android:textAllCaps="false"
-        android:background="@drawable/bg_button_black"
-        android:backgroundTint="#D9A441"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+<!--    &lt;!&ndash; Nút Đăng xuất ở dưới cùng &ndash;&gt;-->
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/btn_logout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="56dp"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginHorizontal="24dp"-->
+<!--        android:layout_marginBottom="24dp"-->
+<!--        android:text="Đăng xuất"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:background="@drawable/bg_button_black"-->
+<!--        android:backgroundTint="#D9A441"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="16sp"-->
+<!--        android:textStyle="bold" />-->
 
 </RelativeLayout>

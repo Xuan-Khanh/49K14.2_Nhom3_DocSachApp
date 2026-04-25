@@ -302,8 +302,12 @@ public class BookDetailsActivity extends AppCompatActivity {
         RetrofitClient.getApi().getStoryDetail(token, storyId).enqueue(new Callback<Story>() {
             @Override
             public void onResponse(Call<Story> call, Response<Story> response) {
+                android.util.Log.d("STORY", "storyId gửi lên: " + storyId);
+                android.util.Log.d("STORY", "Response code: " + response.code());
                 if (response.isSuccessful() && response.body() != null) {
                     Story story = response.body();
+                    android.util.Log.d("STORY", "Title nhận về: " + story.getTitle());
+                    android.util.Log.d("STORY", "ID nhận về: " + story.getId());
                     if (story.getAuthor() != null) authorId = story.getAuthor().getId();
                     isFollowing = story.isFollowing();
                     
@@ -328,6 +332,7 @@ public class BookDetailsActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<Story> call, Throwable t) {
+                android.util.Log.e("STORY", "Lỗi: " + t.getMessage());
                 Toast.makeText(BookDetailsActivity.this, "Lỗi tải thông tin truyện", Toast.LENGTH_SHORT).show();
             }
         });

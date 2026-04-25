@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/btn_back"
             android:layout_marginTop="20dp"
-            android:text="Mới đăng"
+            android:text="Truyện đã hoàn thành"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@color/black" />
@@ -43,6 +43,6 @@
         android:layout_height="match_parent"
         android:paddingHorizontal="16dp"
         android:clipToPadding="false"
-        tools:listitem="@layout/item_story_vertical" />
+        tools:listitem="@layout/item_recently_read" />
 
 </LinearLayout>

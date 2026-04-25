@@ -34,7 +34,7 @@ class Command(BaseCommand):
         self._seed_theo_doi_truyen(nguoi_dungs, truyens)
         self._seed_theo_doi_nguoi_dung(nguoi_dungs)
         self._seed_bo_suu_tap(nguoi_dungs, truyens)
-
+        self._seed_follow_cho_test(nguoi_dungs)
         self.stdout.write(self.style.SUCCESS('=== Seed du lieu thanh cong! ==='))
 
     def _clear_data(self):
@@ -171,6 +171,11 @@ class Command(BaseCommand):
                 trang_thai=trang_thai,
                 so_luot_doc=random.randint(100, 50000)
             )
+            if i < 10:
+                created = timezone.now() - timedelta(days=random.randint(1, 7))
+            else:
+                created = timezone.now() - timedelta(days=random.randint(30, 180))
+            Truyen.objects.filter(pk=truyen.pk).update(created_at=created)
             assigned_tl = random.sample(the_loais, random.randint(1, 3))
             for tl in assigned_tl:
                 TheLoaiTruyen.objects.get_or_create(truyen=truyen, the_loai=tl)
@@ -188,14 +193,18 @@ class Command(BaseCommand):
         )
 
         total = 0
-        for truyen in truyens:
+        for idx, truyen in enumerate(truyens):
             so_chuong = random.randint(3, 6)
             for j in range(so_chuong):
                 trang_thai = 'da_dang' if truyen.trang_thai in ['da_dang', 'hoan_thanh'] else 'ban_thao'
-                thoi_gian_dang = (
-                    timezone.now() - timedelta(days=random.randint(1, 60))
-                    if trang_thai == 'da_dang' else None
-                )
+                # Truyện index 10-19: vừa thêm chương mới gần đây
+                if idx >= 10 and j == so_chuong - 1:
+                    thoi_gian_dang = timezone.now() - timedelta(days=random.randint(1, 3))
+                else:
+                    thoi_gian_dang = (
+                        timezone.now() - timedelta(days=random.randint(1, 60))
+                        if trang_thai == 'da_dang' else None
+                    )
                 Chuong.objects.create(
                     truyen=truyen,
                     tieu_de=f'Chuong {j + 1}',
@@ -328,3 +337,23 @@ class Command(BaseCommand):
                     count_bst_truyen += 1
 
         self.stdout.write(f'  [OK] Da tao {count_bst} bo suu tap, {count_bst_truyen} BST-Truyen')
+
+    def _seed_follow_cho_test(self, nguoi_dungs):
+        """Đảm bảo user đầu tiên (nguyenvana) có followers và following để test"""
+        profile_a = nguoi_dungs[0]  # nguyenvana
+
+        # nguyenvana follow 3 người
+        for nd in nguoi_dungs[1:4]:
+            TheoDoiNguoiDung.objects.get_or_create(
+                nguoi_theo_doi=profile_a,
+                nguoi_duoc_theo_doi=nd
+            )
+
+        # 3 người follow lại nguyenvana
+        for nd in nguoi_dungs[1:4]:
+            TheoDoiNguoiDung.objects.get_or_create(
+                nguoi_theo_doi=nd,
+                nguoi_duoc_theo_doi=profile_a
+            )
+
+        self.stdout.write(f'  [OK] Da tao follow test cho {profile_a.user.username}')

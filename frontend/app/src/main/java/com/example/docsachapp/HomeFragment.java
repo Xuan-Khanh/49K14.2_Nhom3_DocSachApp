@@ -1,5 +1,6 @@
 package com.example.docsachapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,9 +53,24 @@ public class HomeFragment extends Fragment {
         tvError = view.findViewById(R.id.tv_error);
         
         setupRecyclerViews(view);
+        setupClickListeners(view);
         loadData();
         
         return view;
+    }
+
+    private void setupClickListeners(View view) {
+        View btnMoiDang = view.findViewById(R.id.tv_xem_them_moi_dang);
+        if (btnMoiDang != null) btnMoiDang.setOnClickListener(v -> startActivity(new Intent(getActivity(), PostStoriesActivity.class)));
+
+        View btnMoiCapNhat = view.findViewById(R.id.tv_xem_them_moi_cap_nhat);
+        if (btnMoiCapNhat != null) btnMoiCapNhat.setOnClickListener(v -> startActivity(new Intent(getActivity(), UpdateStoriesActivity.class)));
+
+        View btnHoanThanh = view.findViewById(R.id.tv_xem_them_hoan_thanh);
+        if (btnHoanThanh != null) btnHoanThanh.setOnClickListener(v -> startActivity(new Intent(getActivity(), CompletedStoriesActivity.class)));
+
+        View btnDocGday = view.findViewById(R.id.tv_xem_them_doc_gday);
+        if (btnDocGday != null) btnDocGday.setOnClickListener(v -> startActivity(new Intent(getActivity(), RecentlyReadStoriesActivity.class)));
     }
 
     private void setupRecyclerViews(View view) {
@@ -83,19 +99,14 @@ public class HomeFragment extends Fragment {
         showLoading(true);
         String token = sessionManager.getAuthHeader();
         
-        // 1. Load Mới đăng & Mới cập nhật (FIXED: Thêm null cho tham số userId thứ 4)
-        RetrofitClient.getApi().getStories(null, null, null, null).enqueue(new Callback<List<Story>>() {
+        // 1. Load Mới đăng
+        RetrofitClient.getApi().getNewReleases().enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
                     newStories.clear();
                     newStories.addAll(response.body());
                     newStoriesAdapter.notifyDataSetChanged();
-
-                    updateStories.clear();
-                    updateStories.addAll(response.body());
-                    updateStoriesAdapter.notifyDataSetChanged();
-                    
                     showLoading(false);
                 }
             }
@@ -105,8 +116,22 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // 2. Load Hoàn thành (FIXED: Thêm null cho tham số userId thứ 4)
-        RetrofitClient.getApi().getStories(null, null, "hoan_thanh", null).enqueue(new Callback<List<Story>>() {
+        // 2. Load Mới cập nhật
+        RetrofitClient.getApi().getRecentlyUpdated().enqueue(new Callback<List<Story>>() {
+            @Override
+            public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
+                if (isAdded() && response.isSuccessful() && response.body() != null) {
+                    updateStories.clear();
+                    updateStories.addAll(response.body());
+                    updateStoriesAdapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Story>> call, Throwable t) {}
+        });
+
+        // 3. Load Hoàn thành
+        RetrofitClient.getApi().getCompletedStories().enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
@@ -119,7 +144,7 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<List<Story>> call, Throwable t) {}
         });
 
-        // 3. Load Đọc gần đây
+        // 4. Load Đọc gần đây
         if (token != null) {
             RetrofitClient.getApi().getReadingHistory(token).enqueue(new Callback<List<ReadingHistoryItem>>() {
                 @Override
@@ -127,8 +152,7 @@ public class HomeFragment extends Fragment {
                     if (isAdded() && response.isSuccessful() && response.body() != null) {
                         recentStories.clear();
                         for (ReadingHistoryItem item : response.body()) {
-                            Story s = new Story(item.getBookId(), item.getTitle(), item.getCoverUrl());
-                            recentStories.add(s);
+                            recentStories.add(new Story(item.getBookId(), item.getTitle(), item.getCoverUrl()));
                         }
                         recentStoriesAdapter.notifyDataSetChanged();
                     }

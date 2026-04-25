@@ -17,42 +17,60 @@ import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import com.example.docsachapp.model.UserFollowItem;
 
 public interface ApiService {
 
     // ==================== AUTH & PROFILE ====================
-    @POST("auth/login")
+
+    @POST("auth/login/")
     Call<LoginResponse> login(@Body LoginRequest request);
 
-    @POST("auth/register")
+    @POST("auth/register/")
     Call<RegisterResponse> register(@Body RegisterRequest request);
 
-    @GET("auth/profile")
+    /** API Quên mật khẩu - Gửi email nhận OTP */
+    @POST("auth/forgot-password/")
+    Call<Map<String, Object>> forgotPassword(@Body Map<String, String> body);
+
+    /** API Xác nhận mã OTP */
+    @POST("auth/verify-otp/")
+    Call<Map<String, Object>> verifyOtp(@Body Map<String, String> body);
+
+    /** API Đặt lại mật khẩu mới */
+    @POST("auth/reset-password/")
+    Call<Map<String, Object>> resetPassword(@Body Map<String, String> body);
+
+    /** API Đăng nhập bằng mạng xã hội (Google/Facebook) */
+    @POST("auth/social-login/")
+    Call<LoginResponse> socialLogin(@Body Map<String, String> body);
+
+    @GET("auth/profile/")
     Call<UserProfile> getUserProfile(@Header("Authorization") String authToken);
 
-    @PUT("auth/profile")
+    @PUT("auth/profile/")
     Call<Map<String, Object>> updateUserProfile(@Header("Authorization") String authToken, @Body Map<String, String> body);
 
-    @GET("users/{id}")
+    @GET("users/{id}/")
     Call<UserProfile> getPublicProfile(@Path("id") int userId, @Header("Authorization") String authToken);
 
-    @POST("users/follow")
+    @POST("users/follow/")
     Call<Map<String, Object>> followUser(@Header("Authorization") String authToken, @Body Map<String, Integer> body);
 
-    @HTTP(method = "DELETE", path = "users/unfollow", hasBody = true)
+    @HTTP(method = "DELETE", path = "users/unfollow/", hasBody = true)
     Call<Map<String, Object>> unfollowUser(@Header("Authorization") String authToken, @Body Map<String, Integer> body);
 
-    @GET("users/{id}/followers")
-    Call<List<UserSearchItem>> getFollowers(@Path("id") int userId, @Header("Authorization") String authToken);
+    @GET("users/{id}/followers/")
+    Call<List<UserSearchItem>> getUserFollowers(@Path("id") int userId, @Header("Authorization") String authToken);
 
-    @GET("users/{id}/following")
-    Call<List<UserSearchItem>> getFollowing(@Path("id") int userId, @Header("Authorization") String authToken);
+    @GET("users/{id}/following/")
+    Call<List<UserSearchItem>> getUserFollowing(@Path("id") int userId, @Header("Authorization") String authToken);
 
-    @GET("users/{user_id}/collections")
+    @GET("users/{user_id}/collections/")
     Call<List<Collection>> getUserCollections(@Path("user_id") int userId);
 
     // ==================== TRUYỆN (Stories) ====================
-    @GET("stories")
+    @GET("stories/")
     Call<List<Story>> getStories(
             @Query("search") String search,
             @Query("theloai") Integer theLoaiId,
@@ -60,8 +78,17 @@ public interface ApiService {
             @Query("nguoi_dung_id") Integer userId
     );
 
+    @GET("stories/new-releases/")
+    Call<List<Story>> getNewReleases();
+
+    @GET("stories/recently-updated/")
+    Call<List<Story>> getRecentlyUpdated();
+
+    @GET("stories/completed/")
+    Call<List<Story>> getCompletedStories();
+
     @Multipart
-    @POST("stories")
+    @POST("stories/")
     Call<Story> createStory(
             @Header("Authorization") String authToken,
             @Part("ten_truyen") RequestBody title,
@@ -72,7 +99,7 @@ public interface ApiService {
     );
 
     @Multipart
-    @PUT("stories/{id}")
+    @PUT("stories/{id}/")
     Call<Story> updateStoryMultipart(
             @Header("Authorization") String authToken,
             @Path("id") int storyId,
@@ -83,88 +110,96 @@ public interface ApiService {
             @Part MultipartBody.Part coverImage
     );
 
-    @PUT("stories/{id}")
+    @PUT("stories/{id}/")
     Call<Story> updateStory(@Header("Authorization") String authToken, @Path("id") int storyId, @Body Map<String, Object> body);
 
-    @DELETE("stories/{id}")
+    @DELETE("stories/{id}/")
     Call<Map<String, Object>> deleteStory(@Header("Authorization") String authToken, @Path("id") int storyId);
 
-    @GET("stories/my-stories")
+    @GET("stories/my-stories/")
     Call<List<Story>> getMyStories(@Header("Authorization") String authToken);
 
-    @GET("search")
+    @GET("search/")
     Call<SearchResultResponse> searchAll(@Query("keyword") String keyword);
 
-    @GET("genres")
+    @GET("genres/")
     Call<List<Story.Genre>> getGenres();
 
-    @GET("stories/{id}")
+    @GET("stories/{id}/")
     Call<Story> getStoryDetail(@Header("Authorization") String authToken, @Path("id") int id);
 
-    @GET("stories/{id}/chapters")
+    @GET("stories/{id}/chapters/")
     Call<List<Chapter>> getChapters(@Header("Authorization") String authToken, @Path("id") int storyId);
 
-    @GET("chapters/{id}/detail")
+    @GET("chapters/{id}/detail/")
     Call<Chapter> getChapterDetail(@Path("id") int chapterId);
 
-    @POST("chapters")
+    @POST("chapters/")
     Call<Chapter> createChapter(@Body Map<String, Object> body);
 
-    @PUT("chapters/{id}")
+    @PUT("chapters/{id}/")
     Call<Chapter> updateChapter(@Path("id") int chapterId, @Body Map<String, Object> body);
 
-    @POST("chapters/batch-action")
+    @POST("chapters/batch-action/")
     Call<Map<String, Object>> batchActionChapters(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     // ==================== THEO DÕI & BÌNH LUẬN ====================
-    @POST("follow/story")
+    @POST("follow/story/")
     Call<Map<String, Object>> followStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
-    @HTTP(method = "DELETE", path = "unfollow/story", hasBody = true)
+    @HTTP(method = "DELETE", path = "unfollow/story/", hasBody = true)
     Call<Map<String, Object>> unfollowStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
-    @GET("user/following-stories")
+    @GET("user/following-stories/")
     Call<List<Story>> getFollowingStories(@Header("Authorization") String authToken);
 
-    @GET("stories/{id}/comments")
+    // ==================== BÌNH LUẬN ====================
+    @GET("stories/{id}/comments/")
     Call<List<Comment>> getComments(@Path("id") int storyId);
 
-    @POST("comments")
+    @POST("comments/")
     Call<Comment> postComment(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     // ==================== LỊCH SỬ ĐỌC ====================
-    @GET("reading-history")
+    @GET("reading-history/")
     Call<List<ReadingHistoryItem>> getReadingHistory(@Header("Authorization") String authToken);
 
-    @POST("reading-history/update")
+    @POST("reading-history/update/")
     Call<Map<String, Object>> updateReadingHistory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     // ==================== ĐÁNH GIÁ ====================
-    @POST("ratings")
+    @POST("ratings/")
     Call<Map<String, Object>> postRating(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     // ==================== BỘ SƯU TẬP (Collections) ====================
-    @GET("collections")
+    @GET("collections/")
     Call<List<Collection>> getCollections(@Header("Authorization") String authToken);
 
-    @GET("bosuutap")
+    @GET("bosuutap/")
     Call<List<Collection>> getBoSuuTap(@Header("Authorization") String authToken);
 
-    @GET("collections/{id}")
+    @GET("collections/{id}/")
     Call<Collection> getCollectionDetail(@Header("Authorization") String authToken, @Path("id") int collectionId);
 
-    @POST("collections")
+    @POST("collections/")
     Call<Map<String, Object>> createCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
-    @PUT("collections/{id}")
+    @PUT("collections/{id}/")
     Call<Map<String, Object>> updateCollection(@Header("Authorization") String authToken, @Path("id") int collectionId, @Body Map<String, Object> body);
 
-    @DELETE("collections/{id}")
+    @DELETE("collections/{id}/")
     Call<Map<String, Object>> deleteCollection(@Header("Authorization") String authToken, @Path("id") int collectionId);
 
-    @POST("collections/add-story")
+    @POST("collections/add-story/")
     Call<Map<String, Object>> addStoryToCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
-    @HTTP(method = "DELETE", path = "collections/remove-story", hasBody = true)
+    @HTTP(method = "DELETE", path = "collections/remove-story/", hasBody = true)
     Call<Map<String, Object>> removeStoryFromCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);
+
+    // ==================== NGƯỜI THEO DÕI (Auth-based) ====================
+    @GET("auth/followers/")
+    Call<List<UserFollowItem>> getFollowers(@Header("Authorization") String token);
+
+    @GET("auth/following/")
+    Call<List<UserFollowItem>> getFollowing(@Header("Authorization") String token);
 }

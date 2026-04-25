@@ -11,4 +11,6 @@ db.sqlite3
 
 # Android
 .gradle/
+/app/build/
+/build/
 local.properties

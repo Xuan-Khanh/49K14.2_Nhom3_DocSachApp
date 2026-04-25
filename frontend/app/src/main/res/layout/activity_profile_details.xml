@@ -5,185 +5,221 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="24dp"
-        android:layout_above="@+id/ll_buttons">
+        android:layout_above="@+id/ll_buttons"
+        android:fillViewport="true"
+        android:scrollbars="none">
 
-        <!-- Header -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp">
-            <ImageView
-                android:id="@+id/btn_back"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_back_arrow"
-                app:tint="@color/black" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Chi tiết tài khoản"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:fontFamily="@font/inter_bold"/>
-        </RelativeLayout>
-
-        <!-- Avatar -->
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/iv_avatar"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="40dp"
-            android:src="@android:drawable/ic_menu_gallery"
-            android:scaleType="centerCrop"
-            app:riv_oval="true"
-            android:background="#F0F0F0"/>
-
-        <!-- Section Title -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="THÔNG TIN CÁ NHÂN"
-            android:textColor="#9BA4B5"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp"
-            android:fontFamily="@font/inter_bold"/>
-
-        <!-- Form Card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/bg_profile_card"
-            android:padding="16dp">
+            android:padding="24dp">
 
-            <!-- Username -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TÊN ĐĂNG NHẬP"
-                android:textColor="#CCCCCC"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/tv_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="MeoMeo"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:paddingVertical="8dp"
-                android:fontFamily="@font/inter_regular"/>
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" android:layout_marginBottom="12dp"/>
-
-            <!-- Email -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="EMAIL"
-                android:textColor="#CCCCCC"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/tv_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="user_example@gmail.com"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:paddingVertical="8dp"
-                android:fontFamily="@font/inter_regular"/>
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" android:layout_marginBottom="12dp"/>
-
-            <!-- Password -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="MẬT KHẨU"
-                android:textColor="#CCCCCC"
-                android:textSize="10sp"
-                android:textStyle="bold" />
+            <!-- Header -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="56dp">
+                <ImageView
+                    android:id="@+id/btn_back"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_back_arrow"
+                    app:tint="@color/black" />
                 <TextView
-                    android:id="@+id/tv_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Chi tiết tài khoản"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/inter_bold"/>
+            </RelativeLayout>
+
+            <!-- Avatar -->
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="40dp"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:scaleType="centerCrop"
+                app:riv_oval="true"
+                android:background="#F0F0F0"/>
+
+            <!-- Section Title -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="THÔNG TIN CÁ NHÂN"
+                android:textColor="#9BA4B5"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/inter_bold"/>
+
+            <!-- Form Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_profile_card"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Username -->
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="••••••"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:paddingVertical="8dp"
-                    android:fontFamily="@font/inter_regular"/>
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_visibility_off"
-                    app:tint="#CCCCCC"/>
-            </RelativeLayout>
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" android:layout_marginBottom="12dp"/>
+                    android:text="TÊN ĐĂNG NHẬP"
+                    android:textColor="#CCCCCC"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
 
-            <!-- Birthday -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="NGÀY SINH"
-                android:textColor="#CCCCCC"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/tv_birthday"
+                    android:id="@+id/tv_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="01/01/1995"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
+                    android:fontFamily="@font/inter_regular"
                     android:paddingVertical="8dp"
-                    android:fontFamily="@font/inter_regular"/>
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@android:drawable/ic_menu_my_calendar"
-                    app:tint="@color/black"/>
-            </RelativeLayout>
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" android:layout_marginBottom="12dp"/>
+                    android:text="MeoMeo"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-            <!-- Bio -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="MÔ TẢ"
-                android:textColor="#CCCCCC"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/tv_bio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Yêu thích viết lách và khám phá những chân trời mới."
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:paddingVertical="8dp"
-                android:fontFamily="@font/inter_regular"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="#F5F5F5" />
 
+                <!-- Email -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="EMAIL"
+                    android:textColor="#CCCCCC"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingVertical="8dp"
+                    android:text="user_example@gmail.com"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="#F5F5F5" />
+
+                <!-- Password -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MẬT KHẨU"
+                    android:textColor="#CCCCCC"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
+                        android:paddingVertical="8dp"
+                        android:text="••••••"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_visibility_off"
+                        app:tint="#CCCCCC" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="#F5F5F5" />
+
+                <!-- Birthday -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NGÀY SINH"
+                    android:textColor="#CCCCCC"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_birthday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
+                        android:paddingVertical="8dp"
+                        android:text="01/01/1995"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@android:drawable/ic_menu_my_calendar"
+                        app:tint="@color/black" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="#F5F5F5" />
+
+                <!-- Bio -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MÔ TẢ"
+                    android:textColor="#CCCCCC"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_bio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingVertical="8dp"
+                    android:text="Yêu thích viết lách và khám phá những chân trời mới."
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
     <!-- Bottom Buttons -->
     <LinearLayout
@@ -192,7 +228,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:padding="24dp">
+        android:padding="24dp"
+        android:background="@color/white">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_edit"
@@ -207,7 +244,17 @@
             android:layout_marginBottom="12dp"
             android:fontFamily="@font/inter_bold"/>
 
-
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Đăng xuất"
+            android:textAllCaps="false"
+            android:background="@drawable/bg_button_black"
+            android:backgroundTint="#D9A441"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </RelativeLayout>
