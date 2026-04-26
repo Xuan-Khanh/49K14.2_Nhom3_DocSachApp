@@ -35,7 +35,7 @@ public class AuthorProfileActivity extends AppCompatActivity {
     
     private RoundedImageView ivAvatar;
     private TextView tvStoryCount, tvFollowerCount, tvFollowingCount;
-    private TextView tvUsername, tvBio, tvStoriesHeader;
+    private TextView tvUsername, tvBio, tvStoriesHeader, tvHeaderUsername;
     private MaterialButton btnFollowAuthor;
     private RecyclerView rvAuthorStories;
 
@@ -66,6 +66,7 @@ public class AuthorProfileActivity extends AppCompatActivity {
         tvUsername = findViewById(R.id.tv_username);
         tvBio = findViewById(R.id.tv_bio);
         tvStoriesHeader = findViewById(R.id.tv_stories_header);
+        tvHeaderUsername = findViewById(R.id.tv_header_username);
         btnFollowAuthor = findViewById(R.id.btn_follow_author);
         rvAuthorStories = findViewById(R.id.rv_author_stories);
 
@@ -104,6 +105,7 @@ public class AuthorProfileActivity extends AppCompatActivity {
                     UserProfile profile = response.body();
                     
                     tvUsername.setText(profile.getUsername());
+                    if (tvHeaderUsername != null) tvHeaderUsername.setText(profile.getUsername());
                     tvStoryCount.setText(String.valueOf(profile.getStoryCount()));
                     tvFollowerCount.setText(String.valueOf(profile.getFollowerCount()));
                     tvFollowingCount.setText(String.valueOf(profile.getFollowingCount()));

@@ -24,10 +24,11 @@
 
 
         <TextView
+            android:id="@+id/tv_header_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Aneira.__ 🥕"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold" />

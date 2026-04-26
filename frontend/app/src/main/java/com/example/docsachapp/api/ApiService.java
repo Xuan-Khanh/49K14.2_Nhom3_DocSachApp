@@ -15,9 +15,9 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import com.example.docsachapp.model.UserFollowItem;
 
 public interface ApiService {
 
@@ -48,8 +48,14 @@ public interface ApiService {
     @GET("auth/profile/")
     Call<UserProfile> getUserProfile(@Header("Authorization") String authToken);
 
+    /** API Cập nhật hồ sơ (Hỗ trợ cả text và ảnh) */
+    @Multipart
     @PUT("auth/profile/")
-    Call<Map<String, Object>> updateUserProfile(@Header("Authorization") String authToken, @Body Map<String, String> body);
+    Call<Map<String, Object>> updateUserProfile(
+            @Header("Authorization") String authToken,
+            @PartMap Map<String, RequestBody> parts,
+            @Part MultipartBody.Part avatar
+    );
 
     @GET("users/{id}/")
     Call<UserProfile> getPublicProfile(@Path("id") int userId, @Header("Authorization") String authToken);
@@ -132,13 +138,16 @@ public interface ApiService {
     Call<List<Chapter>> getChapters(@Header("Authorization") String authToken, @Path("id") int storyId);
 
     @GET("chapters/{id}/detail/")
-    Call<Chapter> getChapterDetail(@Path("id") int chapterId);
+    Call<Chapter> getChapterDetail(@Header("Authorization") String authToken, @Path("id") int chapterId);
 
     @POST("chapters/")
-    Call<Chapter> createChapter(@Body Map<String, Object> body);
+    Call<Chapter> createChapter(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
     @PUT("chapters/{id}/")
-    Call<Chapter> updateChapter(@Path("id") int chapterId, @Body Map<String, Object> body);
+    Call<Chapter> updateChapter(@Header("Authorization") String authToken, @Path("id") int chapterId, @Body Map<String, Object> body);
+
+    @DELETE("chapters/{id}/")
+    Call<Map<String, Object>> deleteChapter(@Header("Authorization") String authToken, @Path("id") int chapterId);
 
     @POST("chapters/batch-action/")
     Call<Map<String, Object>> batchActionChapters(@Header("Authorization") String authToken, @Body Map<String, Object> body);
@@ -154,8 +163,8 @@ public interface ApiService {
     Call<List<Story>> getFollowingStories(@Header("Authorization") String authToken);
 
     // ==================== BÌNH LUẬN ====================
-    @GET("stories/{id}/comments/")
-    Call<List<Comment>> getComments(@Path("id") int storyId);
+    @GET("stories/{story_id}/comments/")
+    Call<List<Comment>> getComments(@Path("story_id") int storyId);
 
     @POST("comments/")
     Call<Comment> postComment(@Header("Authorization") String authToken, @Body Map<String, Object> body);
@@ -198,8 +207,8 @@ public interface ApiService {
 
     // ==================== NGƯỜI THEO DÕI (Auth-based) ====================
     @GET("auth/followers/")
-    Call<List<UserFollowItem>> getFollowers(@Header("Authorization") String token);
+    Call<List<UserSearchItem>> getMyFollowers(@Header("Authorization") String token);
 
     @GET("auth/following/")
-    Call<List<UserFollowItem>> getFollowing(@Header("Authorization") String token);
+    Call<List<UserSearchItem>> getMyFollowing(@Header("Authorization") String token);
 }

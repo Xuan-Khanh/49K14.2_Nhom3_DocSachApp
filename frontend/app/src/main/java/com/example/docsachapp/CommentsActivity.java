@@ -179,6 +179,19 @@ public class CommentsActivity extends AppCompatActivity {
                         .circleCrop()
                         .into(holder.ivAvatar);
             }
+
+            View.OnClickListener authorClickListener = v -> {
+                if (c.getAuthor() != null) {
+                    android.content.Intent intent = new android.content.Intent(v.getContext(), com.example.docsachapp.AuthorProfileActivity.class);
+                    intent.putExtra("USER_ID", c.getAuthor().getId());
+                    v.getContext().startActivity(intent);
+                }
+            };
+
+            holder.tvUsername.setOnClickListener(authorClickListener);
+            if (holder.ivAvatar != null) {
+                holder.ivAvatar.setOnClickListener(authorClickListener);
+            }
         }
 
         @Override

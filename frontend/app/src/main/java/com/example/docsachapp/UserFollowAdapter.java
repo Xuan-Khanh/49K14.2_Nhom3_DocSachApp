@@ -7,15 +7,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.example.docsachapp.model.UserFollowItem;
+import com.example.docsachapp.model.UserSearchItem;
 import com.makeramen.roundedimageview.RoundedImageView;
 import java.util.List;
 
 public class UserFollowAdapter extends RecyclerView.Adapter<UserFollowAdapter.ViewHolder> {
 
-    private List<UserFollowItem> list;
+    private List<UserSearchItem> list;
 
-    public UserFollowAdapter(List<UserFollowItem> list) {
+    public UserFollowAdapter(List<UserSearchItem> list) {
         this.list = list;
     }
 
@@ -29,19 +29,25 @@ public class UserFollowAdapter extends RecyclerView.Adapter<UserFollowAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        UserFollowItem item = list.get(position);
+        UserSearchItem item = list.get(position);
         holder.tvUsername.setText(item.getUsername());
-        if (item.getAvatar() != null) {
+        
+        String avatarUrl = item.getAvatar();
+        if (avatarUrl != null && !avatarUrl.isEmpty()) {
+            // Đảm bảo URL đầy đủ nếu backend trả về path tương đối
+            String fullUrl = avatarUrl.startsWith("http") ? avatarUrl : "http://10.0.2.2:8000" + avatarUrl;
             Glide.with(holder.itemView.getContext())
-                    .load(item.getAvatar())
+                    .load(fullUrl)
                     .placeholder(android.R.drawable.ic_menu_gallery)
                     .circleCrop()
                     .into(holder.ivAvatar);
+        } else {
+            holder.ivAvatar.setImageResource(android.R.drawable.ic_menu_gallery);
         }
     }
 
     @Override
-    public int getItemCount() { return list.size(); }
+    public int getItemCount() { return list != null ? list.size() : 0; }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         RoundedImageView ivAvatar;

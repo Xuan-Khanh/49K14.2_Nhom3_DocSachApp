@@ -1,20 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-    network_security_config.xml
-    ============================
-    Cho phép HTTP (không mã hóa) đến địa chỉ 10.0.2.2
-    Đây là địa chỉ đặc biệt của Android Emulator để trỏ vào
-    localhost (127.0.0.1) của máy tính thật.
-
-    QUAN TRỌNG:
-    - Emulator → dùng 10.0.2.2:8000
-    - Máy thật  → dùng IP thật của máy tính, ví dụ: 192.168.1.10:8000
--->
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
-        <!-- Android Emulator → localhost máy tính -->
-        <domain includeSubdomains="false">10.0.2.2</domain>
-        <!-- Nếu test trên máy thật, thêm IP máy tính vào đây -->
-        <!-- <domain includeSubdomains="false">192.168.1.x</domain> -->
+        <domain includeSubdomains="true">10.0.2.2</domain> <!-- emulator -->
+        <domain includeSubdomains="true">192.168.1.15</domain> <!-- IP máy bạn -->
     </domain-config>
+
+    <!-- Cho phép toàn bộ HTTP (dev only) -->
+    <base-config cleartextTrafficPermitted="true" />
 </network-security-config>

@@ -25,18 +25,22 @@
 
         <TextView
             android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_toEndOf="@id/btn_back"
+            android:layout_toStartOf="@id/ll_buttons"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="Viết"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
-
         <LinearLayout
+            android:id="@+id/ll_buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

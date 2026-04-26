@@ -92,7 +92,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         View.OnClickListener authorClick = v -> {
             if (authorId != -1) {
                 Intent intent = new Intent(this, AuthorProfileActivity.class);
-                intent.putExtra("AUTHOR_ID", authorId);
+                intent.putExtra("USER_ID", authorId);
                 startActivity(intent);
             }
         };

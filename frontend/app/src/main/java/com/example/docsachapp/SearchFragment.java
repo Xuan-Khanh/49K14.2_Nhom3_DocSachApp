@@ -66,6 +66,8 @@ public class SearchFragment extends Fragment {
     private List<UserSearchItem> searchUsersList = new ArrayList<>();
     private List<String> recentSearches = new ArrayList<>();
 
+    private Integer selectedGenreId = null;
+
     private SharedPreferences sharedPrefs;
     private static final String PREF_NAME = "SearchPrefs";
     private static final String KEY_RECENT = "recent_searches";
@@ -280,10 +282,8 @@ public class SearchFragment extends Fragment {
         for (int i = 0; i < genres.size(); i++) {
             Story.Genre genre = genres.get(i);
 
-            if (i < 5) {
-                Chip chipCol = createChip(genre);
-                cgCollapsed.addView(chipCol);
-            }
+            Chip chipCol = createChip(genre);
+            cgCollapsed.addView(chipCol);
 
             Chip chipExp = createChip(genre);
             cgExpanded.addView(chipExp);
@@ -293,13 +293,33 @@ public class SearchFragment extends Fragment {
     private Chip createChip(Story.Genre genre) {
         Chip chip = new Chip(getContext());
         chip.setText(genre.getName());
+        chip.setTag(genre.getId());
         chip.setCheckable(true);
         chip.setClickable(true);
         chip.setOnClickListener(v -> {
+            if (chip.isChecked()) {
+                selectedGenreId = genre.getId();
+            } else {
+                selectedGenreId = null;
+            }
+            updateChipsState();
             showState(llExploreView);
-            loadExploreStories(genre.getId());
+            loadExploreStories(selectedGenreId);
         });
         return chip;
+    }
+
+    private void updateChipsState() {
+        for (int i = 0; i < cgCollapsed.getChildCount(); i++) {
+            Chip c = (Chip) cgCollapsed.getChildAt(i);
+            Integer id = (Integer) c.getTag();
+            c.setChecked(selectedGenreId != null && selectedGenreId.equals(id));
+        }
+        for (int i = 0; i < cgExpanded.getChildCount(); i++) {
+            Chip c = (Chip) cgExpanded.getChildAt(i);
+            Integer id = (Integer) c.getTag();
+            c.setChecked(selectedGenreId != null && selectedGenreId.equals(id));
+        }
     }
 
     private void loadExploreStories(Integer genreId) {

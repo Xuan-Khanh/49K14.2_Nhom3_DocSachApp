@@ -143,8 +143,8 @@ public class FollowListActivity extends AppCompatActivity {
     private void loadData() {
         String authHeader = sessionManager.getAuthHeader();
 
-        // Load followers
-        RetrofitClient.getApi().getFollowers(userId, authHeader).enqueue(new Callback<List<UserSearchItem>>() {
+        // Load followers - Updated to use getUserFollowers
+        RetrofitClient.getApi().getUserFollowers(userId, authHeader).enqueue(new Callback<List<UserSearchItem>>() {
             @Override
             public void onResponse(Call<List<UserSearchItem>> call, Response<List<UserSearchItem>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -162,8 +162,8 @@ public class FollowListActivity extends AppCompatActivity {
             }
         });
 
-        // Load following
-        RetrofitClient.getApi().getFollowing(userId, authHeader).enqueue(new Callback<List<UserSearchItem>>() {
+        // Load following - Updated to use getUserFollowing
+        RetrofitClient.getApi().getUserFollowing(userId, authHeader).enqueue(new Callback<List<UserSearchItem>>() {
             @Override
             public void onResponse(Call<List<UserSearchItem>> call, Response<List<UserSearchItem>> response) {
                 if (response.isSuccessful() && response.body() != null) {

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -18,28 +19,24 @@ import com.example.docsachapp.model.UserProfile;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
  * ProfileEditActivity – Chỉnh sửa hồ sơ người dùng
- *
- * Luồng:
- * 1. Load profile hiện tại từ GET /api/auth/profile
- * 2. Hiển thị dữ liệu vào EditText
- * 3. Khi bấm Lưu → gọi PUT /api/auth/profile với các trường đã thay đổi
- * 4. Sau khi lưu thành công → finish() để quay lại AdminFragment
  */
 public class ProfileEditActivity extends AppCompatActivity {
 
-    private EditText etBio, etBirthday, etEmail;
+    private EditText etUsername, etBio, etBirthday, etEmail;
     private Button btnSave;
-    private ImageView btnBack;
+    private ImageView btnBack, ivAvatar;
     private ProgressBar progressBar;
     private SessionManager sessionManager;
 
-    // Giữ giá trị gốc để không gửi trùng
     private UserProfile currentProfile;
 
     @Override
@@ -62,48 +59,44 @@ public class ProfileEditActivity extends AppCompatActivity {
     private void initViews() {
         btnBack     = findViewById(R.id.btn_back);
         btnSave     = findViewById(R.id.btn_save);
-        etBio       = findViewById(R.id.et_bio);          // Mô tả / giới thiệu bản thân
-        etBirthday  = findViewById(R.id.et_birthday);     // Ngày sinh (yyyy-MM-dd)
-        etEmail     = findViewById(R.id.et_email);        // Email
+        etUsername  = findViewById(R.id.et_username);
+        etBio       = findViewById(R.id.et_bio);
+        etBirthday  = findViewById(R.id.et_birthday);
+        etEmail     = findViewById(R.id.et_email);
+        ivAvatar    = findViewById(R.id.iv_avatar);
         progressBar = findViewById(R.id.progress_bar);
-
-        // Fallback: nếu layout dùng et_username thay cho et_bio
-        if (etBio == null) etBio = findViewById(R.id.et_username);
 
         btnBack.setOnClickListener(v -> finish());
 
         btnSave.setOnClickListener(v -> {
+            String username = etUsername != null ? etUsername.getText().toString().trim() : "";
             String bio      = etBio      != null ? etBio.getText().toString().trim() : "";
-            String birthday = etBirthday != null ? etBirthday.getText().toString().trim() : "";
-            String email    = etEmail    != null ? etEmail.getText().toString().trim() : "";
 
-            if (etBio != null && bio.isEmpty()) {
-                etBio.setError("Không được để trống");
+            if (username.isEmpty()) {
+                if (etUsername != null) etUsername.setError("Không được để trống");
                 return;
             }
-            saveProfile(bio, birthday, email);
+            saveProfile(username, bio);
         });
     }
 
-    // ─── Load profile hiện tại ─────────────────────────────────────────────────
     private void loadProfile(String token) {
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
 
         RetrofitClient.getApi().getUserProfile(token).enqueue(new Callback<UserProfile>() {
             @Override
-            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+            public void onResponse(@NonNull Call<UserProfile> call, @NonNull Response<UserProfile> response) {
                 if (progressBar != null) progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
                     currentProfile = response.body();
                     fillForm(currentProfile);
                 } else {
-                    Toast.makeText(ProfileEditActivity.this,
-                            "Không thể tải hồ sơ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileEditActivity.this, "Không thể tải hồ sơ", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<UserProfile> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserProfile> call, @NonNull Throwable t) {
                 if (progressBar != null) progressBar.setVisibility(View.GONE);
                 Toast.makeText(ProfileEditActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
             }
@@ -111,49 +104,49 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     private void fillForm(UserProfile profile) {
+        if (etUsername != null) etUsername.setText(profile.getUsername());
         if (etBio != null)      etBio.setText(profile.getBio());
         if (etBirthday != null) etBirthday.setText(profile.getBirthday() != null ? profile.getBirthday() : "");
         if (etEmail != null)    etEmail.setText(profile.getEmail());
+        
+        if (ivAvatar != null && profile.getAvatar() != null) {
+            Glide.with(this).load(profile.getAvatar()).placeholder(android.R.drawable.ic_menu_gallery).into(ivAvatar);
+        }
     }
 
-    // ─── Lưu profile ─────────────────────────────────────────────────────────
-    private void saveProfile(String bio, String birthday, String email) {
+    private void saveProfile(String username, String bio) {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;
 
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         btnSave.setEnabled(false);
 
-        Map<String, String> body = new HashMap<>();
-        body.put("mo_ta", bio);
-        if (!birthday.isEmpty()) body.put("ngay_sinh", birthday);
-        if (!email.isEmpty())    body.put("email", email);
+        // Tạo Map RequestBody cho các trường văn bản (Multipart PartMap)
+        Map<String, RequestBody> parts = new HashMap<>();
+        parts.put("username", RequestBody.create(username, MediaType.parse("text/plain")));
+        parts.put("mo_ta", RequestBody.create(bio, MediaType.parse("text/plain")));
+        
+        // Hiện tại để avatar null (Chưa xử lý chọn file ảnh)
+        MultipartBody.Part avatarPart = null;
 
-        RetrofitClient.getApi().updateUserProfile(token, body).enqueue(new Callback<Map<String, Object>>() {
+        // Gọi API với 3 tham số: token, PartMap, và avatarPart
+        RetrofitClient.getApi().updateUserProfile(token, parts, avatarPart).enqueue(new Callback<Map<String, Object>>() {
             @Override
-            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+            public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
                 if (progressBar != null) progressBar.setVisibility(View.GONE);
                 btnSave.setEnabled(true);
 
                 if (response.isSuccessful()) {
-                    Toast.makeText(ProfileEditActivity.this,
-                            "Đã lưu hồ sơ thành công!", Toast.LENGTH_SHORT).show();
-                    // Cache avatar nếu profile trả về
-                    if (currentProfile != null && currentProfile.getAvatar() != null) {
-                        sessionManager.saveAvatar(currentProfile.getAvatar());
-                    }
+                    Toast.makeText(ProfileEditActivity.this, "Đã lưu hồ sơ thành công!", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);
                     finish();
                 } else {
-                    String msg = response.code() == 400
-                            ? "Dữ liệu không hợp lệ"
-                            : "Lưu thất bại (mã " + response.code() + ")";
-                    Toast.makeText(ProfileEditActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileEditActivity.this, "Lưu thất bại (mã " + response.code() + ")", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
                 if (progressBar != null) progressBar.setVisibility(View.GONE);
                 btnSave.setEnabled(true);
                 Toast.makeText(ProfileEditActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
