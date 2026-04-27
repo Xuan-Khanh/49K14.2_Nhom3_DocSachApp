@@ -10,7 +10,9 @@ public class RetrofitClient {
 
     // NẾU DÙNG MÁY THẬT: Thay 10.0.2.2 bằng IP của máy tính (ví dụ: 192.168.1.x)
     // NẾU DÙNG MÁY ẢO: Giữ nguyên 10.0.2.2
-    private static final String BASE_URL = "http://10.0.2.2:8000/api/";
+//    private static final String BASE_URL = "http://10.0.2.2:8000/api/";
+    private static final String BASE_URL = "http://172.36.65.219:8000/api/";
+
 
     private static Retrofit retrofitInstance;
 

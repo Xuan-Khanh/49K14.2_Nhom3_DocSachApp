@@ -73,7 +73,7 @@ class NguoiDungSerializer(serializers.ModelSerializer):
         ]
 
     def get_so_truyen(self, obj):
-        return obj.truyen_list.filter(trang_thai='da_dang').count()
+        return obj.truyen_list.filter(trang_thai__in=['da_dang', 'hoan_thanh']).count()
 
     def get_so_follower(self, obj):
         return obj.nguoi_theo_doi_list.count()
@@ -85,27 +85,47 @@ class NguoiDungSerializer(serializers.ModelSerializer):
 class NguoiDungCapNhatSerializer(serializers.ModelSerializer):
     """Serializer cập nhật profile (PUT)"""
     email = serializers.EmailField(required=False)
+    username = serializers.CharField(required=False)
 
     class Meta:
         model = NguoiDung
-        fields = ['avatar', 'ngay_sinh', 'mo_ta']
+        fields = ['avatar', 'ngay_sinh', 'mo_ta', 'email', 'username']
 
     def update(self, instance, validated_data):
+        # Loại bỏ các field không thuộc model NguoiDung
+        validated_data.pop('email', None)
+        validated_data.pop('username', None)
+
         # Cập nhật email nếu có
         email = self.initial_data.get('email')
+        username = self.initial_data.get('username')
+        user_changed = False
         if email:
             instance.user.email = email
+            user_changed = True
+        if username:
+            instance.user.username = username
+            user_changed = True
+        if user_changed:
             instance.user.save()
+
         return super().update(instance, validated_data)
 
 
 class NguoiDungNgoanSerializer(serializers.ModelSerializer):
     """Serializer nhỏ gọn để nhúng vào các response khác (bình luận, truyện)"""
     username = serializers.CharField(source='user.username', read_only=True)
+    avatar_url = serializers.SerializerMethodField()
 
     class Meta:
         model = NguoiDung
-        fields = ['id', 'username', 'avatar', 'mo_ta']
+        fields = ['id', 'username', 'avatar', 'avatar_url', 'mo_ta']
+
+    def get_avatar_url(self, obj):
+        request = self.context.get('request')
+        if obj.avatar and request:
+            return request.build_absolute_uri(obj.avatar.url)
+        return None
 
 
 # =============================================
@@ -136,17 +156,36 @@ class TruyenSerializer(serializers.ModelSerializer):
     so_chuong = serializers.SerializerMethodField()
     is_following = serializers.SerializerMethodField()
     user_rating = serializers.SerializerMethodField()
+    cover_url = serializers.SerializerMethodField()
+    trang_thai_display = serializers.SerializerMethodField()
+    followers = serializers.SerializerMethodField()
 
     class Meta:
         model = Truyen
         fields = [
-            'id', 'ten_truyen', 'mo_ta', 'trang_thai',
-            'anh_bia', 'so_luot_doc',
+            'id', 'ten_truyen', 'mo_ta', 'trang_thai', 'trang_thai_display',
+            'anh_bia', 'cover_url', 'so_luot_doc',
+            'created_at', 'updated_at',
             'tac_gia', 'the_loai', 'the_loai_ids',
             'diem_trung_binh', 'tong_danh_gia', 'so_chuong',
-            'is_following', 'user_rating'
+            'is_following', 'user_rating', 'followers'
         ]
-        read_only_fields = ['so_luot_doc']
+        read_only_fields = ['so_luot_doc', 'created_at', 'updated_at']
+
+    def get_cover_url(self, obj):
+        """Trả về URL đầy đủ của ảnh bìa (giống LichSuDocSerializer)"""
+        request = self.context.get('request')
+        if obj.anh_bia and request:
+            return request.build_absolute_uri(obj.anh_bia.url)
+        return None
+
+    def get_trang_thai_display(self, obj):
+        """Trả về tên trạng thái hiển thị (e.g. 'Hoàn thành', 'Đã đăng')"""
+        return obj.get_trang_thai_display()
+
+    def get_followers(self, obj):
+        """Số người đang theo dõi truyện"""
+        return obj.theo_doi_list.count()
 
     def get_diem_trung_binh(self, obj):
         return obj.diem_trung_binh()
@@ -176,6 +215,39 @@ class TruyenSerializer(serializers.ModelSerializer):
             except: return 0
         return 0
 
+    def create(self, validated_data):
+        """Tạo truyện mới và xử lý the_loai_ids"""
+        the_loai_ids = validated_data.pop('the_loai_ids', [])
+        truyen = Truyen.objects.create(**validated_data)
+        # Tạo quan hệ thể loại
+        for genre_id in the_loai_ids:
+            try:
+                the_loai = TheLoai.objects.get(pk=int(genre_id))
+                TheLoaiTruyen.objects.get_or_create(truyen=truyen, the_loai=the_loai)
+            except (TheLoai.DoesNotExist, ValueError):
+                pass
+        return truyen
+
+    def update(self, instance, validated_data):
+        """Cập nhật truyện và xử lý the_loai_ids"""
+        the_loai_ids = validated_data.pop('the_loai_ids', None)
+        # Cập nhật các trường thông thường
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        # Cập nhật thể loại nếu có gửi the_loai_ids
+        if the_loai_ids is not None:
+            # Xóa tất cả thể loại cũ
+            TheLoaiTruyen.objects.filter(truyen=instance).delete()
+            # Tạo lại thể loại mới
+            for genre_id in the_loai_ids:
+                try:
+                    the_loai = TheLoai.objects.get(pk=int(genre_id))
+                    TheLoaiTruyen.objects.get_or_create(truyen=instance, the_loai=the_loai)
+                except (TheLoai.DoesNotExist, ValueError):
+                    pass
+        return instance
+
 
 # =============================================
 # CHƯƠNG SERIALIZERS
@@ -183,7 +255,7 @@ class TruyenSerializer(serializers.ModelSerializer):
 
 class ChuongSerializer(serializers.ModelSerializer):
     """Serializer cho chương"""
-    truyen_id = serializers.IntegerField(write_only=True)
+    truyen_id = serializers.IntegerField(write_only=True, required=False)
     ten_truyen = serializers.CharField(source='truyen.ten_truyen', read_only=True)
 
     class Meta:
@@ -282,10 +354,11 @@ class TheoDoiTruyenSerializer(serializers.ModelSerializer):
 class BoSuuTapSerializer(serializers.ModelSerializer):
     """Serializer bộ sưu tập (danh sách)"""
     so_truyen = serializers.SerializerMethodField()
+    nguoi_dung_id = serializers.IntegerField(source='nguoi_dung.id', read_only=True)
 
     class Meta:
         model = BoSuuTap
-        fields = ['id', 'ten_bo_suu_tap', 'so_truyen']
+        fields = ['id', 'ten_bo_suu_tap', 'so_truyen', 'nguoi_dung_id']
 
     def get_so_truyen(self, obj):
         return obj.truyen_list.count()
@@ -325,6 +398,8 @@ class LichSuDocSerializer(serializers.ModelSerializer):
       - followers: Số người theo dõi
       - chapters_count: Tổng số chương
       - genres: Danh sách thể loại
+      - trang_thai: Trạng thái truyện (raw)
+      - trang_thai_display: Trạng thái hiển thị
       - current_chapter: Chương đang đọc (id + tên)
       - updated_at: Thời gian đọc lần cuối → sort, hiển thị
     """
@@ -336,6 +411,8 @@ class LichSuDocSerializer(serializers.ModelSerializer):
     followers    = serializers.SerializerMethodField()
     chapters_count = serializers.SerializerMethodField()
     genres       = serializers.SerializerMethodField()
+    trang_thai   = serializers.CharField(source='truyen.trang_thai', read_only=True)
+    trang_thai_display = serializers.SerializerMethodField()
 
     # Thông tin tác giả
     author       = serializers.CharField(
@@ -352,6 +429,7 @@ class LichSuDocSerializer(serializers.ModelSerializer):
             'id',
             'book_id', 'title', 'author', 'cover_url',
             'views', 'followers', 'chapters_count', 'genres',
+            'trang_thai', 'trang_thai_display',
             'current_chapter',
             'updated_at',
         ]
@@ -374,6 +452,10 @@ class LichSuDocSerializer(serializers.ModelSerializer):
     def get_genres(self, obj):
         """Danh sách tên thể loại"""
         return list(obj.truyen.the_loai.values_list('ten_the_loai', flat=True))
+
+    def get_trang_thai_display(self, obj):
+        """Trả về tên trạng thái hiển thị của truyện"""
+        return obj.truyen.get_trang_thai_display()
 
     def get_current_chapter(self, obj):
         """Thông tin chương đang đọc (None nếu chưa đọc chương nào)"""

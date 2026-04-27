@@ -13,10 +13,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.docsachapp.adapter.FollowListAdapter;
 import com.example.docsachapp.api.RetrofitClient;
 import com.example.docsachapp.api.SessionManager;
 import com.example.docsachapp.model.UserSearchItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -46,14 +48,15 @@ public class FollowingFragment extends Fragment {
 
         String token = new SessionManager(requireContext()).getAuthHeader();
         
-        // Cập nhật gọi API getMyFollowing và dùng UserSearchItem
+        // ✅ FIX #7 & #8: Dùng FollowListAdapter để có nút Follow/Unfollow
+        // API getMyFollowing trả is_following=true → button mặc định = "Đang theo dõi" (Hủy theo dõi)
         RetrofitClient.getApi().getMyFollowing(token).enqueue(new Callback<List<UserSearchItem>>() {
             @Override
             public void onResponse(Call<List<UserSearchItem>> call, Response<List<UserSearchItem>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<UserSearchItem> list = response.body();
-                    tvTitle.setText("Người đang theo dõi: " + list.size());
-                    rv.setAdapter(new UserFollowAdapter(list));
+                    tvTitle.setText("Đang theo dõi: " + list.size());
+                    rv.setAdapter(new FollowListAdapter(list, requireContext()));
                 }
             }
 

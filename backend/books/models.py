@@ -142,8 +142,8 @@ class BinhLuan(models.Model):
 
 # ==================== THEO DÕI TRUYỆN ====================
 class TheoDoiTruyen(models.Model):
-    nguoi_dung = models.ForeignKey(NguoiDung, on_delete=models.CASCADE, verbose_name='Người dùng')
-    truyen = models.ForeignKey(Truyen, on_delete=models.CASCADE, verbose_name='Truyện')
+    nguoi_dung = models.ForeignKey(NguoiDung, on_delete=models.CASCADE, related_name='theo_doi_truyen_list', verbose_name='Người dùng')
+    truyen = models.ForeignKey(Truyen, on_delete=models.CASCADE, related_name='theo_doi_list', verbose_name='Truyện')
     class Meta:
         verbose_name = 'Theo dõi truyện'
         verbose_name_plural = 'Theo dõi truyện'

@@ -373,11 +373,7 @@ public class BookEditActivity extends AppCompatActivity {
             TextView tvDate = itemView.findViewById(R.id.tv_chapter_date);
             ImageView ivCheckbox = itemView.findViewById(R.id.iv_checkbox);
             ImageView ivChevron = itemView.findViewById(R.id.iv_chevron);
-            
-            TextView tvViews = itemView.findViewById(R.id.tv_chapter_views);
-            TextView tvBookmarks = itemView.findViewById(R.id.tv_chapter_bookmarks);
-            TextView tvComments = itemView.findViewById(R.id.tv_chapter_comments);
-            
+
             tvTitle.setText(chapter.getTitle());
             if (chapter.isPublished()) {
                 tvBadge.setText("Đã đăng tải");
@@ -387,11 +383,7 @@ public class BookEditActivity extends AppCompatActivity {
                 tvBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#D9A441")));
             }
             tvDate.setText(chapter.getCreatedAt() != null ? chapter.getCreatedAt().substring(0, 10) : "");
-            
-            if (tvViews != null) tvViews.setText(formatStatText(chapter.getViews()));
-            if (tvBookmarks != null) tvBookmarks.setText(formatStatText(chapter.getBookmarks()));
-            if (tvComments != null) tvComments.setText(formatStatText(chapter.getComments()));
-            
+
             ivCheckbox.setVisibility(View.GONE);
             ivChevron.setVisibility(View.VISIBLE);
 
@@ -417,10 +409,7 @@ public class BookEditActivity extends AppCompatActivity {
             TextView tvDate = itemView.findViewById(R.id.tv_chapter_date);
             ImageView ivCheckbox = itemView.findViewById(R.id.iv_checkbox);
             ImageView ivChevron = itemView.findViewById(R.id.iv_chevron);
-            
-            TextView tvViews = itemView.findViewById(R.id.tv_chapter_views);
-            TextView tvBookmarks = itemView.findViewById(R.id.tv_chapter_bookmarks);
-            TextView tvComments = itemView.findViewById(R.id.tv_chapter_comments);
+
             
             tvTitle.setText(chapter.getTitle());
             if (chapter.isPublished()) {
@@ -431,11 +420,7 @@ public class BookEditActivity extends AppCompatActivity {
                 tvBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#D9A441")));
             }
             tvDate.setText(chapter.getCreatedAt() != null ? chapter.getCreatedAt().substring(0, 10) : "");
-            
-            if (tvViews != null) tvViews.setText(formatStatText(chapter.getViews()));
-            if (tvBookmarks != null) tvBookmarks.setText(formatStatText(chapter.getBookmarks()));
-            if (tvComments != null) tvComments.setText(formatStatText(chapter.getComments()));
-            
+
             ivChevron.setVisibility(View.GONE);
             ivCheckbox.setVisibility(View.VISIBLE);
             ivCheckbox.setImageResource(selectedChapters.contains(chapter.getId()) ? R.drawable.ic_circle_filled : R.drawable.ic_circle_outline);

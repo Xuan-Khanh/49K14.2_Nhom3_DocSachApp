@@ -37,7 +37,9 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,7 +68,8 @@ public class SearchFragment extends Fragment {
     private List<UserSearchItem> searchUsersList = new ArrayList<>();
     private List<String> recentSearches = new ArrayList<>();
 
-    private Integer selectedGenreId = null;
+    /** ✅ FIX: Hỗ trợ chọn NHIỀU thể loại thay vì chỉ 1 */
+    private Set<Integer> selectedGenreIds = new HashSet<>();
 
     private SharedPreferences sharedPrefs;
     private static final String PREF_NAME = "SearchPrefs";
@@ -82,7 +85,7 @@ public class SearchFragment extends Fragment {
         setupListeners();
 
         // Initial data loads
-        loadExploreStories(null); // Load all stories by default
+        loadExploreStories(); // Load all stories by default
         loadGenres();
 
         return view;
@@ -290,6 +293,7 @@ public class SearchFragment extends Fragment {
         }
     }
 
+    /** ✅ FIX: Chip giờ toggle trong Set thay vì thay thế 1 giá trị */
     private Chip createChip(Story.Genre genre) {
         Chip chip = new Chip(getContext());
         chip.setText(genre.getName());
@@ -298,33 +302,49 @@ public class SearchFragment extends Fragment {
         chip.setClickable(true);
         chip.setOnClickListener(v -> {
             if (chip.isChecked()) {
-                selectedGenreId = genre.getId();
+                selectedGenreIds.add(genre.getId());
             } else {
-                selectedGenreId = null;
+                selectedGenreIds.remove(genre.getId());
             }
             updateChipsState();
             showState(llExploreView);
-            loadExploreStories(selectedGenreId);
+            loadExploreStories();
         });
         return chip;
     }
 
+    /** ✅ FIX: Đồng bộ trạng thái checked với Set thay vì so sánh 1 giá trị */
     private void updateChipsState() {
         for (int i = 0; i < cgCollapsed.getChildCount(); i++) {
             Chip c = (Chip) cgCollapsed.getChildAt(i);
             Integer id = (Integer) c.getTag();
-            c.setChecked(selectedGenreId != null && selectedGenreId.equals(id));
+            c.setChecked(selectedGenreIds.contains(id));
         }
         for (int i = 0; i < cgExpanded.getChildCount(); i++) {
             Chip c = (Chip) cgExpanded.getChildAt(i);
             Integer id = (Integer) c.getTag();
-            c.setChecked(selectedGenreId != null && selectedGenreId.equals(id));
+            c.setChecked(selectedGenreIds.contains(id));
         }
     }
 
-    private void loadExploreStories(Integer genreId) {
-        // Updated to 4 parameters to match ApiService
-        RetrofitClient.getApi().getStories(null, genreId, "da_dang", null).enqueue(new Callback<List<Story>>() {
+    /**
+     * ✅ FIX: Chuyển Set<Integer> thành chuỗi comma-separated "1,2,3"
+     * để gửi đúng param theloai cho API GET /api/stories/?theloai=1,2,3
+     */
+    private String buildGenreIdsParam() {
+        if (selectedGenreIds.isEmpty()) return null;
+        StringBuilder sb = new StringBuilder();
+        for (Integer id : selectedGenreIds) {
+            if (sb.length() > 0) sb.append(",");
+            sb.append(id);
+        }
+        return sb.toString();
+    }
+
+    /** ✅ FIX: Gửi theloai dạng String comma-separated thay vì Integer */
+    private void loadExploreStories() {
+        String genreParam = buildGenreIdsParam();
+        RetrofitClient.getApi().getStories(null, genreParam, null, null).enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -341,12 +361,21 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    /** ✅ FIX: Tìm kiếm cũng gửi kèm thể loại đã chọn (comma-separated) */
     private void performSearch(String keyword) {
         hideKeyboard();
         addRecentSearch(keyword);
         showState(llSearchResultsView);
 
-        RetrofitClient.getApi().searchAll(keyword).enqueue(new Callback<SearchResultResponse>() {
+        String genreParam = buildGenreIdsParam();
+        Call<SearchResultResponse> call;
+        if (genreParam != null) {
+            call = RetrofitClient.getApi().searchAll(keyword, genreParam);
+        } else {
+            call = RetrofitClient.getApi().searchAll(keyword);
+        }
+
+        call.enqueue(new Callback<SearchResultResponse>() {
             @Override
             public void onResponse(Call<SearchResultResponse> call, Response<SearchResultResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {

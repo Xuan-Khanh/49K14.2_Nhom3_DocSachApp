@@ -13,7 +13,7 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_margin="16dp"
-        android:src="@android:drawable/ic_menu_revert"
+        android:src="@drawable/ic_back_arrow"
         android:rotation="0"
         app:tint="@color/text_dark" />
 
@@ -131,17 +131,19 @@
                     android:src="@android:drawable/ic_menu_agenda"
                     app:tint="@color/black"/>
                 <TextView
+                    android:id="@+id/tv_story_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dang tiến hành"
+                    android:text="Đang tiến hành"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"/>
                 <TextView
+                    android:id="@+id/tv_story_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="6 giờ"
+                    android:text=""
                     android:textColor="@color/text_dark"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"/>
@@ -251,14 +253,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Tên truyện: Gieo Lại Mầm Sáng Ở Vùng Phế Tích" android:textColor="@color/black" android:layout_marginBottom="4dp"/>
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Tên gốc: Nhà Trẻ Số Một Vũ Trụ" android:textColor="@color/black" android:layout_marginBottom="4dp"/>
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Tác giả: Trường Nhạc Tư Ương" android:textColor="@color/black" android:layout_marginBottom="4dp"/>
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Thể loại: Ngôn tình, Lãng mạng, Điền văn, HE" android:textColor="@color/black" android:layout_marginBottom="4dp"/>
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Nhóm chuyển ngữ: Lavender team" android:textColor="@color/black" android:layout_marginBottom="4dp"/>
-
 
                 <TextView
                     android:layout_width="match_parent"

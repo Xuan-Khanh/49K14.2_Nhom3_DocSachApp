@@ -76,10 +76,23 @@ public interface ApiService {
     Call<List<Collection>> getUserCollections(@Path("user_id") int userId);
 
     // ==================== TRUYỆN (Stories) ====================
+
+    /** Danh sách truyện với sort/filter (hỗ trợ theloai comma-separated: "1,2,3") */
     @GET("stories/")
     Call<List<Story>> getStories(
             @Query("search") String search,
-            @Query("theloai") Integer theLoaiId,
+            @Query("theloai") String theLoaiIds,
+            @Query("trang_thai") String trangThai,
+            @Query("nguoi_dung_id") Integer userId,
+            @Query("sort_by") String sortBy,
+            @Query("order") String order
+    );
+
+    /** Overload giữ tương thích ngược (không sort) */
+    @GET("stories/")
+    Call<List<Story>> getStories(
+            @Query("search") String search,
+            @Query("theloai") String theLoaiIds,
             @Query("trang_thai") String trangThai,
             @Query("nguoi_dung_id") Integer userId
     );
@@ -101,7 +114,7 @@ public interface ApiService {
             @Part("mo_ta") RequestBody description,
             @Part("trang_thai") RequestBody status,
             @Part List<MultipartBody.Part> the_loai,
-            @Part MultipartBody.Part coverImage
+            @Part @androidx.annotation.Nullable MultipartBody.Part coverImage
     );
 
     @Multipart
@@ -113,7 +126,7 @@ public interface ApiService {
             @Part("mo_ta") RequestBody description,
             @Part("trang_thai") RequestBody status,
             @Part List<MultipartBody.Part> the_loai,
-            @Part MultipartBody.Part coverImage
+            @Part @androidx.annotation.Nullable MultipartBody.Part coverImage
     );
 
     @PUT("stories/{id}/")
@@ -125,6 +138,14 @@ public interface ApiService {
     @GET("stories/my-stories/")
     Call<List<Story>> getMyStories(@Header("Authorization") String authToken);
 
+    /** Tìm kiếm hỗ trợ nhiều thể loại (genres comma-separated) */
+    @GET("search/")
+    Call<SearchResultResponse> searchAll(
+            @Query("keyword") String keyword,
+            @Query("genres") String genres
+    );
+
+    /** Tìm kiếm không filter thể loại */
     @GET("search/")
     Call<SearchResultResponse> searchAll(@Query("keyword") String keyword);
 
@@ -159,6 +180,17 @@ public interface ApiService {
     @HTTP(method = "DELETE", path = "unfollow/story/", hasBody = true)
     Call<Map<String, Object>> unfollowStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
+    /** Danh sách truyện đang theo dõi (có sort/filter) */
+    @GET("user/following-stories/")
+    Call<List<Story>> getFollowingStories(
+            @Header("Authorization") String authToken,
+            @Query("sort_by") String sortBy,
+            @Query("order") String order,
+            @Query("trang_thai") String trangThai,
+            @Query("theloai") String theloai
+    );
+
+    /** Danh sách truyện đang theo dõi (không sort/filter) */
     @GET("user/following-stories/")
     Call<List<Story>> getFollowingStories(@Header("Authorization") String authToken);
 
@@ -166,8 +198,13 @@ public interface ApiService {
     @GET("stories/{story_id}/comments/")
     Call<List<Comment>> getComments(@Path("story_id") int storyId);
 
-    @POST("comments/")
-    Call<Comment> postComment(@Header("Authorization") String authToken, @Body Map<String, Object> body);
+    /** POST bình luận mới – URL đúng: /api/stories/{story_id}/comments/ */
+    @POST("stories/{story_id}/comments/")
+    Call<Comment> postComment(
+            @Header("Authorization") String authToken,
+            @Path("story_id") int storyId,
+            @Body Map<String, Object> body
+    );
 
     // ==================== LỊCH SỬ ĐỌC ====================
     @GET("reading-history/")

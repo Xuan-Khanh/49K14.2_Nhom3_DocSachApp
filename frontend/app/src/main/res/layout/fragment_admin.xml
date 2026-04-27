@@ -48,9 +48,9 @@
                     android:layout_height="80dp"
                     android:src="@android:drawable/ic_menu_gallery"
                     android:scaleType="centerCrop"
-                    app:riv_corner_radius="8dp"
-                    android:padding="8dp"
-                    android:background="#F5F5F5" />
+                    app:riv_oval="true"
+                    app:riv_border_width="1dp"
+                    app:riv_border_color="#DDDDDD" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -81,8 +81,7 @@
                     android:layout_height="20dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:src="@android:drawable/arrow_up_float"
-                    android:rotation="90"
+                    android:src="@drawable/ic_chevron_right"
                     app:tint="#CCCCCC" />
             </RelativeLayout>
 
@@ -144,27 +143,6 @@
             </LinearLayout>
 
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" />
-
-            <!-- PHẦN MỚI: BỘ SƯU TẬP CỦA TÔI -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="8dp"
-                android:text="BỘ SƯU TẬP CỦA TÔI"
-                android:textSize="12sp"
-                android:textColor="#BBBBBB" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_admin_collections"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="8dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" android:layout_marginTop="16dp"/>
 
             <!-- Section: THƯ VIỆN -->
             <TextView

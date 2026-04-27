@@ -16,10 +16,14 @@ public class Collection {
     @SerializedName("so_truyen") // Trường nhận số lượng từ Backend
     private int storyCountFromApi;
 
+    @SerializedName("nguoi_dung_id") // ID chủ sở hữu bộ sưu tập
+    private int nguoiDungId;
+
     public int getId() { return id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public List<Story> getStories() { return stories; }
+    public int getNguoiDungId() { return nguoiDungId; }
     
     /**
      * Hàm đếm thông minh: 

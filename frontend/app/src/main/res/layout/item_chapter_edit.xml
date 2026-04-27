@@ -77,15 +77,6 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="6dp"
                 android:gravity="center_vertical">
-
-                <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_eye" app:tint="#555555" />
-                <TextView android:id="@+id/tv_chapter_views" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="12sp" android:textColor="#555555" android:layout_marginStart="4dp" />
-
-                <ImageView android:layout_width="12dp" android:layout_height="14dp" android:src="@drawable/ic_bookmark" app:tint="#555555" android:layout_marginStart="12dp"/>
-                <TextView android:id="@+id/tv_chapter_bookmarks" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="12sp" android:textColor="#555555" android:layout_marginStart="4dp" />
-
-                <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_comment" app:tint="#555555" android:layout_marginStart="12dp"/>
-                <TextView android:id="@+id/tv_chapter_comments" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="12sp" android:textColor="#555555" android:layout_marginStart="4dp" />
             </LinearLayout>
 
         </LinearLayout>

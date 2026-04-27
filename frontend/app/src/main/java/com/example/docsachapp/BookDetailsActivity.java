@@ -41,6 +41,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     private int myRating = 0; // Biến lưu điểm đánh giá của chính người dùng
     
     private TextView tvTitle, tvAuthor, tvDescription, tvRating, tvRatingCount;
+    private TextView tvStatus, tvTime, tvViewsCount, tvChaptersCount;
     private RoundedImageView ivCover, ivAuthorAvatar;
     private ChipGroup cgGenres;
     private MaterialButton btnFollow;
@@ -72,6 +73,10 @@ public class BookDetailsActivity extends AppCompatActivity {
         ivCover = findViewById(R.id.iv_book_cover);
         ivAuthorAvatar = findViewById(R.id.iv_author_avatar);
         cgGenres = findViewById(R.id.cg_genres);
+        tvStatus = findViewById(R.id.tv_story_status);
+        tvTime = findViewById(R.id.tv_story_time);
+        tvViewsCount = findViewById(R.id.tv_views_count);
+        tvChaptersCount = findViewById(R.id.tv_chapters_count);
         btnFollow = findViewById(R.id.btn_follow_book);
         
         // Ánh xạ 5 ngôi sao
@@ -243,7 +248,9 @@ public class BookDetailsActivity extends AppCompatActivity {
         rgCollections.setVisibility(View.VISIBLE); // Đảm bảo RadioGroup được hiển thị
         rgCollections.removeAllViews();
 
-        RetrofitClient.getApi().getBoSuuTap(token).enqueue(new Callback<List<Collection>>() {
+        // ✅ FIX #5: Gọi API collection theo user_id thay vì global
+        int userId = sessionManager.getUserId();
+        RetrofitClient.getApi().getUserCollections(userId).enqueue(new Callback<List<Collection>>() {
             @Override
             public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
                 rgCollections.removeAllViews();
@@ -342,6 +349,17 @@ public class BookDetailsActivity extends AppCompatActivity {
         tvTitle.setText(story.getTitle());
         tvAuthor.setText(story.getAuthorName());
         tvDescription.setText(story.getDescription());
+
+        // ✅ FIX #1: Hiển thị trạng thái và thời gian từ API
+        if (tvStatus != null) tvStatus.setText(story.getStatusDisplay());
+        if (tvTime != null) {
+            String timeText = story.getFormattedUpdatedAt();
+            tvTime.setText(timeText.isEmpty() ? "" : "· " + timeText);
+        }
+
+        // ✅ FIX: Hiển thị lượt đọc và số chương động
+        if (tvViewsCount != null) tvViewsCount.setText("👁 " + story.getViews());
+        if (tvChaptersCount != null) tvChaptersCount.setText("≡ " + story.getChaptersCount() + " chương");
         
         Glide.with(this).load(story.getCoverUrl()).placeholder(R.drawable.biatruyen).into(ivCover);
         if (ivAuthorAvatar != null && story.getAuthor() != null && story.getAuthor().getAvatar() != null) {

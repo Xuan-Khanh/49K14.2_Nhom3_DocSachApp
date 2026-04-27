@@ -33,6 +33,10 @@ from .serializers import (
 )
 from .permissions import IsOwnerOrReadOnly, IsAuthorOfStory, IsCommentOwnerOrAdmin
 
+import requests
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+
 
 # =============================================
 # HELPER
@@ -72,14 +76,19 @@ class DangNhapView(APIView):
 
 class HoSoView(APIView):
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
     def get(self, request):
         profile, _ = get_nguoidung_or_error(request)
         return Response(NguoiDungSerializer(profile, context={'request': request}).data)
     def put(self, request):
-        profile, _ = get_nguoidung_or_error(request)
+        profile, err = get_nguoidung_or_error(request)
+        if err:
+            return err
         ser = NguoiDungCapNhatSerializer(profile, data=request.data, partial=True)
         if ser.is_valid():
             ser.save()
+            profile.refresh_from_db()
             return Response(NguoiDungSerializer(profile, context={'request': request}).data)
         return Response(ser.errors, status=400)
 
@@ -102,21 +111,25 @@ class UserDetailView(APIView):
             return Response({"error": "Không tìm thấy người dùng."}, status=404)
 
         serializer = NguoiDungSerializer(profile, context={'request': request})
-        # Thêm danh sách truyện đã đăng
-        truyen_list = profile.truyen_list.filter(trang_thai='da_dang')
+        # Thêm danh sách truyện đã đăng (bao gồm hoàn thành)
+        truyen_list = profile.truyen_list.filter(trang_thai__in=['da_dang', 'hoan_thanh'])
         truyen_serializer = TruyenSerializer(truyen_list, many=True, context={'request': request})
 
         data = serializer.data
         data['truyen_da_dang'] = truyen_serializer.data
 
-        # Add is_following flag if user is authenticated
+        # is_self: kiểm tra có phải chính mình không
+        data['is_self'] = False
         data['is_following'] = False
         if request.user.is_authenticated:
             try:
-                data['is_following'] = TheoDoiNguoiDung.objects.filter(
-                    nguoi_theo_doi=request.user.nguoidung,
-                    nguoi_duoc_theo_doi=profile
-                ).exists()
+                current_profile = request.user.nguoidung
+                data['is_self'] = (current_profile.id == profile.id)
+                if not data['is_self']:
+                    data['is_following'] = TheoDoiNguoiDung.objects.filter(
+                        nguoi_theo_doi=current_profile,
+                        nguoi_duoc_theo_doi=profile
+                    ).exists()
             except Exception:
                 pass
 
@@ -266,14 +279,24 @@ class TruyenListCreateView(APIView):
         elif not nguoi_dung_id:
             queryset = queryset.filter(trang_thai__in=['da_dang', 'hoan_thanh'])
 
-        # Lọc theo thể loại
+        # Lọc theo thể loại (hỗ trợ nhiều thể loại, cách nhau bởi dấu phẩy)
         theloai_id = request.query_params.get('theloai')
         if theloai_id:
-            queryset = queryset.filter(the_loai__id=theloai_id)
+            genre_ids = [g.strip() for g in theloai_id.split(',') if g.strip()]
+            if genre_ids:
+                queryset = queryset.filter(the_loai__id__in=genre_ids)
 
         # Tìm kiếm theo tên truyện
         search = request.query_params.get('search')
         if search: queryset = queryset.filter(ten_truyen__icontains=search)
+
+        # Sắp xếp
+        sort_by = request.query_params.get('sort_by', 'updated_at')
+        order = request.query_params.get('order', 'desc')
+        valid_sorts = ['ten_truyen', 'so_luot_doc', 'updated_at', 'created_at']
+        if sort_by in valid_sorts:
+            order_prefix = '-' if order == 'desc' else ''
+            queryset = queryset.order_by(f'{order_prefix}{sort_by}')
         
         serializer = TruyenSerializer(queryset.distinct(), many=True, context={'request': request})
         return Response(serializer.data)
@@ -283,7 +306,14 @@ class TruyenListCreateView(APIView):
         if err:
             return err
 
+        # Validate required field 'ten_truyen'
+        if not request.data.get('ten_truyen'):
+            return Response({'error': 'Tên truyện là bắt buộc.'}, status=400)
+
+        # Prepare mutable copy of request data
         data_copy = request.data.copy() if hasattr(request.data, 'copy') else dict(request.data)
+
+        # Handle many-to-many genre IDs
         if 'the_loai' in request.data:
             the_loai_list = request.data.getlist('the_loai') if hasattr(request.data, 'getlist') else request.data.get('the_loai')
             if not isinstance(the_loai_list, list):
@@ -295,8 +325,11 @@ class TruyenListCreateView(APIView):
 
         serializer = TruyenSerializer(data=data_copy, context={'request': request})
         if serializer.is_valid():
-            truyen = serializer.save(nguoi_dung=profile)
-            return Response(TruyenSerializer(truyen, context={'request': request}).data, status=201)
+            try:
+                truyen = serializer.save(nguoi_dung=profile)
+                return Response(TruyenSerializer(truyen, context={'request': request}).data, status=201)
+            except Exception as e:
+                return Response({'error': 'Failed to create story', 'details': str(e)}, status=500)
         return Response(serializer.errors, status=400)
 
 class TruyenDetailView(APIView):
@@ -312,9 +345,23 @@ class TruyenDetailView(APIView):
         truyen = self.get_object(pk)
         if not truyen:
             return Response(status=404)
-            
-        truyen.so_luot_doc += 1
-        truyen.save(update_fields=['so_luot_doc'])
+
+        # Tăng lượt đọc mà KHÔNG thay đổi updated_at
+        Truyen.objects.filter(pk=pk).update(so_luot_doc=truyen.so_luot_doc + 1)
+        truyen.refresh_from_db()
+
+        # Tự động lưu lịch sử đọc cho user đã đăng nhập
+        if request.user.is_authenticated:
+            try:
+                profile = request.user.nguoidung
+                LichSuDoc.objects.update_or_create(
+                    nguoi_dung=profile,
+                    truyen=truyen,
+                    defaults={}  # auto_now updated_at sẽ tự cập nhật
+                )
+            except Exception:
+                pass  # Không block nếu lỗi lưu lịch sử
+
         return Response(TruyenSerializer(truyen, context={'request': request}).data)
 
     def put(self, request, pk):
@@ -343,8 +390,10 @@ class TruyenDetailView(APIView):
             truyen, data=data_copy, partial=True, context={'request': request}
         )
         if serializer.is_valid():
-            serializer.save()
-            return Response(TruyenSerializer(truyen, context={'request': request}).data)
+            updated_truyen = serializer.save()
+            # Refresh from DB to get latest data including trang_thai
+            updated_truyen.refresh_from_db()
+            return Response(TruyenSerializer(updated_truyen, context={'request': request}).data)
         return Response(serializer.errors, status=400)
 
     def delete(self, request, pk):
@@ -403,10 +452,33 @@ class ChuongDetailView(APIView):
 # =============================================
 
 class BinhLuanListView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get(self, request, story_id):
-        bls = BinhLuan.objects.filter(truyen_id=story_id)
+        bls = BinhLuan.objects.filter(truyen_id=story_id).order_by('-thoi_gian_bl')
         return Response(BinhLuanSerializer(bls, many=True, context={'request': request}).data)
+
+    def post(self, request, story_id):
+        """Tạo bình luận mới cho truyện"""
+        profile, err = get_nguoidung_or_error(request)
+        if err:
+            return err
+
+        try:
+            truyen = Truyen.objects.get(pk=story_id)
+        except Truyen.DoesNotExist:
+            return Response({"error": "Không tìm thấy truyện."}, status=404)
+
+        noi_dung = request.data.get('noi_dung', '').strip()
+        if not noi_dung:
+            return Response({"error": "Nội dung bình luận không được để trống."}, status=400)
+
+        binh_luan = BinhLuan.objects.create(
+            nguoi_dung=profile,
+            truyen=truyen,
+            noi_dung=noi_dung
+        )
+        return Response(BinhLuanSerializer(binh_luan, context={'request': request}).data, status=201)
 
 class DanhGiaCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -664,11 +736,18 @@ class SearchView(APIView):
         if not keyword:
             return Response({"error": "Thiếu từ khóa tìm kiếm."}, status=400)
 
-        # Tìm truyện theo tên (chỉ truyện đã đăng)
-        truyen_list = Truyen.objects.filter(
+        # Tìm truyện theo tên (bao gồm cả hoàn thành)
+        truyen_qs = Truyen.objects.filter(
             ten_truyen__icontains=keyword,
-            trang_thai='da_dang'
+            trang_thai__in=['da_dang', 'hoan_thanh']
         )
+
+        # Lọc theo thể loại (hỗ trợ nhiều thể loại, cách nhau bởi dấu phẩy)
+        genres = request.query_params.get('genres', '').strip()
+        if genres:
+            genre_ids = [g.strip() for g in genres.split(',') if g.strip()]
+            if genre_ids:
+                truyen_qs = truyen_qs.filter(the_loai__id__in=genre_ids).distinct()
 
         # Tìm user theo username
         user_list = NguoiDung.objects.filter(
@@ -677,13 +756,13 @@ class SearchView(APIView):
 
         return Response({
             "keyword": keyword,
-            "stories": TruyenSerializer(truyen_list, many=True, context={'request': request}).data,
+            "stories": TruyenSerializer(truyen_qs, many=True, context={'request': request}).data,
             "users": [
                 {
                     "id": u.id,
                     "username": u.user.username,
                     "avatar": request.build_absolute_uri(u.avatar.url) if u.avatar else None,
-                    "so_truyen": u.truyen_list.filter(trang_thai='da_dang').count()
+                    "so_truyen": u.truyen_list.filter(trang_thai__in=['da_dang', 'hoan_thanh']).count()
                 }
                 for u in user_list
             ]
@@ -839,7 +918,7 @@ class SocialLoginView(APIView):
             try:
                 # Gọi API Graph của Facebook để lấy thông tin
                 fb_url = f"https://graph.facebook.com/me?fields=id,name,email&access_token={access_token}"
-                fb_resp = requests.get(fb_resp).json()
+                fb_resp = requests.get(fb_url).json()
                 if 'email' in fb_resp:
                     email = fb_resp['email']
                     username = fb_resp['name'].replace(" ", "_").lower()
@@ -885,14 +964,22 @@ class DanhSachFollowerView(APIView):
         followers = TheoDoiNguoiDung.objects.filter(
             nguoi_duoc_theo_doi=profile
         ).select_related('nguoi_theo_doi__user')
-        data = [
-            {
-                "id": f.nguoi_theo_doi.id,
-                "username": f.nguoi_theo_doi.user.username,
-                "avatar": request.build_absolute_uri(f.nguoi_theo_doi.avatar.url) if f.nguoi_theo_doi.avatar else None
-            }
-            for f in followers
-        ]
+        data = []
+        for f in followers:
+            nguoi = f.nguoi_theo_doi
+            # Kiểm tra mình có đang follow người này không
+            is_following_back = TheoDoiNguoiDung.objects.filter(
+                nguoi_theo_doi=profile,
+                nguoi_duoc_theo_doi=nguoi
+            ).exists()
+            data.append({
+                "id": nguoi.id,
+                "username": nguoi.user.username,
+                "avatar": request.build_absolute_uri(nguoi.avatar.url) if nguoi.avatar else None,
+                "mo_ta": nguoi.mo_ta,
+                "is_self": (nguoi.id == profile.id),
+                "is_following": is_following_back,
+            })
         return Response(data)
 
 
@@ -906,12 +993,207 @@ class DanhSachFollowingView(APIView):
         following = TheoDoiNguoiDung.objects.filter(
             nguoi_theo_doi=profile
         ).select_related('nguoi_duoc_theo_doi__user')
-        data = [
-            {
-                "id": f.nguoi_duoc_theo_doi.id,
-                "username": f.nguoi_duoc_theo_doi.user.username,
-                "avatar": request.build_absolute_uri(f.nguoi_duoc_theo_doi.avatar.url) if f.nguoi_duoc_theo_doi.avatar else None
-            }
-            for f in following
-        ]
+        data = []
+        for f in following:
+            nguoi = f.nguoi_duoc_theo_doi
+            data.append({
+                "id": nguoi.id,
+                "username": nguoi.user.username,
+                "avatar": request.build_absolute_uri(nguoi.avatar.url) if nguoi.avatar else None,
+                "mo_ta": nguoi.mo_ta,
+                "is_self": (nguoi.id == profile.id),
+                "is_following": True,  # Đang theo dõi là True luôn
+            })
         return Response(data)
+
+
+# =============================================
+# CHƯƠNG - TẠO / SỬA / XÓA / BATCH
+# =============================================
+
+class ChuongCreateView(APIView):
+    """POST /api/chapters – Tạo chương mới"""
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        profile, err = get_nguoidung_or_error(request)
+        if err:
+            return err
+
+        story_id = request.data.get('truyen_id') or request.data.get('truyen')
+        if not story_id:
+            return Response({"error": "Thiếu truyen_id (story_id)."}, status=400)
+
+        try:
+            truyen = Truyen.objects.get(pk=story_id)
+        except Truyen.DoesNotExist:
+            return Response({"error": "Không tìm thấy truyện."}, status=404)
+
+        if truyen.nguoi_dung != profile:
+            return Response({"error": "Bạn không có quyền thêm chương cho truyện này."}, status=403)
+
+        serializer = ChuongSerializer(data=request.data)
+        if serializer.is_valid():
+            chuong = serializer.save(truyen=truyen)
+            return Response(ChuongSerializer(chuong).data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class ChuongUpdateDeleteView(APIView):
+    """PUT/DELETE /api/chapters/{id} – Sửa/xóa chương"""
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return Chuong.objects.get(pk=pk)
+        except Chuong.DoesNotExist:
+            return None
+
+    def put(self, request, pk):
+        chuong = self.get_object(pk)
+        if not chuong:
+            return Response({"error": "Không tìm thấy chương."}, status=404)
+
+        profile, err = get_nguoidung_or_error(request)
+        if err:
+            return err
+        if chuong.truyen.nguoi_dung != profile:
+            return Response({"error": "Bạn không có quyền sửa chương này."}, status=403)
+
+        serializer = ChuongSerializer(chuong, data=request.data, partial=True)
+        if serializer.is_valid():
+            # Nếu chuyển sang đã đăng, cập nhật thời gian đăng
+            if request.data.get('trang_thai') == 'da_dang' and not chuong.thoi_gian_dang:
+                serializer.validated_data['thoi_gian_dang'] = timezone.now()
+            serializer.save()
+            return Response(ChuongSerializer(chuong).data)
+        return Response(serializer.errors, status=400)
+
+    def delete(self, request, pk):
+        chuong = self.get_object(pk)
+        if not chuong:
+            return Response({"error": "Không tìm thấy chương."}, status=404)
+
+        profile, err = get_nguoidung_or_error(request)
+        if err:
+            return err
+        if chuong.truyen.nguoi_dung != profile:
+            return Response({"error": "Bạn không có quyền xóa chương này."}, status=403)
+
+        chuong.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ChuongBatchActionView(APIView):
+    """POST /api/chapters/batch-action – Thao tác nhiều chương cùng lúc"""
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        profile, err = get_nguoidung_or_error(request)
+        if err:
+            return err
+
+        action = request.data.get('action')  # 'publish' hoặc 'delete'
+        chapter_ids = request.data.get('chapter_ids', [])
+
+        if not action or not chapter_ids:
+            return Response({"error": "Thiếu action hoặc chapter_ids."}, status=400)
+
+        chapters = Chuong.objects.filter(pk__in=chapter_ids, truyen__nguoi_dung=profile)
+
+        if action == 'publish':
+            for ch in chapters:
+                ch.trang_thai = 'da_dang'
+                if not ch.thoi_gian_dang:
+                    ch.thoi_gian_dang = timezone.now()
+                ch.save()
+            return Response({"message": f"Đã đăng {chapters.count()} chương."})
+        elif action == 'delete':
+            count = chapters.count()
+            chapters.delete()
+            return Response({"message": f"Đã xóa {count} chương."})
+        else:
+            return Response({"error": "Action không hợp lệ."}, status=400)
+
+
+# =============================================
+# THEO DÕI TRUYỆN - BỎ THEO DÕI & DANH SÁCH
+# =============================================
+
+class BorTheoDoiTruyenView(APIView):
+    """DELETE /api/unfollow/story – Bỏ theo dõi truyện"""
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        profile, err = get_nguoidung_or_error(request)
+        if err:
+            return err
+
+        story_id = request.data.get('story_id')
+        deleted, _ = TheoDoiTruyen.objects.filter(
+            nguoi_dung=profile,
+            truyen_id=story_id
+        ).delete()
+
+        if deleted:
+            return Response({"message": "Đã bỏ theo dõi truyện."})
+        return Response({"error": "Bạn chưa theo dõi truyện này."}, status=400)
+
+
+class DanhSachTheoDoiTruyenView(APIView):
+    """GET /api/user/following-stories – Danh sách truyện đang theo dõi"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        profile, err = get_nguoidung_or_error(request)
+        if err:
+            return err
+
+        truyen_ids = TheoDoiTruyen.objects.filter(nguoi_dung=profile).values_list('truyen_id', flat=True)
+        truyen_list = Truyen.objects.filter(pk__in=truyen_ids)
+
+        # Sắp xếp
+        sort_by = request.query_params.get('sort_by', 'updated_at')
+        order = request.query_params.get('order', 'desc')
+        valid_sorts = ['ten_truyen', 'so_luot_doc', 'updated_at', 'created_at']
+        if sort_by in valid_sorts:
+            order_prefix = '-' if order == 'desc' else ''
+            truyen_list = truyen_list.order_by(f'{order_prefix}{sort_by}')
+
+        # Lọc theo trạng thái
+        trang_thai = request.query_params.get('trang_thai')
+        if trang_thai:
+            truyen_list = truyen_list.filter(trang_thai=trang_thai)
+
+        # Lọc theo thể loại
+        theloai = request.query_params.get('theloai')
+        if theloai:
+            genre_ids = [g.strip() for g in theloai.split(',') if g.strip()]
+            if genre_ids:
+                truyen_list = truyen_list.filter(the_loai__id__in=genre_ids).distinct()
+
+        serializer = TruyenSerializer(truyen_list, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+# =============================================
+# ĐÁNH GIÁ - DANH SÁCH
+# =============================================
+
+class DanhGiaListView(APIView):
+    """GET /api/stories/{story_id}/ratings – Danh sách đánh giá + điểm trung bình"""
+    permission_classes = [AllowAny]
+
+    def get(self, request, story_id):
+        try:
+            truyen = Truyen.objects.get(pk=story_id)
+        except Truyen.DoesNotExist:
+            return Response({"error": "Không tìm thấy truyện."}, status=404)
+
+        danhgia_list = DanhGia.objects.filter(truyen=truyen)
+        serializer = DanhGiaSerializer(danhgia_list, many=True)
+        return Response({
+            "diem_trung_binh": truyen.diem_trung_binh(),
+            "tong_danh_gia": truyen.tong_danh_gia(),
+            "danh_sach": serializer.data
+        })

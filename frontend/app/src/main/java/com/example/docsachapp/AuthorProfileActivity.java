@@ -3,6 +3,7 @@ package com.example.docsachapp;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,11 +18,13 @@ import com.bumptech.glide.Glide;
 import com.example.docsachapp.adapter.StorySearchAdapter;
 import com.example.docsachapp.api.RetrofitClient;
 import com.example.docsachapp.api.SessionManager;
+import com.example.docsachapp.model.Story;
 import com.example.docsachapp.model.UserProfile;
 import com.google.android.material.button.MaterialButton;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -119,14 +122,25 @@ public class AuthorProfileActivity extends AppCompatActivity {
                         ivAvatar.setImageResource(R.drawable.image5);
                     }
 
-                    if (profile.getPublishedStories() != null) {
-                        tvStoriesHeader.setText("Truyện đã đăng (" + profile.getPublishedStories().size() + ")");
-                        StorySearchAdapter adapter = new StorySearchAdapter(profile.getPublishedStories(), AuthorProfileActivity.this);
+                    // ✅ FIX #9: Hiển thị cả truyện đang đăng VÀ hoàn thành (không lọc mất hoan_thanh)
+                    List<Story> allStories = profile.getAllStories();
+                    if (allStories != null && !allStories.isEmpty()) {
+                        tvStoriesHeader.setText("Truyện đã đăng (" + allStories.size() + ")");
+                        StorySearchAdapter adapter = new StorySearchAdapter(allStories, AuthorProfileActivity.this);
                         rvAuthorStories.setAdapter(adapter);
+                    } else {
+                        tvStoriesHeader.setText("Truyện đã đăng (0)");
                     }
 
                     isFollowing = profile.isFollowing();
-                    updateFollowButtonUI();
+
+                    // ✅ FIX #3: Nếu is_self = true → ẩn nút Follow (không cho follow chính mình)
+                    if (profile.isSelf()) {
+                        btnFollowAuthor.setVisibility(View.GONE);
+                    } else {
+                        btnFollowAuthor.setVisibility(View.VISIBLE);
+                        updateFollowButtonUI();
+                    }
                 }
             }
 

@@ -21,6 +21,9 @@ public class UserSearchItem {
     @SerializedName("is_following")
     private boolean isFollowing;
 
+    @SerializedName("is_self")
+    private boolean isSelf;
+
     public int getId() { return id; }
     public String getUsername() { return username != null ? username : ""; }
     public String getAvatar() { return avatar; }
@@ -28,4 +31,5 @@ public class UserSearchItem {
     public String getMoTa() { return moTa != null ? moTa : ""; }
     public boolean isFollowing() { return isFollowing; }
     public void setFollowing(boolean following) { isFollowing = following; }
+    public boolean isSelf() { return isSelf; }
 }

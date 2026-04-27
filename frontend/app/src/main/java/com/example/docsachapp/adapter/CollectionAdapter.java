@@ -69,11 +69,16 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
             holder.ivSub2.setImageResource(R.drawable.image5);
         }
 
+        // ✅ FIX #7: Dùng nguoi_dung_id để xác định quyền sửa/xóa bộ sưu tập
+        boolean isOwner = collection.getNguoiDungId() == sessionManager.getUserId();
+
         holder.btnMore.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(context, holder.btnMore);
             popup.getMenu().add("Thêm truyện");
-            popup.getMenu().add("Chỉnh sửa bộ sưu tập");
-            popup.getMenu().add("Xóa bộ sưu tập");
+            if (isOwner) {
+                popup.getMenu().add("Chỉnh sửa bộ sưu tập");
+                popup.getMenu().add("Xóa bộ sưu tập");
+            }
             popup.setOnMenuItemClickListener(item -> {
                 String title = item.getTitle().toString();
                 if (title.equals("Thêm truyện")) {
@@ -90,6 +95,9 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
             popup.show();
         });
 
+        // ✅ FIX: Ẩn nút more nếu không phải chủ sở hữu
+        holder.btnMore.setVisibility(isOwner ? View.VISIBLE : View.GONE);
+
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, CollectionDetailsActivity.class);
             intent.putExtra("COLLECTION_ID", collection.getId());
@@ -97,6 +105,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
         });
     }
 
+    /** ✅ FIX: Gọi API updateCollection() thực tế thay vì chỉ show Toast */
     private void showEditDialog(Collection collection, int position) {
         AlertDialog dialog = new AlertDialog.Builder(context, R.style.CustomAlertDialog).create();
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_edit_collection, null);
@@ -108,20 +117,55 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
             if (newName.isEmpty()) return;
             Map<String, Object> body = new HashMap<>();
             body.put("ten_bo_suu_tap", newName);
-            // Cập nhật lại logic gọi API cho khớp với ApiService mới (nếu có)
-            Toast.makeText(context, "Tính năng đang cập nhật để khớp với API mới", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
+            String token = sessionManager.getAuthHeader();
+            RetrofitClient.getApi().updateCollection(token, collection.getId(), body).enqueue(new Callback<Map<String, Object>>() {
+                @Override
+                public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                    if (response.isSuccessful()) {
+                        collection.setName(newName);
+                        notifyItemChanged(position);
+                        Toast.makeText(context, "Đã cập nhật bộ sưu tập", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Lỗi cập nhật: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                    dialog.dismiss();
+                }
+                @Override
+                public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                    Toast.makeText(context, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            });
         });
         dialog.setView(view); dialog.show();
     }
 
+    /** ✅ FIX: Gọi API deleteCollection() thực tế thay vì chỉ show Toast */
     private void showDeleteDialog(Collection collection, int position) {
         AlertDialog dialog = new AlertDialog.Builder(context, R.style.CustomAlertDialog).create();
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_delete_collection, null);
         view.findViewById(R.id.btn_cancel).setOnClickListener(v -> dialog.dismiss());
         view.findViewById(R.id.btn_confirm).setOnClickListener(v -> {
-            Toast.makeText(context, "Tính năng đang cập nhật để khớp với API mới", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
+            String token = sessionManager.getAuthHeader();
+            RetrofitClient.getApi().deleteCollection(token, collection.getId()).enqueue(new Callback<Map<String, Object>>() {
+                @Override
+                public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                    if (response.isSuccessful()) {
+                        collectionList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, collectionList.size());
+                        Toast.makeText(context, "Đã xóa bộ sưu tập", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Lỗi xóa: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                    dialog.dismiss();
+                }
+                @Override
+                public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                    Toast.makeText(context, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            });
         });
         dialog.setView(view); dialog.show();
     }

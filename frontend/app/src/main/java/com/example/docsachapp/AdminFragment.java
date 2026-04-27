@@ -42,10 +42,6 @@ public class AdminFragment extends Fragment {
     private TextView tvUsername, tvBio, tvFollowers, tvFollowing, tvStoryCount;
     private RoundedImageView ivAvatar;
 
-    private RecyclerView rvCollections;
-    private CollectionAdapter collectionAdapter;
-    private List<Collection> collectionList = new ArrayList<>();
-
     private ActivityResultLauncher<Intent> profileLauncher;
 
     @Nullable
@@ -63,12 +59,7 @@ public class AdminFragment extends Fragment {
         tvFollowing = view.findViewById(R.id.tv_following);
         tvStoryCount = view.findViewById(R.id.tv_story_count);
         ivAvatar = view.findViewById(R.id.iv_avatar);
-        rvCollections = view.findViewById(R.id.rv_admin_collections);
 
-        // Setup RecyclerView cho Bộ sưu tập
-        collectionAdapter = new CollectionAdapter(collectionList, getContext());
-        rvCollections.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvCollections.setAdapter(collectionAdapter);
 
         profileLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -80,7 +71,6 @@ public class AdminFragment extends Fragment {
 
         setupClickListeners(view);
         loadProfile();
-        loadMyCollections();
 
         return view;
     }
@@ -171,23 +161,6 @@ public class AdminFragment extends Fragment {
                     Toast.makeText(getContext(), "Không thể tải thông tin cá nhân", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
-    }
-
-    private void loadMyCollections() {
-        String token = sessionManager.getAuthHeader();
-        if (token == null) return;
-
-        RetrofitClient.getApi().getCollections(token).enqueue(new Callback<List<Collection>>() {
-            @Override
-            public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
-                if (isAdded() && response.isSuccessful() && response.body() != null) {
-                    collectionList.clear();
-                    collectionList.addAll(response.body());
-                    collectionAdapter.notifyDataSetChanged();
-                }
-            }
-            @Override public void onFailure(Call<List<Collection>> call, Throwable t) {}
         });
     }
 

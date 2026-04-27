@@ -20,7 +20,7 @@
             android:id="@+id/btn_back"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:src="@android:drawable/ic_menu_revert"
+            android:src="@drawable/ic_back_arrow"
             app:tint="@color/text_dark" />
 
         <TextView

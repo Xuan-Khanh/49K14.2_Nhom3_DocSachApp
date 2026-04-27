@@ -57,6 +57,11 @@ public class LibraryFragment extends Fragment {
     private boolean isFollowingTab = true;
     private int selectedCollectionId = -1; // Lưu BST được tích chọn
 
+    /** ✅ FIX #6: Lưu trạng thái sort/filter hiện tại */
+    private String currentSortBy = null;
+    private String currentOrder = null;
+    private String currentTrangThai = null;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,13 +88,15 @@ public class LibraryFragment extends Fragment {
         setupRecyclerViews();
         setupTabListeners();
 
+        // ✅ FIX #3: Đã bỏ mục "Lọc trạng thái" khỏi menu
         btnMore.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(requireContext(), btnMore);
             popup.getMenu().add("Sắp xếp truyện");
             popup.getMenu().add("Cập nhật thư viện");
             popup.setOnMenuItemClickListener(item -> {
-                if (item.getTitle().equals("Sắp xếp truyện")) showSortDialog();
-                else if (item.getTitle().equals("Cập nhật thư viện")) enterSelectionMode();
+                String title = item.getTitle().toString();
+                if (title.equals("Sắp xếp truyện")) showSortDialog();
+                else if (title.equals("Cập nhật thư viện")) enterSelectionMode();
                 return true;
             });
             popup.show();
@@ -151,10 +158,11 @@ public class LibraryFragment extends Fragment {
         if (isFollowing) loadFollowingStories(); else loadCollections();
     }
 
+    // ✅ FIX #5: Gọi API collection theo user_id, chỉ lấy BST của user hiện tại
     private void loadCollections() {
-        String token = sessionManager.getAuthHeader();
-        if (token == null) return;
-        RetrofitClient.getApi().getBoSuuTap(token).enqueue(new Callback<List<Collection>>() {
+        int userId = sessionManager.getUserId();
+        if (userId == -1) return;
+        RetrofitClient.getApi().getUserCollections(userId).enqueue(new Callback<List<Collection>>() {
             @Override
             public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
@@ -167,10 +175,12 @@ public class LibraryFragment extends Fragment {
         });
     }
 
+    /** ✅ FIX #6: Gọi API với đúng params sort_by, order, trang_thai */
     private void loadFollowingStories() {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;
-        RetrofitClient.getApi().getFollowingStories(token).enqueue(new Callback<List<Story>>() {
+        RetrofitClient.getApi().getFollowingStories(token, currentSortBy, currentOrder, currentTrangThai, null)
+                .enqueue(new Callback<List<Story>>() {
             @Override public void onResponse(Call<List<Story>> c, Response<List<Story>> r) {
                 if (isAdded() && r.isSuccessful() && r.body() != null) {
                     followingStories.clear(); followingStories.addAll(r.body());
@@ -324,9 +334,33 @@ public class LibraryFragment extends Fragment {
         });
     }
 
+    /**
+     * ✅ FIX #6: Dialog sắp xếp gọi API đúng params sort_by và order
+     */
+    /**
+     * ✅ FIX #4: Đã bỏ "Lượt đọc nhiều nhất" và "Mới tạo nhất"
+     */
     private void showSortDialog() {
-        String[] options = {"Mới cập nhật", "Tên truyện (A-Z)", "Đọc gần đây"};
+        String[] options = {"Mới cập nhật", "Tên truyện (A-Z)", "Tên truyện (Z-A)"};
         new AlertDialog.Builder(requireContext()).setTitle("Sắp xếp theo")
-                .setItems(options, (d, i) -> Toast.makeText(getContext(), options[i], 0).show()).show();
+                .setItems(options, (d, i) -> {
+                    switch (i) {
+                        case 0: // Mới cập nhật
+                            currentSortBy = "updated_at";
+                            currentOrder = "desc";
+                            break;
+                        case 1: // Tên A-Z
+                            currentSortBy = "ten_truyen";
+                            currentOrder = "asc";
+                            break;
+                        case 2: // Tên Z-A
+                            currentSortBy = "ten_truyen";
+                            currentOrder = "desc";
+                            break;
+                    }
+                    loadFollowingStories();
+                    Toast.makeText(getContext(), "Đang sắp xếp: " + options[i], Toast.LENGTH_SHORT).show();
+                }).show();
     }
 }
+

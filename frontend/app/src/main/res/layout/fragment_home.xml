@@ -37,151 +37,179 @@
             android:paddingBottom="100dp"> <!-- Tăng padding để tránh bị che bởi BottomNav -->
 
             <!-- Section: Mới đăng -->
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/section_moi_dang"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:paddingHorizontal="16dp"
-                android:paddingBottom="8dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mới đăng"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/tv_xem_them_moi_dang"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Xem Thêm ▸"
-                    android:textSize="13sp"
-                    android:textColor="#D9A441"
-                    android:textStyle="bold"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:focusable="true"/>
-            </RelativeLayout>
+                android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_new_stories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_story_horizontal"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mới đăng"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/tv_xem_them_moi_dang"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Xem Thêm ▸"
+                        android:textSize="13sp"
+                        android:textColor="#D9A441"
+                        android:textStyle="bold"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_new_stories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_story_horizontal"/>
+            </LinearLayout>
 
             <!-- Section: Mới cập nhật -->
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/section_moi_cap_nhat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="24dp"
-                android:paddingHorizontal="16dp"
-                android:paddingBottom="8dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mới cập nhật"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/tv_xem_them_moi_cap_nhat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Xem Thêm ▸"
-                    android:textSize="13sp"
-                    android:textColor="#D9A441"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"/>
-            </RelativeLayout>
+                android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_update_stories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_story_horizontal"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="24dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mới cập nhật"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/tv_xem_them_moi_cap_nhat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Xem Thêm ▸"
+                        android:textSize="13sp"
+                        android:textColor="#D9A441"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_update_stories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_story_horizontal"/>
+            </LinearLayout>
 
             <!-- Section: Truyện đã hoàn thành -->
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/section_hoan_thanh"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="24dp"
-                android:paddingHorizontal="16dp"
-                android:paddingBottom="8dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Truyện đã hoàn thành"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/tv_xem_them_hoan_thanh"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Xem Thêm ▸"
-                    android:textSize="13sp"
-                    android:textColor="#D9A441"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"/>
-            </RelativeLayout>
+                android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_completed_stories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_story_horizontal"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="24dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Truyện đã hoàn thành"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/tv_xem_them_hoan_thanh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Xem Thêm ▸"
+                        android:textSize="13sp"
+                        android:textColor="#D9A441"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_completed_stories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_story_horizontal"/>
+            </LinearLayout>
 
             <!-- Section: Đọc gần đây -->
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/section_doc_day"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="24dp"
-                android:paddingHorizontal="16dp"
-                android:paddingBottom="8dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Truyện đọc gần đây"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/tv_xem_them_doc_gday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Xem Thêm ▸"
-                    android:textSize="13sp"
-                    android:textColor="#D9A441"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"/>
-            </RelativeLayout>
+                android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_recent_stories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_story_horizontal"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="24dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Truyện đọc gần đây"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/tv_xem_them_doc_gday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Xem Thêm ▸"
+                        android:textSize="13sp"
+                        android:textColor="#D9A441"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_recent_stories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_story_horizontal"/>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

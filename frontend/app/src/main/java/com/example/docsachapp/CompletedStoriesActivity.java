@@ -35,8 +35,8 @@ public class CompletedStoriesActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        // Lọc theo trạng thái Hoàn thành
-        RetrofitClient.getApi().getStories(null, null, "Hoàn thành",null).enqueue(new Callback<List<Story>>() {
+        // ✅ FIX: Gọi API endpoint truyện hoàn thành đúng
+        RetrofitClient.getApi().getCompletedStories().enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
                 if (response.isSuccessful() && response.body() != null) {

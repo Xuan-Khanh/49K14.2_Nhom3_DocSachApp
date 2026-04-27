@@ -60,6 +60,9 @@ public class BookCreateActivity extends AppCompatActivity {
         btnNext.setOnClickListener(v -> {
             if (isFormValid) {
                 Intent intent = new Intent(BookCreateActivity.this, BookCreateStep2Activity.class);
+                // ✅ FIX: Truyền title và description sang Step2
+                intent.putExtra("BOOK_TITLE", etTitle.getText().toString().trim());
+                intent.putExtra("BOOK_DESCRIPTION", etDesc.getText().toString().trim());
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();

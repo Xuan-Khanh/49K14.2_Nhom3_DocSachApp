@@ -123,10 +123,9 @@ public class CommentsActivity extends AppCompatActivity {
         }
 
         Map<String, Object> body = new HashMap<>();
-        body.put("truyen_id", storyId);
         body.put("noi_dung", text);
 
-        RetrofitClient.getApi().postComment(token, body).enqueue(new Callback<Comment>() {
+        RetrofitClient.getApi().postComment(token, storyId, body).enqueue(new Callback<Comment>() {
             @Override
             public void onResponse(Call<Comment> call, Response<Comment> response) {
                 if (response.isSuccessful() && response.body() != null) {

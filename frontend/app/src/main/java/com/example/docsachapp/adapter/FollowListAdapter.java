@@ -76,7 +76,13 @@ public class FollowListAdapter extends RecyclerView.Adapter<FollowListAdapter.Vi
             holder.ivAvatar.setImageResource(R.drawable.image5);
         }
 
-        updateFollowButtonUI(holder.btnFollow, user.isFollowing());
+        // ✅ FIX #3: Nếu is_self = true → ẩn nút Follow (không cho follow chính mình)
+        if (user.isSelf()) {
+            holder.btnFollow.setVisibility(View.GONE);
+        } else {
+            holder.btnFollow.setVisibility(View.VISIBLE);
+            updateFollowButtonUI(holder.btnFollow, user.isFollowing());
+        }
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, AuthorProfileActivity.class);

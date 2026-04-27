@@ -42,6 +42,10 @@ public class HomeFragment extends Fragment {
     private TextView tvError;
     private SessionManager sessionManager;
 
+    // ✅ FIX #1: Khai báo thêm các section container và nút xem thêm
+    private View sectionMoiDang, sectionMoiCapNhat, sectionHoanThanh, sectionDocGday;
+    private View tvXemThemMoiDang, tvXemThemMoiCapNhat, tvXemThemHoanThanh, tvXemThemDocGday;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +55,12 @@ public class HomeFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar);
         scrollView = view.findViewById(R.id.scroll_view);
         tvError = view.findViewById(R.id.tv_error);
+
+        // ✅ FIX #1: Tìm section containers (có thể null nếu layout chưa wrap)
+        sectionMoiDang = view.findViewById(R.id.section_moi_dang);
+        sectionMoiCapNhat = view.findViewById(R.id.section_moi_cap_nhat);
+        sectionHoanThanh = view.findViewById(R.id.section_hoan_thanh);
+        sectionDocGday = view.findViewById(R.id.section_doc_day);
         
         setupRecyclerViews(view);
         setupClickListeners(view);
@@ -60,17 +70,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupClickListeners(View view) {
-        View btnMoiDang = view.findViewById(R.id.tv_xem_them_moi_dang);
-        if (btnMoiDang != null) btnMoiDang.setOnClickListener(v -> startActivity(new Intent(getActivity(), PostStoriesActivity.class)));
+        tvXemThemMoiDang = view.findViewById(R.id.tv_xem_them_moi_dang);
+        tvXemThemMoiCapNhat = view.findViewById(R.id.tv_xem_them_moi_cap_nhat);
+        tvXemThemHoanThanh = view.findViewById(R.id.tv_xem_them_hoan_thanh);
+        tvXemThemDocGday = view.findViewById(R.id.tv_xem_them_doc_gday);
 
-        View btnMoiCapNhat = view.findViewById(R.id.tv_xem_them_moi_cap_nhat);
-        if (btnMoiCapNhat != null) btnMoiCapNhat.setOnClickListener(v -> startActivity(new Intent(getActivity(), UpdateStoriesActivity.class)));
-
-        View btnHoanThanh = view.findViewById(R.id.tv_xem_them_hoan_thanh);
-        if (btnHoanThanh != null) btnHoanThanh.setOnClickListener(v -> startActivity(new Intent(getActivity(), CompletedStoriesActivity.class)));
-
-        View btnDocGday = view.findViewById(R.id.tv_xem_them_doc_gday);
-        if (btnDocGday != null) btnDocGday.setOnClickListener(v -> startActivity(new Intent(getActivity(), RecentlyReadStoriesActivity.class)));
+        if (tvXemThemMoiDang != null) tvXemThemMoiDang.setOnClickListener(v -> startActivity(new Intent(getActivity(), PostStoriesActivity.class)));
+        if (tvXemThemMoiCapNhat != null) tvXemThemMoiCapNhat.setOnClickListener(v -> startActivity(new Intent(getActivity(), UpdateStoriesActivity.class)));
+        if (tvXemThemHoanThanh != null) tvXemThemHoanThanh.setOnClickListener(v -> startActivity(new Intent(getActivity(), CompletedStoriesActivity.class)));
+        if (tvXemThemDocGday != null) tvXemThemDocGday.setOnClickListener(v -> startActivity(new Intent(getActivity(), RecentlyReadStoriesActivity.class)));
     }
 
     private void setupRecyclerViews(View view) {
@@ -108,6 +116,8 @@ public class HomeFragment extends Fragment {
                     newStories.addAll(response.body());
                     newStoriesAdapter.notifyDataSetChanged();
                     showLoading(false);
+                    // ✅ FIX #1: Hiện nút "Xem thêm" nếu có truyện > 0, không phụ thuộc >= 4
+                    updateSectionVisibility(sectionMoiDang, tvXemThemMoiDang, newStories);
                 }
             }
             @Override
@@ -124,6 +134,7 @@ public class HomeFragment extends Fragment {
                     updateStories.clear();
                     updateStories.addAll(response.body());
                     updateStoriesAdapter.notifyDataSetChanged();
+                    updateSectionVisibility(sectionMoiCapNhat, tvXemThemMoiCapNhat, updateStories);
                 }
             }
             @Override
@@ -138,6 +149,7 @@ public class HomeFragment extends Fragment {
                     completedStories.clear();
                     completedStories.addAll(response.body());
                     completedStoriesAdapter.notifyDataSetChanged();
+                    updateSectionVisibility(sectionHoanThanh, tvXemThemHoanThanh, completedStories);
                 }
             }
             @Override
@@ -155,11 +167,30 @@ public class HomeFragment extends Fragment {
                             recentStories.add(new Story(item.getBookId(), item.getTitle(), item.getCoverUrl()));
                         }
                         recentStoriesAdapter.notifyDataSetChanged();
+                        updateSectionVisibility(sectionDocGday, tvXemThemDocGday, recentStories);
                     }
                 }
                 @Override
                 public void onFailure(Call<List<ReadingHistoryItem>> call, Throwable t) {}
             });
+        } else {
+            // Ẩn section đọc gần đây nếu chưa đăng nhập
+            if (sectionDocGday != null) sectionDocGday.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * ✅ FIX #1: Cập nhật hiển thị section và nút "Xem thêm"
+     * - Nếu list rỗng → ẩn toàn bộ section
+     * - Nếu list > 0 → hiện section VÀ nút "Xem thêm" (không cần >= 4)
+     */
+    private void updateSectionVisibility(View section, View btnXemThem, List<?> list) {
+        if (section != null) {
+            section.setVisibility(list.isEmpty() ? View.GONE : View.VISIBLE);
+        }
+        if (btnXemThem != null) {
+            // Luôn hiện nút "Xem thêm" nếu có ít nhất 1 truyện
+            btnXemThem.setVisibility(list.isEmpty() ? View.GONE : View.VISIBLE);
         }
     }
 

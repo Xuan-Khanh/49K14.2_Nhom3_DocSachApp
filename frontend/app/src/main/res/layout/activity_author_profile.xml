@@ -19,7 +19,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
-            android:src="@android:drawable/ic_menu_revert"
+            android:src="@drawable/ic_back_arrow"
             app:tint="#666666" />
 
 

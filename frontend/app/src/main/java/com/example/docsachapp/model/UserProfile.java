@@ -1,12 +1,15 @@
 package com.example.docsachapp.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * UserProfile.java
  * Map với JSON từ API:
  * GET /api/auth/profile  → NguoiDungSerializer
  * PUT /api/auth/profile  → cùng response
+ * GET /api/users/{id}/   → trả thêm is_self, truyen_da_dang, truyen_hoan_thanh
  *
  * JSON:
  * {
@@ -18,7 +21,11 @@ import com.google.gson.annotations.SerializedName;
  *   "mo_ta": "...",
  *   "so_truyen": 3,
  *   "so_follower": 10,
- *   "so_following": 5
+ *   "so_following": 5,
+ *   "is_self": false,
+ *   "is_following": true,
+ *   "truyen_da_dang": [...],
+ *   "truyen_hoan_thanh": [...]
  * }
  */
 public class UserProfile {
@@ -51,10 +58,16 @@ public class UserProfile {
     private int followingCount;
 
     @SerializedName("truyen_da_dang")
-    private java.util.List<Story> publishedStories;
+    private List<Story> publishedStories;
+
+    @SerializedName("truyen_hoan_thanh")
+    private List<Story> completedStories;
 
     @SerializedName("is_following")
     private boolean isFollowing;
+
+    @SerializedName("is_self")
+    private boolean isSelf;
 
     public int getId() { return id; }
     public String getUsername() { return username != null ? username : ""; }
@@ -65,8 +78,21 @@ public class UserProfile {
     public int getStoryCount() { return storyCount; }
     public int getFollowerCount() { return followerCount; }
     public int getFollowingCount() { return followingCount; }
-    public java.util.List<Story> getPublishedStories() { return publishedStories; }
+    public List<Story> getPublishedStories() { return publishedStories; }
+    public List<Story> getCompletedStories() { return completedStories; }
     public boolean isFollowing() { return isFollowing; }
     public void setFollowing(boolean following) { this.isFollowing = following; }
     public void setFollowerCount(int followerCount) { this.followerCount = followerCount; }
+    public boolean isSelf() { return isSelf; }
+
+    /**
+     * Trả về danh sách tất cả truyện (da_dang + hoan_thanh).
+     * Dùng cho hiển thị trên profile người dùng để không bị thiếu truyện hoàn thành.
+     */
+    public List<Story> getAllStories() {
+        List<Story> all = new ArrayList<>();
+        if (publishedStories != null) all.addAll(publishedStories);
+        if (completedStories != null) all.addAll(completedStories);
+        return all;
+    }
 }

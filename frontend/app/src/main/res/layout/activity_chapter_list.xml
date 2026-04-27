@@ -20,9 +20,9 @@
         <ImageView
             android:id="@+id/btn_back"
             android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:src="@android:drawable/ic_menu_revert"
+            android:layout_height="19dp"
             android:rotation="0"
+            android:src="@drawable/ic_back_arrow"
             app:tint="@color/text_dark" />
 
 

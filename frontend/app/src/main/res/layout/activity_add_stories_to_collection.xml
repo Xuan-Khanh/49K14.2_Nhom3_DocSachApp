@@ -11,6 +11,7 @@
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
+        android:layout_marginTop="40px"
         android:layout_height="56dp"
         android:background="#D9A441"
         android:paddingHorizontal="16dp">

@@ -80,6 +80,7 @@ public class TuSachFragment extends Fragment {
     // Thể loại
     private List<Story.Genre> allGenres = new ArrayList<>();
     private Set<Integer> selectedGenreIds = new HashSet<>();
+    private int createdStoryId = -1;
 
     private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -216,13 +217,33 @@ public class TuSachFragment extends Fragment {
             checkStep2Validity();
         });
 
-        btnDoneCreate.setOnClickListener(v -> createStoryOnServer());
+        btnDoneCreate.setOnClickListener(v -> {
+            if (createdStoryId != -1) {
+                Toast.makeText(getContext(), "Tạo truyện thành công!", Toast.LENGTH_SHORT).show();
+                backToMain();
+                loadUserStories(false);
+                resetFields();
+            } else {
+                createStoryOnServer(false);
+            }
+        });
+
+        View btnAddChapter = view.findViewById(R.id.btn_add_chapter_new);
+        if (btnAddChapter != null) {
+            btnAddChapter.setOnClickListener(v -> {
+                if (createdStoryId != -1) {
+                    navigateToChapterWriter(createdStoryId);
+                } else {
+                    createStoryOnServer(true);
+                }
+            });
+        }
 
         checkStep1Validity();
         checkStep2Validity();
     }
 
-    private void createStoryOnServer() {
+    private void createStoryOnServer(boolean navigateToAddChapter) {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;
 
@@ -248,11 +269,17 @@ public class TuSachFragment extends Fragment {
         RetrofitClient.getApi().createStory(token, titlePart, descPart, statusPart, genreParts, bodyCover).enqueue(new Callback<Story>() {
             @Override
             public void onResponse(@NonNull Call<Story> call, @NonNull Response<Story> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Tạo truyện thành công!", Toast.LENGTH_SHORT).show();
-                    backToMain();
-                    loadUserStories(false);
-                    resetFields();
+                if (response.isSuccessful() && response.body() != null) {
+                    createdStoryId = response.body().getId();
+                    if (navigateToAddChapter) {
+                        Toast.makeText(getContext(), "Đã tạo truyện, hãy thêm chương!", Toast.LENGTH_SHORT).show();
+                        navigateToChapterWriter(createdStoryId);
+                    } else {
+                        Toast.makeText(getContext(), "Tạo truyện thành công!", Toast.LENGTH_SHORT).show();
+                        backToMain();
+                        loadUserStories(false);
+                        resetFields();
+                    }
                 } else {
                     Toast.makeText(getContext(), "Lỗi server: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
@@ -261,6 +288,12 @@ public class TuSachFragment extends Fragment {
                 Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void navigateToChapterWriter(int storyId) {
+        Intent intent = new Intent(requireContext(), ChapterWriterActivity.class);
+        intent.putExtra("STORY_ID", storyId);
+        startActivity(intent);
     }
 
     private void resetFields() {
@@ -443,7 +476,7 @@ public class TuSachFragment extends Fragment {
 
     private void updateUI(Story newest, List<Story> stories, boolean showListPopup) {
         tvRecentTitle.setText(newest.getTitle());
-        tvRecentStatus.setText("da_dang".equals(newest.getStatus()) ? "Đã đăng tải" : "Đang tiến hành");
+        tvRecentStatus.setText("hoan_thanh".equals(newest.getStatus()) ? "Hoàn thành" : "Đang đăng");
         Glide.with(requireContext()).load(newest.getCoverUrl()).placeholder(R.drawable.anhtruyen).into(ivRecentCover);
         btnEditRecent.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), BookEditActivity.class);
