@@ -3,12 +3,19 @@ Django settings for DocSachApp project.
 """
 
 from pathlib import Path
+import os
+import dj_database_url
+from dotenv import load_dotenv
+
+# Load file .env khi chạy local
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-k+^^h6nxw3qe!#o&9op3*w6c=yr!94+-l#l1=n@sjcv8kemhy_'
+# ✅ Lấy từ biến môi trường
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-k+^^h6nxw3qe!#o&9op3*w6c=yr!94+-l#l1=n@sjcv8kemhy_')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -19,17 +26,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Third-party
     'rest_framework',
-    'rest_framework.authtoken',   # Token authentication
-    'corsheaders',                 # CORS cho Android gọi API
-    # Local apps
+    'rest_framework.authtoken',
+    'corsheaders',
     'books',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # CORS phải đặt trên cùng
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ Thêm cho static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -57,11 +63,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'DocSachApp.wsgi.application'
 
+# ✅ Dùng PostgreSQL trên Render, fallback SQLite khi dev local
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -76,51 +83,37 @@ TIME_ZONE = 'Asia/Ho_Chi_Minh'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
+# ✅ Static files
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files (ảnh bìa, avatar upload)
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# =============================================
-# Django REST Framework Configuration
-# =============================================
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    # Cho phép đọc public, yêu cầu đăng nhập khi ghi
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
 }
 
-# =============================================
-# CORS – Cho phép Android Studio gọi API
-# =============================================
-CORS_ALLOW_ALL_ORIGINS = True  # Chỉ dùng khi dev
+CORS_ALLOW_ALL_ORIGINS = True
 
-# =============================================
-# EMAIL CONFIGURATION (GMAIL SMTP)
-# =============================================
-# Khi chạy thật, bạn hãy điền EMAIL_HOST_USER và EMAIL_HOST_PASSWORD (App Password)
+# ✅ Email lấy từ biến môi trường
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'anhphuong07062005@gmail.com' # Email gửi đi
-EMAIL_HOST_PASSWORD = 'bpyk eeqk qukn akob' # Mã 16 ký tự "Mật khẩu ứng dụng"
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = f"DocSachApp <{EMAIL_HOST_USER}>"
 
-# Nếu muốn test nhanh mà không cần gửi email thật, hãy bỏ comment dòng dưới:
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# =============================================
-# CACHE CONFIGURATION
-# =============================================
-# Sử dụng LocMemCache cho đơn giản nếu chưa cài Redis
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
