@@ -3,7 +3,6 @@ __pycache__/
 *.pyc
 
 # Django
-db.sqlite3
 
 # IDE
 .idea/
@@ -14,3 +13,10 @@ db.sqlite3
 /app/build/
 /build/
 local.properties
+
+
+.env
+
+venv/
+media/
+staticfiles/
