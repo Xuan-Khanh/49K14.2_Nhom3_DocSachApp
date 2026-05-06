@@ -20,6 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình Bước 2: Hoàn tất thông tin phụ và gọi API lên Server để tạo truyện
 public class BookCreateStep2Activity extends AppCompatActivity {
     private static final String TAG = "BookCreateStep2";
     private SessionManager sessionManager;
@@ -53,6 +54,7 @@ public class BookCreateStep2Activity extends AppCompatActivity {
 
         btnClose.setOnClickListener(v -> finish());
 
+        // Nút bấm Hoàn thành -> Gọi API lưu truyện rồi đóng màn hình
         btnDone.setOnClickListener(v -> {
             if (createdStoryId != -1) {
                 // Truyện đã được tạo rồi, chỉ cần finish
@@ -76,7 +78,7 @@ public class BookCreateStep2Activity extends AppCompatActivity {
     }
 
     /**
-     * Tạo truyện mới trên server, sau đó finish
+     * Gửi API tạo truyện mới lên server, thành công thì đóng màn hình kết thúc tiến trình
      */
     private void createStoryAndFinish() {
         String token = sessionManager.getAuthHeader();

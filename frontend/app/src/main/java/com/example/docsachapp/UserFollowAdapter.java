@@ -11,6 +11,7 @@ import com.example.docsachapp.model.UserSearchItem;
 import com.makeramen.roundedimageview.RoundedImageView;
 import java.util.List;
 
+// Adapter dùng để hiển thị danh sách User (trong kết quả Tìm kiếm)
 public class UserFollowAdapter extends RecyclerView.Adapter<UserFollowAdapter.ViewHolder> {
 
     private List<UserSearchItem> list;
@@ -34,7 +35,8 @@ public class UserFollowAdapter extends RecyclerView.Adapter<UserFollowAdapter.Vi
         
         String avatarUrl = item.getAvatar();
         if (avatarUrl != null && !avatarUrl.isEmpty()) {
-            // Đảm bảo URL đầy đủ nếu backend trả về path tương đối
+            // Đảm bảo URL là tuyệt đối. Nếu backend Django trả về path tương đối (vd: /media/avatars/...), 
+            // cần nối thêm BASE_URL (http://10.0.2.2:8000) vào trước để Glide tải được ảnh.
             String fullUrl = avatarUrl.startsWith("http") ? avatarUrl : "http://10.0.2.2:8000" + avatarUrl;
             Glide.with(holder.itemView.getContext())
                     .load(fullUrl)

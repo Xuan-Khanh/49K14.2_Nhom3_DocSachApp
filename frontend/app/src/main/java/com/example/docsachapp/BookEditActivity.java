@@ -49,6 +49,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình dành riêng cho Tác giả để Chỉnh sửa thông tin truyện và Quản lý các chương
 public class BookEditActivity extends AppCompatActivity {
 
     private View layoutMain, popupTitle, popupDesc, popupCategory, popupManageChapters;
@@ -185,6 +186,7 @@ public class BookEditActivity extends AppCompatActivity {
             hidePopups();
         });
 
+        // Công tắc bật tắt chuyển đổi Trạng thái (Đang tiến hành <-> Hoàn thành)
         switchStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
             tvStatusLabel.setText(isChecked ? "Đã hoàn thành" : "Đang tiến hành");
             tvStatusLabel.setTextColor(isChecked ? Color.parseColor("#4CAF50") : Color.parseColor("#888888"));
@@ -242,6 +244,7 @@ public class BookEditActivity extends AppCompatActivity {
         });
     }
 
+    // Thực hiện hành động hàng loạt (Xóa hoặc Đổi trạng thái) cho nhiều chương cùng lúc
     private void performBatchAction(String action) {
         if (selectedChapters.isEmpty()) return;
         Map<String, Object> body = new java.util.HashMap<>();
@@ -511,6 +514,7 @@ public class BookEditActivity extends AppCompatActivity {
     private void enableSaveButton() { btnSave.setEnabled(true); btnSave.setAlpha(1.0f); btnSave.setColorFilter(Color.parseColor("#D9A441")); }
     private void disableSaveButton() { btnSave.setEnabled(false); btnSave.setAlpha(0.3f); btnSave.setColorFilter(Color.GRAY); }
 
+    // Gọi API để Cập nhật toàn bộ thay đổi (Dùng MultipartBody vì có gửi file ảnh bìa)
     private void saveChangesToServer() {
         String token = sessionManager.getAuthHeader();
         if (token == null) {

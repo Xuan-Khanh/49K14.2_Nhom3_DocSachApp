@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+// Màn hình Bước 1: Tạo truyện mới (Nhập Tiêu đề & Mô tả)
 public class BookCreateActivity extends AppCompatActivity {
     private boolean isFormValid = false;
 
@@ -24,6 +25,7 @@ public class BookCreateActivity extends AppCompatActivity {
         EditText etTitle = findViewById(R.id.et_book_title);
         EditText etDesc = findViewById(R.id.et_book_description);
 
+        // Theo dõi sự thay đổi văn bản để tự động bật/tắt màu của nút "Tiếp tục"
         TextWatcher watcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -41,6 +43,7 @@ public class BookCreateActivity extends AppCompatActivity {
         etTitle.addTextChangedListener(watcher);
         etDesc.addTextChangedListener(watcher);
 
+        // Nút X (Đóng) -> Hỏi lưu bản thảo nếu đã có nhập chữ
         btnClose.setOnClickListener(v -> {
             if (etTitle.getText().length() > 0 || etDesc.getText().length() > 0) {
                 new AlertDialog.Builder(this)

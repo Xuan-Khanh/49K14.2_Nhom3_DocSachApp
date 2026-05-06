@@ -24,6 +24,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình tổng hợp hiển thị Người theo dõi / Đang theo dõi của BẤT KỲ NGƯỜI DÙNG NÀO (khi bấm từ hồ sơ của họ)
+// Màn hình này chia làm 2 tab ngang để chuyển qua lại dễ dàng.
 public class FollowListActivity extends AppCompatActivity {
 
     private int userId;
@@ -89,6 +91,7 @@ public class FollowListActivity extends AppCompatActivity {
         rvFollowList.setAdapter(adapter);
     }
 
+    // Xử lý sự kiện khi người dùng bấm vào tiêu đề các Tab để chuyển đổi qua lại
     private void setupTabs() {
         tabFollowers.setOnClickListener(v -> {
             if (currentTab != 0) {
@@ -105,6 +108,7 @@ public class FollowListActivity extends AppCompatActivity {
         });
     }
 
+    // Thuật toán cập nhật giao diện (màu chữ, đường kẻ chân) khi thay đổi Tab
     private void updateTabUI() {
         int colorBlack = ContextCompat.getColor(this, R.color.black);
         int colorGray = android.graphics.Color.parseColor("#888888");
@@ -140,10 +144,11 @@ public class FollowListActivity extends AppCompatActivity {
         indicatorFollowing.requestLayout();
     }
 
+    // Gọi API để lấy dữ liệu cho cả 2 tab cùng một lúc
     private void loadData() {
         String authHeader = sessionManager.getAuthHeader();
 
-        // Load followers - Updated to use getUserFollowers
+        // 1. Tải danh sách Người theo dõi (Followers)
         RetrofitClient.getApi().getUserFollowers(userId, authHeader).enqueue(new Callback<List<UserSearchItem>>() {
             @Override
             public void onResponse(Call<List<UserSearchItem>> call, Response<List<UserSearchItem>> response) {
@@ -162,7 +167,7 @@ public class FollowListActivity extends AppCompatActivity {
             }
         });
 
-        // Load following - Updated to use getUserFollowing
+        // 2. Tải danh sách Đang theo dõi (Following)
         RetrofitClient.getApi().getUserFollowing(userId, authHeader).enqueue(new Callback<List<UserSearchItem>>() {
             @Override
             public void onResponse(Call<List<UserSearchItem>> call, Response<List<UserSearchItem>> response) {

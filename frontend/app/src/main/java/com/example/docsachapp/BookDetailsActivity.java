@@ -33,6 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình Xem chi tiết của một cuốn truyện (Đánh giá, Theo dõi, Thông số lượt đọc...)
 public class BookDetailsActivity extends AppCompatActivity {
     private int storyId;
     private int authorId = -1;
@@ -133,6 +134,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // Xử lý sự kiện bấm vào các ngôi sao để Gửi đánh giá
     private void handleRatingClick(int score) {
         String token = sessionManager.getAuthHeader();
         if (token == null) {
@@ -172,6 +174,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // Gọi API Theo dõi / Bỏ theo dõi truyện này
     private void toggleFollow() {
         String token = sessionManager.getAuthHeader();
         if (token == null) {
@@ -220,6 +223,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // Bật BottomSheet (Bảng vuốt từ dưới màn hình lên) để chọn lưu truyện vào 1 Bộ sưu tập có sẵn
     private void showAddToCollectionDialog() {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;

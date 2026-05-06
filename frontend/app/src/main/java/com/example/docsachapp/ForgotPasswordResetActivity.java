@@ -20,6 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình Bước 3 Quên mật khẩu: Nhập và Xác nhận Mật khẩu mới
 public class ForgotPasswordResetActivity extends AppCompatActivity {
     private boolean isPassVis = false;
     private boolean isConfirmVis = false;
@@ -43,9 +44,12 @@ public class ForgotPasswordResetActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
 
+        // Xử lý nút "Con Mắt" để Hiện / Ẩn mật khẩu (cho ô Mật khẩu mới)
         ivEyePass.setOnClickListener(v -> {
             isPassVis = !isPassVis;
+            // Dùng InputType để đổi kiểu hiển thị: TEXT (Hiện) <-> PASSWORD (Dấu chấm)
             etPass.setInputType(isPassVis ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            // Đưa con trỏ nháy về cuối chuỗi sau khi đổi trạng thái
             etPass.setSelection(etPass.getText().length());
         });
 
@@ -59,18 +63,21 @@ public class ForgotPasswordResetActivity extends AppCompatActivity {
             String newPassword = etPass.getText().toString();
             String confirmPassword = etConfirm.getText().toString();
 
+            // Kiểm tra bảo mật cơ bản: Phải dài hơn 8 ký tự
             if (newPassword.length() < 8) {
                 tvError.setText("Mật khẩu mới phải có ít nhất 8 ký tự");
                 tvError.setVisibility(View.VISIBLE);
                 return;
             }
 
+            // Kiểm tra khớp mật khẩu
             if (!newPassword.equals(confirmPassword)) {
                 tvError.setText("Mật khẩu xác nhận không khớp");
                 tvError.setVisibility(View.VISIBLE);
                 return;
             }
 
+            // Đủ điều kiện -> Gọi API
             resetPassword(newPassword, btnUpdate, tvError);
         });
     }
@@ -92,7 +99,10 @@ public class ForgotPasswordResetActivity extends AppCompatActivity {
                 btnUpdate.setText("Cập nhật");
 
                 if (response.isSuccessful()) {
+                    // THÀNH CÔNG: Chuyển sang màn hình Thông báo thành công (Bước 4)
                     Intent intent = new Intent(ForgotPasswordResetActivity.this, ForgotPasswordSuccessActivity.class);
+                    // FLAG_ACTIVITY_CLEAR_TASK giúp xóa sạch các màn hình trước (Bước 1, 2, 3) 
+                    // để người dùng không thể bấm Back quay lại màn đổi pass nữa
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 } else {

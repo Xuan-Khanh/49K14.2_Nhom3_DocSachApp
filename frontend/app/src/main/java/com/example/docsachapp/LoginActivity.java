@@ -127,8 +127,9 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this,
                         "Chào mừng " + body.getUsername() + "!", Toast.LENGTH_SHORT).show();
 
-                    // Chuyển sang MainActivity và xóa stack cũ
+                    // Chuyển sang MainActivity và xóa stack cũ để không Back lại được
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    // Dùng cờ CLEAR_TASK để biến MainActivity thành màn hình gốc
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();

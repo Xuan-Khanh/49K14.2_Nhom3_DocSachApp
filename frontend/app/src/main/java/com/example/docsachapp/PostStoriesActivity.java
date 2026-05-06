@@ -14,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình hiển thị danh sách các Truyện Mới Đăng (được mở khi bấm "Xem thêm" ở trang chủ)
 public class PostStoriesActivity extends AppCompatActivity {
     private RecyclerView rvStories;
     private StoryVerticalAdapter adapter;
@@ -35,7 +36,7 @@ public class PostStoriesActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        // Đồng bộ với trang chủ: Sử dụng API new-releases
+        // Đồng bộ với trang chủ: Sử dụng API getNewReleases để lấy danh sách truyện mới
         RetrofitClient.getApi().getNewReleases().enqueue(new Callback<List<Story>>() {
             @Override
             public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {

@@ -22,6 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Bước 2 đăng ký: Nhập và Xác nhận Mật khẩu, sau đó gọi API Đăng ký
 public class RegisterPasswordActivity extends AppCompatActivity {
     private boolean isPassVis    = false;
     private boolean isConfirmVis = false;
@@ -43,6 +44,7 @@ public class RegisterPasswordActivity extends AppCompatActivity {
             return;
         }
 
+        // Lấy tham chiếu các View
         ImageView  btnBack          = findViewById(R.id.btn_back);
         EditText   etPass           = findViewById(R.id.et_password);
         EditText   etConfirm        = findViewById(R.id.et_confirm_password);
@@ -89,7 +91,7 @@ public class RegisterPasswordActivity extends AppCompatActivity {
             }
             tvError.setVisibility(View.GONE);
 
-            // GỌI API ĐĂNG KÝ TẠI ĐÂY
+            // GỌI API ĐĂNG KÝ TẠI ĐÂY NẾU HỢP LỆ
             callRegisterApi(pass, btnRegister, layoutRegisterForm, layoutSuccessPopup);
         });
 
@@ -114,7 +116,7 @@ public class RegisterPasswordActivity extends AppCompatActivity {
                 btnRegister.setText("Đăng ký");
 
                 if (response.isSuccessful()) {
-                    // HIỆN POPUP THÀNH CÔNG NHƯ YÊU CẦU
+                    // HIỆN POPUP THÀNH CÔNG NHƯ YÊU CẦU: Ẩn form đăng ký, hiện thông báo
                     layoutForm.setVisibility(View.GONE);
                     layoutSuccess.setVisibility(View.VISIBLE);
                 } else {

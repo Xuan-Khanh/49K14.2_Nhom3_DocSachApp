@@ -14,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình xem chi tiết Hồ sơ (Profile) của người dùng hiện tại
 public class ProfileDetailsActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
@@ -39,13 +40,14 @@ public class ProfileDetailsActivity extends AppCompatActivity {
             startActivity(new Intent(this, ProfileEditActivity.class));
         });
 
-        // Xử lý nút Đăng xuất đã được thêm vào layout
+        // Xử lý nút Đăng xuất (hiển thị Dialog xác nhận trước khi thoát)
         findViewById(R.id.btn_logout).setOnClickListener(v -> {
             new AlertDialog.Builder(this)
                     .setTitle("Đăng xuất")
                     .setMessage("Bạn có chắc muốn đăng xuất không?")
                     .setPositiveButton("Đăng xuất", (dialog, which) -> {
-                        sessionManager.logout();
+                        sessionManager.logout(); // Xóa Token khỏi SharedPreferences
+                        // Trở về trang Đăng nhập và xóa hết các màn hình cũ
                         Intent intent = new Intent(this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -58,6 +60,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         loadProfile();
     }
 
+    // Lấy thông tin user từ API
     private void loadProfile() {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;

@@ -45,6 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Fragment Tìm Kiếm: Xử lý tìm kiếm truyện/người dùng, lọc theo thể loại và xem lịch sử tìm kiếm
 public class SearchFragment extends Fragment {
 
     private EditText etSearch;
@@ -68,7 +69,7 @@ public class SearchFragment extends Fragment {
     private List<UserSearchItem> searchUsersList = new ArrayList<>();
     private List<String> recentSearches = new ArrayList<>();
 
-    /** ✅ FIX: Hỗ trợ chọn NHIỀU thể loại thay vì chỉ 1 */
+    /** Lưu trữ danh sách ID Thể loại mà người dùng đang chọn để lọc nhiều thể loại cùng lúc */
     private Set<Integer> selectedGenreIds = new HashSet<>();
 
     private SharedPreferences sharedPrefs;
@@ -293,7 +294,7 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    /** ✅ FIX: Chip giờ toggle trong Set thay vì thay thế 1 giá trị */
+    /** Tạo một UI Chip cho từng thể loại, xử lý logic toggle (Bật/Tắt) */
     private Chip createChip(Story.Genre genre) {
         Chip chip = new Chip(getContext());
         chip.setText(genre.getName());
@@ -313,7 +314,7 @@ public class SearchFragment extends Fragment {
         return chip;
     }
 
-    /** ✅ FIX: Đồng bộ trạng thái checked với Set thay vì so sánh 1 giá trị */
+    /** Đồng bộ trạng thái checked của các Chip (đang thu gọn và mở rộng) với selectedGenreIds */
     private void updateChipsState() {
         for (int i = 0; i < cgCollapsed.getChildCount(); i++) {
             Chip c = (Chip) cgCollapsed.getChildAt(i);
@@ -328,8 +329,8 @@ public class SearchFragment extends Fragment {
     }
 
     /**
-     * ✅ FIX: Chuyển Set<Integer> thành chuỗi comma-separated "1,2,3"
-     * để gửi đúng param theloai cho API GET /api/stories/?theloai=1,2,3
+     * Chuyển Set<Integer> thành chuỗi comma-separated "1,2,3"
+     * để gửi đúng param theloai cho API backend: GET /api/stories/?theloai=1,2,3
      */
     private String buildGenreIdsParam() {
         if (selectedGenreIds.isEmpty()) return null;
@@ -361,7 +362,7 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    /** ✅ FIX: Tìm kiếm cũng gửi kèm thể loại đã chọn (comma-separated) */
+    /** Thực hiện gọi API tìm kiếm tổng hợp. Gửi kèm keyword và theloai đã chọn */
     private void performSearch(String keyword) {
         hideKeyboard();
         addRecentSearch(keyword);

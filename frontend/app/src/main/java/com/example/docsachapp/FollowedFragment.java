@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+// Fragment dùng làm màn hình chứa giao diện (thường được gắn vào ViewPager hoặc các tab điều hướng)
 public class FollowedFragment extends Fragment {
     @Nullable
     @Override

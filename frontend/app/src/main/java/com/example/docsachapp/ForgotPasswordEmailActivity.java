@@ -19,6 +19,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình Bước 1 Quên mật khẩu: Yêu cầu người dùng nhập Email
 public class ForgotPasswordEmailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +42,14 @@ public class ForgotPasswordEmailActivity extends AppCompatActivity {
                 return;
             }
 
-            // Gọi API quên mật khẩu
+            // Gọi API kiểm tra email trên hệ thống có tồn tại không để gửi mã OTP
             performForgotPassword(email, btnSend, tvError);
         });
     }
 
+    // Thực hiện gọi API xử lý quên mật khẩu
     private void performForgotPassword(String email, Button btnSend, TextView tvError) {
+        // Tạm thời vô hiệu hóa nút bấm và đổi chữ để tránh người dùng bấm liên tục nhiều lần (Spam API)
         btnSend.setEnabled(false);
         btnSend.setText("Đang xử lý...");
         tvError.setVisibility(View.GONE);
@@ -61,9 +64,10 @@ public class ForgotPasswordEmailActivity extends AppCompatActivity {
                 btnSend.setText("Gửi");
 
                 if (response.isSuccessful()) {
-                    // Chuyển sang màn hình nhập OTP
+                    // Xử lý thành công: Chuyển sang màn hình Bước 2 (Nhập mã OTP)
                     Intent intent = new Intent(ForgotPasswordEmailActivity.this, ForgotPasswordOtpActivity.class);
-                    intent.putExtra("email", email); // Gửi email sang màn hình tiếp theo
+                    // Đính kèm email mà người dùng vừa nhập để truyền sang màn hình sau
+                    intent.putExtra("email", email); 
                     startActivity(intent);
                 } else {
                     tvError.setText("Email không tồn tại trên hệ thống");

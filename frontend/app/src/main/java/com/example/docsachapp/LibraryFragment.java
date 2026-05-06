@@ -54,10 +54,10 @@ public class LibraryFragment extends Fragment {
     private TextView tabFollowing, tabCollections;
     private ImageView btnAddCollection, btnMore, btnBulkAdd, btnBulkDelete;
 
-    private boolean isFollowingTab = true;
-    private int selectedCollectionId = -1; // Lưu BST được tích chọn
+    private boolean isFollowingTab = true; // Trạng thái tab hiện tại
+    private int selectedCollectionId = -1; // Lưu ID Bộ sưu tập được tích chọn trong BottomSheet
 
-    /** ✅ FIX #6: Lưu trạng thái sort/filter hiện tại */
+    // Lưu trạng thái sort/filter hiện tại để gửi lên API khi tải lại danh sách
     private String currentSortBy = null;
     private String currentOrder = null;
     private String currentTrangThai = null;
@@ -88,7 +88,6 @@ public class LibraryFragment extends Fragment {
         setupRecyclerViews();
         setupTabListeners();
 
-        // ✅ FIX #3: Đã bỏ mục "Lọc trạng thái" khỏi menu
         btnMore.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(requireContext(), btnMore);
             popup.getMenu().add("Sắp xếp truyện");
@@ -124,6 +123,7 @@ public class LibraryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        // Mỗi khi quay lại màn hình (ví dụ từ đọc truyện), tải lại dữ liệu mới nhất
         if (isFollowingTab) loadFollowingStories(); else loadCollections();
     }
 
@@ -148,20 +148,26 @@ public class LibraryFragment extends Fragment {
 
     private void switchTab(boolean isFollowing) {
         this.isFollowingTab = isFollowing;
+        // Đổi màu chữ giữa 2 tab (Primary = Đang chọn, Placeholder = Chưa chọn)
         tabFollowing.setTextColor(getResources().getColor(isFollowing ? R.color.primary : R.color.placeholder));
         tabCollections.setTextColor(getResources().getColor(isFollowing ? R.color.placeholder : R.color.primary));
+        
+        // Ẩn/hiện danh sách và nút bấm tương ứng với tab
         rvFollowing.setVisibility(isFollowing ? View.VISIBLE : View.GONE);
         rvCollections.setVisibility(isFollowing ? View.GONE : View.VISIBLE);
         btnAddCollection.setVisibility(isFollowing ? View.GONE : View.VISIBLE);
         btnMore.setVisibility(isFollowing ? View.VISIBLE : View.GONE);
+        
+        // Thoát chế độ chọn nhiều nếu đang bật và tải lại dữ liệu
         exitSelectionMode();
         if (isFollowing) loadFollowingStories(); else loadCollections();
     }
 
-    // ✅ FIX #5: Gọi API collection theo user_id, chỉ lấy BST của user hiện tại
+    // Gọi API lấy danh sách Bộ sưu tập theo user_id (chỉ lấy BST của user hiện tại)
     private void loadCollections() {
         int userId = sessionManager.getUserId();
         if (userId == -1) return;
+        
         RetrofitClient.getApi().getUserCollections(userId).enqueue(new Callback<List<Collection>>() {
             @Override
             public void onResponse(Call<List<Collection>> call, Response<List<Collection>> response) {
@@ -175,15 +181,17 @@ public class LibraryFragment extends Fragment {
         });
     }
 
-    /** ✅ FIX #6: Gọi API với đúng params sort_by, order, trang_thai */
+    /** Gọi API lấy truyện đang theo dõi. Điểm đặc biệt: có truyền kèm các biến sắp xếp (sort_by, order) */
     private void loadFollowingStories() {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;
+        
         RetrofitClient.getApi().getFollowingStories(token, currentSortBy, currentOrder, currentTrangThai, null)
                 .enqueue(new Callback<List<Story>>() {
             @Override public void onResponse(Call<List<Story>> c, Response<List<Story>> r) {
                 if (isAdded() && r.isSuccessful() && r.body() != null) {
-                    followingStories.clear(); followingStories.addAll(r.body());
+                    followingStories.clear(); 
+                    followingStories.addAll(r.body());
                     followingAdapter.notifyDataSetChanged();
                 }
             }
@@ -191,13 +199,15 @@ public class LibraryFragment extends Fragment {
         });
     }
 
+    // Bật chế độ thao tác hàng loạt (Tick chọn nhiều truyện)
     private void enterSelectionMode() {
-        llTopBar.setVisibility(View.GONE);
-        bulkActionBar.setVisibility(View.VISIBLE);
-        followingAdapter.setSelectionMode(true);
-        loadCollections(); 
+        llTopBar.setVisibility(View.GONE); // Ẩn topbar bình thường
+        bulkActionBar.setVisibility(View.VISIBLE); // Hiện thanh thao tác hàng loạt
+        followingAdapter.setSelectionMode(true); // Báo cho Adapter hiện các ô tick chọn
+        loadCollections(); // Tải sẵn danh sách BST để dùng cho việc "Thêm vào BST"
     }
 
+    // Tắt chế độ thao tác hàng loạt
     private void exitSelectionMode() {
         bulkActionBar.setVisibility(View.GONE);
         llTopBar.setVisibility(View.VISIBLE);
@@ -280,10 +290,11 @@ public class LibraryFragment extends Fragment {
         dialog.show();
     }
 
+    // Hàm gọi API bỏ theo dõi (xóa) hàng loạt
     private void unfollowStoriesApi(Set<Integer> storyIds, AlertDialog dialog) {
         String token = sessionManager.getAuthHeader();
         int total = storyIds.size();
-        final int[] successCount = {0};
+        final int[] successCount = {0}; // Dùng mảng [0] để đếm số lượng API đã chạy thành công
 
         for (Integer id : storyIds) {
             Map<String, Object> body = new HashMap<>();
@@ -293,11 +304,12 @@ public class LibraryFragment extends Fragment {
                 @Override
                 public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                     successCount[0]++;
+                    // Chỉ thông báo và tải lại danh sách khi TẤT CẢ request đã chạy xong
                     if (successCount[0] == total) {
                         Toast.makeText(getContext(), "Đã xóa thành công", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         exitSelectionMode();
-                        loadFollowingStories();
+                        loadFollowingStories(); // Tải lại danh sách sau khi xóa
                     }
                 }
                 @Override public void onFailure(Call<Map<String, Object>> call, Throwable t) {
@@ -307,39 +319,43 @@ public class LibraryFragment extends Fragment {
         }
     }
 
+    // Hiển thị hộp thoại (Dialog) để người dùng nhập tên Bộ sưu tập mới
     private void showCreateCollectionDialog() {
         AlertDialog dialog = new AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create();
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_create_collection, null);
         EditText etName = dialogView.findViewById(R.id.et_collection_name);
+        
+        // Nút hủy bỏ
         dialogView.findViewById(R.id.btn_skip).setOnClickListener(v -> dialog.dismiss());
+        
+        // Nút tạo mới: Lấy tên BST, nếu không rỗng thì gọi API
         dialogView.findViewById(R.id.btn_write).setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
             if (!name.isEmpty()) createCollectionApi(name, dialog);
         });
-        dialog.setView(dialogView); dialog.show();
+        
+        dialog.setView(dialogView); 
+        dialog.show();
     }
 
+    // Gửi request API để tạo mới Bộ sưu tập lên server
     private void createCollectionApi(String name, AlertDialog dialog) {
         String token = sessionManager.getAuthHeader();
         Map<String, Object> body = new HashMap<>();
         body.put("ten_bo_suu_tap", name);
+        
         RetrofitClient.getApi().createCollection(token, body).enqueue(new Callback<Map<String, Object>>() {
             @Override public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getContext(), "Đã tạo bộ sưu tập", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss(); loadCollections();
+                    dialog.dismiss(); 
+                    loadCollections(); // Tải lại danh sách BST để hiển thị ngay lập tức
                 }
             }
             @Override public void onFailure(Call<Map<String, Object>> call, Throwable t) {}
         });
     }
 
-    /**
-     * ✅ FIX #6: Dialog sắp xếp gọi API đúng params sort_by và order
-     */
-    /**
-     * ✅ FIX #4: Đã bỏ "Lượt đọc nhiều nhất" và "Mới tạo nhất"
-     */
     private void showSortDialog() {
         String[] options = {"Mới cập nhật", "Tên truyện (A-Z)", "Tên truyện (Z-A)"};
         new AlertDialog.Builder(requireContext()).setTitle("Sắp xếp theo")

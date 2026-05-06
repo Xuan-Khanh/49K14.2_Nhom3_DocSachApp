@@ -138,6 +138,7 @@ public class ReadingActivity extends AppCompatActivity {
         Chapter chapter = chapterList.get(index);
         showLoading(true);
 
+        // Gọi API lấy nội dung chi tiết của Chương (Content)
         String token = sessionManager.getAuthHeader();
         RetrofitClient.getApi().getChapterDetail(token, chapter.getId()).enqueue(new Callback<Chapter>() {
             @Override
@@ -161,6 +162,7 @@ public class ReadingActivity extends AppCompatActivity {
         });
     }
 
+    // Hiển thị nội dung chương lên giao diện
     private void displayChapter(Chapter chapter) {
         String progressText = (currentIndex + 1) + " / " + chapterList.size();
 
@@ -175,6 +177,7 @@ public class ReadingActivity extends AppCompatActivity {
         if (tvCurrent != null) tvCurrent.setText(String.valueOf(currentIndex + 1));
     }
 
+    // Cập nhật trạng thái bật/tắt (Enable/Disable) của các nút điều hướng (Trước/Sau)
     private void updateNavigationButtons() {
         boolean isFirst = (currentIndex == 0);
         boolean isLast  = (currentIndex == chapterList.size() - 1);

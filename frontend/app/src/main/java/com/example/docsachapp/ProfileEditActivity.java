@@ -211,7 +211,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         btnSave.setEnabled(false);
 
-        // Tạo Map RequestBody cho các trường văn bản (Multipart PartMap)
+        // Tạo Map RequestBody cho các trường văn bản (Bắt buộc phải dùng Multipart PartMap vì có kèm File ảnh)
         Map<String, RequestBody> parts = new HashMap<>();
         parts.put("username", RequestBody.create(username, MediaType.parse("text/plain")));
         parts.put("mo_ta", RequestBody.create(bio, MediaType.parse("text/plain")));
@@ -245,7 +245,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         }
 
-        // Gọi API với 3 tham số: token, PartMap, và avatarPart
+        // Gọi API với 3 tham số: token, PartMap (chứa các chuỗi text), và avatarPart (chứa file ảnh)
         RetrofitClient.getApi().updateUserProfile(token, parts, avatarPart).enqueue(new Callback<Map<String, Object>>() {
             @Override
             public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {

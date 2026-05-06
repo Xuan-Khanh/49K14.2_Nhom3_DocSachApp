@@ -21,6 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình Hiển thị Mục lục (Danh sách các chương) của 1 cuốn truyện
 public class TableOfContentsActivity extends AppCompatActivity {
 
     private int storyId;
@@ -58,9 +59,9 @@ public class TableOfContentsActivity extends AppCompatActivity {
         rvChapters.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new ChapterAdapter(chapterList, this, chapter -> {
-            // Chuyển sang màn hình đọc truyện
+            // Sự kiện Click vào 1 chương: Chuyển sang màn hình Đọc truyện (ReadingActivity)
             Intent intent = new Intent(TableOfContentsActivity.this, ReadingActivity.class);
-            intent.putExtra("STORY_ID", storyId);
+            intent.putExtra("STORY_ID", storyId); // Gửi ID truyện
             intent.putExtra("CHAPTER_ID", chapter.getId());
             startActivity(intent);
         });

@@ -36,6 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình (Tab) Hồ sơ cá nhân của người dùng đang đăng nhập
 public class AdminFragment extends Fragment {
 
     private SessionManager sessionManager;
@@ -82,6 +83,7 @@ public class AdminFragment extends Fragment {
         loadProfile();
     }
 
+    // Lắng nghe sự kiện bấm vào các mục trong màn hình cá nhân
     private void setupClickListeners(View view) {
         View rlUserInfo = view.findViewById(R.id.rl_user_info);
         View rlLibrary = view.findViewById(R.id.rl_library);
@@ -113,12 +115,15 @@ public class AdminFragment extends Fragment {
             llFollowing.setOnClickListener(v -> replaceFragment(new FollowingFragment()));
         }
 
+        // Xử lý sự kiện bấm nút Đăng xuất
         if (btnLogout != null) {
             btnLogout.setOnClickListener(v -> new AlertDialog.Builder(requireContext())
                     .setTitle("Đăng xuất")
                     .setMessage("Bạn có chắc muốn đăng xuất không?")
                     .setPositiveButton("Đăng xuất", (dialog, which) -> {
-                        sessionManager.logout();
+                        sessionManager.logout(); // Xóa sạch dữ liệu đăng nhập lưu trong máy
+                        
+                        // Chuyển về màn hình Đăng nhập và xóa lịch sử các màn hình trước đó
                         Intent intent = new Intent(requireContext(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -144,6 +149,7 @@ public class AdminFragment extends Fragment {
         transaction.commit();
     }
 
+    // Gọi API để lấy thông tin chi tiết của người dùng đang đăng nhập (Tên, Avatar, Số lượng theo dõi...)
     private void loadProfile() {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;

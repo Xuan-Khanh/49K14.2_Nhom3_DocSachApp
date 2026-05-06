@@ -19,9 +19,18 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+/**
+ * ApiService.java
+ * ==================
+ * Đây là Interface cốt lõi của Retrofit dùng để định nghĩa toàn bộ các API gọi lên backend (Django).
+ * Mỗi hàm trong này tương ứng với 1 URL Endpoint trên server.
+ * Các Annotation (như @GET, @POST, @PUT, @DELETE, @Multipart) xác định phương thức HTTP.
+ * Dữ liệu truyền vào (như @Body, @Path, @Query, @Header) sẽ được Retrofit tự động format thành request hợp lệ.
+ */
 public interface ApiService {
 
-    // ==================== AUTH & PROFILE ====================
+    // ==================== 1. XÁC THỰC & HỒ SƠ NGƯỜI DÙNG (AUTH & PROFILE) ====================
+    // Bao gồm Đăng nhập, Đăng ký, Quên mật khẩu, Mạng xã hội và Cập nhật thông tin cá nhân
 
     @POST("auth/login/")
     Call<LoginResponse> login(@Body LoginRequest request);
@@ -75,7 +84,8 @@ public interface ApiService {
     @GET("users/{user_id}/collections/")
     Call<List<Collection>> getUserCollections(@Path("user_id") int userId);
 
-    // ==================== TRUYỆN (Stories) ====================
+    // ==================== 2. QUẢN LÝ TRUYỆN (STORIES) ====================
+    // Cung cấp các API lấy danh sách truyện, lọc truyện (filter), và các thao tác CRUD (Tạo, Sửa, Xóa) cho Tác giả
 
     /** Danh sách truyện với sort/filter (hỗ trợ theloai comma-separated: "1,2,3") */
     @GET("stories/")
@@ -106,6 +116,7 @@ public interface ApiService {
     @GET("stories/completed/")
     Call<List<Story>> getCompletedStories();
 
+    /** API Tạo truyện mới (Hỗ trợ upload ảnh bìa thông qua Multipart) */
     @Multipart
     @POST("stories/")
     Call<Story> createStory(
@@ -152,6 +163,7 @@ public interface ApiService {
     @GET("genres/")
     Call<List<Story.Genre>> getGenres();
 
+    /** Lấy thông tin chi tiết của 1 truyện cụ thể, cần truyền ID của truyện vào URL */
     @GET("stories/{id}/")
     Call<Story> getStoryDetail(@Header("Authorization") String authToken, @Path("id") int id);
 
@@ -173,7 +185,8 @@ public interface ApiService {
     @POST("chapters/batch-action/")
     Call<Map<String, Object>> batchActionChapters(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
-    // ==================== THEO DÕI & BÌNH LUẬN ====================
+    // ==================== 3. TƯƠNG TÁC: THEO DÕI TRUYỆN ====================
+    // API cho phép người dùng lưu truyện vào danh sách yêu thích/theo dõi
     @POST("follow/story/")
     Call<Map<String, Object>> followStory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
@@ -194,7 +207,8 @@ public interface ApiService {
     @GET("user/following-stories/")
     Call<List<Story>> getFollowingStories(@Header("Authorization") String authToken);
 
-    // ==================== BÌNH LUẬN ====================
+    // ==================== 4. BÌNH LUẬN (COMMENTS) ====================
+    // API lấy và đăng bình luận. Lưu ý truyền đúng story_id vào đường dẫn URL
     @GET("stories/{story_id}/comments/")
     Call<List<Comment>> getComments(@Path("story_id") int storyId);
 
@@ -206,18 +220,21 @@ public interface ApiService {
             @Body Map<String, Object> body
     );
 
-    // ==================== LỊCH SỬ ĐỌC ====================
+    // ==================== 5. LỊCH SỬ ĐỌC (READING HISTORY) ====================
+    // Tự động lưu lại vị trí (chương nào) mà user đang đọc dở
     @GET("reading-history/")
     Call<List<ReadingHistoryItem>> getReadingHistory(@Header("Authorization") String authToken);
 
     @POST("reading-history/update/")
     Call<Map<String, Object>> updateReadingHistory(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
-    // ==================== ĐÁNH GIÁ ====================
+    // ==================== 6. ĐÁNH GIÁ (RATING) ====================
+    // API cho phép user đánh giá (chấm điểm) 1 cuốn truyện
     @POST("ratings/")
     Call<Map<String, Object>> postRating(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
-    // ==================== BỘ SƯU TẬP (Collections) ====================
+    // ==================== 7. BỘ SƯU TẬP (COLLECTIONS) ====================
+    // Nhóm tính năng cho phép tạo danh sách truyện riêng (VD: "Truyện hay", "Tiên hiệp đáng đọc")
     @GET("collections/")
     Call<List<Collection>> getCollections(@Header("Authorization") String authToken);
 
@@ -242,7 +259,8 @@ public interface ApiService {
     @HTTP(method = "DELETE", path = "collections/remove-story/", hasBody = true)
     Call<Map<String, Object>> removeStoryFromCollection(@Header("Authorization") String authToken, @Body Map<String, Object> body);
 
-    // ==================== NGƯỜI THEO DÕI (Auth-based) ====================
+    // ==================== 8. MẠNG LƯỚI NGƯỜI DÙNG (USER FOLLOW) ====================
+    // Danh sách "Followers" (Người theo dõi mình) và "Following" (Người mình đang theo dõi)
     @GET("auth/followers/")
     Call<List<UserSearchItem>> getMyFollowers(@Header("Authorization") String token);
 

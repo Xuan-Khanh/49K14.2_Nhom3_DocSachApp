@@ -25,6 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Tab hiển thị danh sách "Những người MÌNH ĐANG THEO DÕI" (dành riêng cho người đang đăng nhập)
 public class FollowingFragment extends Fragment {
 
     @Nullable
@@ -48,8 +49,9 @@ public class FollowingFragment extends Fragment {
 
         String token = new SessionManager(requireContext()).getAuthHeader();
         
-        // ✅ FIX #7 & #8: Dùng FollowListAdapter để có nút Follow/Unfollow
-        // API getMyFollowing trả is_following=true → button mặc định = "Đang theo dõi" (Hủy theo dõi)
+        // Gọi API lấy danh sách các tác giả mà mình đang theo dõi
+        // ✅ FIX #7 & #8: Dùng FollowListAdapter để hiển thị các nút thao tác tương ứng
+        // API getMyFollowing luôn trả về is_following=true → vì vậy nút sẽ mặc định ở trạng thái "Đang theo dõi" (Bấm vào là Hủy)
         RetrofitClient.getApi().getMyFollowing(token).enqueue(new Callback<List<UserSearchItem>>() {
             @Override
             public void onResponse(Call<List<UserSearchItem>> call, Response<List<UserSearchItem>> response) {

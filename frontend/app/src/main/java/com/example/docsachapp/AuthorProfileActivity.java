@@ -31,6 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình hiển thị Hồ sơ công khai của một Tác giả / Người dùng khác
 public class AuthorProfileActivity extends AppCompatActivity {
     private boolean isFollowing = false;
     private int userId;
@@ -80,6 +81,7 @@ public class AuthorProfileActivity extends AppCompatActivity {
         LinearLayout llFollowers = findViewById(R.id.ll_followers);
         LinearLayout llFollowing = findViewById(R.id.ll_following);
 
+        // Bấm vào mục Người theo dõi -> Mở danh sách người theo dõi (Tab index 0)
         llFollowers.setOnClickListener(v -> {
             Intent intent = new Intent(AuthorProfileActivity.this, FollowListActivity.class);
             intent.putExtra("USER_ID", userId);
@@ -88,6 +90,7 @@ public class AuthorProfileActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // Bấm vào mục Đang theo dõi -> Mở danh sách người đang theo dõi (Tab index 1)
         llFollowing.setOnClickListener(v -> {
             Intent intent = new Intent(AuthorProfileActivity.this, FollowListActivity.class);
             intent.putExtra("USER_ID", userId);
@@ -97,6 +100,7 @@ public class AuthorProfileActivity extends AppCompatActivity {
         });
     }
 
+    // Tải thông tin hồ sơ của tác giả này từ Server
     private void loadUserProfile() {
         // Nếu đã đăng nhập, truyền token để biết mình có đang follow người này không
         String authHeader = sessionManager.getAuthHeader();
@@ -151,6 +155,7 @@ public class AuthorProfileActivity extends AppCompatActivity {
         });
     }
 
+    // Xử lý sự kiện khi người dùng bấm nút Theo dõi / Bỏ theo dõi
     private void toggleFollow() {
         String authHeader = sessionManager.getAuthHeader();
         if (authHeader == null) {

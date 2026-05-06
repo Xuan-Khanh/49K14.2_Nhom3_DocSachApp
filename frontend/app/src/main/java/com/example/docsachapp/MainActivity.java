@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.example.docsachapp.api.SessionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+// Activity gốc chứa Bottom Navigation Bar và quản lý việc chuyển đổi giữa các Fragment
 public class MainActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Kiểm tra đăng nhập, nếu chưa có session thì đẩy về trang Đăng nhập
         sessionManager = new SessionManager(this);
         if (!sessionManager.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
             if (selectedFragment != null) {
                 // Ẩn/Hiện Top Bar dựa trên Fragment được chọn
                 // Ẩn khi vào trang Thư viện (LibraryFragment) hoặc trang Viết (TuSachFragment)
+                // vì các trang này có thiết kế UI riêng (không cần thanh tìm kiếm phía trên)
                 if (selectedFragment instanceof LibraryFragment || selectedFragment instanceof TuSachFragment) {
                     llTopBar.setVisibility(View.GONE);
                     vDivider.setVisibility(View.GONE);

@@ -68,7 +68,7 @@
                     android:text="ĐANG THEO DÕI"
                     android:textColor="#D9A441"
                     android:textStyle="bold" />
-                <TextView
+                F<TextView
                     android:id="@+id/tab_collections"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

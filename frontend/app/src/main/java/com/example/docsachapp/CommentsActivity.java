@@ -31,12 +31,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * CommentsActivity – Màn hình bình luận
+ * CommentsActivity – Màn hình bình luận của truyện
  *
- * Luồng:
- * 1. Nhận STORY_ID từ BookDetailsActivity
- * 2. Load danh sách bình luận từ GET /api/stories/{id}/comments
- * 3. Gửi bình luận mới qua POST /api/comments (cần token)
+ * Nhiệm vụ chính:
+ * 1. Nhận STORY_ID từ màn hình trước (BookDetailsActivity) truyền sang.
+ * 2. Gọi API lấy danh sách bình luận (GET) và hiển thị lên danh sách.
+ * 3. Cho phép người dùng nhập văn bản và gọi API (POST) để gửi bình luận mới.
  */
 public class CommentsActivity extends AppCompatActivity {
 
@@ -85,9 +85,9 @@ public class CommentsActivity extends AppCompatActivity {
         btnSend.setOnClickListener(v -> sendComment());
     }
 
-    // ─── Load danh sách bình luận ─────────────────────────────────────────────
+    // ─── Tải danh sách bình luận từ máy chủ ──────────────────────────────────
     private void loadComments() {
-        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE); // Bật vòng xoay loading
 
         RetrofitClient.getApi().getComments(storyId).enqueue(new Callback<List<Comment>>() {
             @Override
@@ -108,10 +108,11 @@ public class CommentsActivity extends AppCompatActivity {
         });
     }
 
-    // ─── Gửi bình luận ────────────────────────────────────────────────────────
+    // ─── Gửi bình luận mới lên máy chủ ────────────────────────────────────────
     private void sendComment() {
         String token = sessionManager.getAuthHeader();
         if (token == null) {
+            // Kiểm tra bảo mật: Nếu chưa đăng nhập thì không cho phép bình luận
             Toast.makeText(this, "Vui lòng đăng nhập để bình luận", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -129,10 +130,14 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Comment> call, Response<Comment> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    etComment.setText("");
-                    // Thêm bình luận mới vào đầu danh sách
+                    etComment.setText(""); // Xóa trắng ô nhập liệu sau khi gửi thành công
+                    
+                    // TỐI ƯU UI: Thêm ngay bình luận mới vào vị trí ĐẦU TIÊN của danh sách (index = 0)
+                    // Cách này giúp giao diện mượt mà, không cần phải gọi API tải lại toàn bộ danh sách bình luận
                     commentList.add(0, response.body());
-                    adapter.notifyItemInserted(0);
+                    adapter.notifyItemInserted(0); 
+                    
+                    // Tự động cuộn danh sách lên đầu để người dùng nhìn thấy bình luận vừa đăng
                     if (rvComments != null) rvComments.scrollToPosition(0);
                     Toast.makeText(CommentsActivity.this, "Đã gửi bình luận", Toast.LENGTH_SHORT).show();
                 } else {

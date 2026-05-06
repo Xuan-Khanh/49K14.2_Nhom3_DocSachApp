@@ -16,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình Danh sách Truyện Đã Đọc Gần Đây
 public class RecentlyReadStoriesActivity extends AppCompatActivity {
     private RecyclerView rvStories;
     private ReadingHistoryAdapter adapter;
@@ -41,6 +42,7 @@ public class RecentlyReadStoriesActivity extends AppCompatActivity {
 
     private void loadData() {
         // Lấy Token theo định dạng "Token [giá trị]"
+        // API Lịch sử đọc bắt buộc phải có Token vì lịch sử lưu theo UserID
         String authHeader = sessionManager.getAuthHeader();
         
         if (authHeader == null) {

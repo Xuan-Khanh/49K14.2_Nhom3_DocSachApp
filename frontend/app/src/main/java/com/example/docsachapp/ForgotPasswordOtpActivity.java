@@ -20,6 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import android.os.CountDownTimer;
 import android.graphics.Color;
+// Màn hình Bước 2 Quên mật khẩu: Yêu cầu người dùng nhập mã OTP được gửi qua Email
 public class ForgotPasswordOtpActivity extends AppCompatActivity {
     private String email;
     private CountDownTimer countDownTimer;
@@ -40,7 +41,7 @@ public class ForgotPasswordOtpActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
 
-        // thêm click gửi lại OTP
+        // Nút Gửi lại mã OTP: Gọi lại API quên mật khẩu với email cũ để hệ thống cấp mã mới
         ivRefresh.setOnClickListener(v -> {
             Map<String, String> body = new HashMap<>();
             body.put("email", email);
@@ -72,6 +73,7 @@ public class ForgotPasswordOtpActivity extends AppCompatActivity {
             verifyOtp(otp, btnVerify, tvError);
         });
     }
+    // Gọi API để gửi mã OTP và Email lên Server kiểm tra tính hợp lệ
     private void verifyOtp(String otp, Button btnVerify, TextView tvError) {
         btnVerify.setEnabled(false);
         btnVerify.setText("Đang xác nhận...");
@@ -88,10 +90,14 @@ public class ForgotPasswordOtpActivity extends AppCompatActivity {
                 btnVerify.setText("Xác nhận");
 
                 if (response.isSuccessful()) {
+                    // XÁC NHẬN THÀNH CÔNG: API sẽ trả về một chuỗi `reset_token`
+                    // Token này cực kỳ quan trọng, dùng để cấp quyền đổi mật khẩu ở bước tiếp theo
                     String resetToken = String.valueOf(response.body().get("reset_token"));
+                    
+                    // Chuyển sang màn hình Bước 3 (Đặt lại mật khẩu)
                     Intent intent = new Intent(ForgotPasswordOtpActivity.this, ForgotPasswordResetActivity.class);
                     intent.putExtra("email", email);
-                    intent.putExtra("reset_token", resetToken);
+                    intent.putExtra("reset_token", resetToken); // Gửi kèm token sang màn hình sau
                     startActivity(intent);
                 } else {
                     tvError.setText("Mã OTP không chính xác hoặc đã hết hạn");
@@ -107,6 +113,7 @@ public class ForgotPasswordOtpActivity extends AppCompatActivity {
             }
         });
     }
+    // Hàm tạo Đồng hồ đếm ngược 60 giây (1 phút) cho mã OTP
     private void startOtpTimer(final TextView textViewTimer) {
         if (countDownTimer != null) {
             countDownTimer.cancel();

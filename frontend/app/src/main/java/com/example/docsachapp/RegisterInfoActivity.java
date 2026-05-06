@@ -53,7 +53,7 @@ public class RegisterInfoActivity extends AppCompatActivity {
 
             tvError.setVisibility(View.GONE);
 
-            // ✅ FIX: Truyền username và email sang bước tiếp theo
+            // Gửi dữ liệu (username và email) sang Intent của Bước 2
             Intent intent = new Intent(RegisterInfoActivity.this, RegisterPasswordActivity.class);
             intent.putExtra("username", username);
             intent.putExtra("email", email);

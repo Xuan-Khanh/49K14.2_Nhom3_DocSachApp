@@ -27,6 +27,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Fragment màn hình chính (Trang Chủ): Chứa danh sách truyện theo 4 danh mục
+// - Mới đăng, Mới cập nhật, Hoàn thành, Đọc gần đây
 public class HomeFragment extends Fragment {
 
     private RecyclerView rvNewStories, rvUpdateStories, rvCompletedStories, rvRecentStories;
@@ -42,7 +44,7 @@ public class HomeFragment extends Fragment {
     private TextView tvError;
     private SessionManager sessionManager;
 
-    // ✅ FIX #1: Khai báo thêm các section container và nút xem thêm
+    //  Khai báo thêm các section container và nút xem thêm
     private View sectionMoiDang, sectionMoiCapNhat, sectionHoanThanh, sectionDocGday;
     private View tvXemThemMoiDang, tvXemThemMoiCapNhat, tvXemThemHoanThanh, tvXemThemDocGday;
 
@@ -56,7 +58,7 @@ public class HomeFragment extends Fragment {
         scrollView = view.findViewById(R.id.scroll_view);
         tvError = view.findViewById(R.id.tv_error);
 
-        // ✅ FIX #1: Tìm section containers (có thể null nếu layout chưa wrap)
+        // Tìm section containers (có thể null nếu layout chưa wrap)
         sectionMoiDang = view.findViewById(R.id.section_moi_dang);
         sectionMoiCapNhat = view.findViewById(R.id.section_moi_cap_nhat);
         sectionHoanThanh = view.findViewById(R.id.section_hoan_thanh);
@@ -103,6 +105,7 @@ public class HomeFragment extends Fragment {
         rvRecentStories.setAdapter(recentStoriesAdapter);
     }
 
+    // Hàm tải dữ liệu từ API cho cả 4 danh mục
     private void loadData() {
         showLoading(true);
         String token = sessionManager.getAuthHeader();
@@ -174,7 +177,7 @@ public class HomeFragment extends Fragment {
                 public void onFailure(Call<List<ReadingHistoryItem>> call, Throwable t) {}
             });
         } else {
-            // Ẩn section đọc gần đây nếu chưa đăng nhập
+            // Ẩn section đọc gần đây nếu chưa đăng nhập (token = null)
             if (sectionDocGday != null) sectionDocGday.setVisibility(View.GONE);
         }
     }

@@ -19,6 +19,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình Lựa chọn Phương thức Đăng ký (Google, Facebook, hoặc Email)
 public class RegisterMethodActivity extends AppCompatActivity {
     
     private SessionManager sessionManager;
@@ -59,10 +60,12 @@ public class RegisterMethodActivity extends AppCompatActivity {
         body.put("social_id", socialId); // Thêm social_id nếu backend cần
         body.put("access_token", "mock_token_valid_" + provider); // Đổi sang access_token thường dùng
 
+        // Gọi API Đăng nhập/Đăng ký qua mạng xã hội (Google/Facebook)
         RetrofitClient.getApi().socialLogin(body).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    // Đăng nhập MXH thành công -> Lưu session và vào thẳng màn chính
                     LoginResponse loginResponse = response.body();
                     sessionManager.saveLoginSession(
                             loginResponse.getToken(),

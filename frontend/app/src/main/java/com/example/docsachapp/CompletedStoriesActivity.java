@@ -14,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình hiển thị danh sách các Truyện đã được đánh dấu là "Hoàn thành"
 public class CompletedStoriesActivity extends AppCompatActivity {
     private RecyclerView rvStories;
     private StoryVerticalAdapter adapter;
@@ -34,6 +35,7 @@ public class CompletedStoriesActivity extends AppCompatActivity {
         loadData();
     }
 
+    // Gọi API lấy danh sách truyện hoàn thành và hiển thị ra màn hình
     private void loadData() {
         // ✅ FIX: Gọi API endpoint truyện hoàn thành đúng
         RetrofitClient.getApi().getCompletedStories().enqueue(new Callback<List<Story>>() {

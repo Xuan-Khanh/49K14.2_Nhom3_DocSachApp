@@ -20,6 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Màn hình Soạn thảo Chương (dùng chung cho cả việc Viết chương mới và Sửa/Xóa chương cũ)
 public class ChapterWriterActivity extends AppCompatActivity {
 
     private EditText etTitle, etContent;
@@ -38,6 +39,8 @@ public class ChapterWriterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chapter_writer);
 
         sessionManager = new SessionManager(this);
+        // Lấy ID truyện và ID chương (nếu có) được truyền từ màn hình trước sang
+        // Nếu chapterId = -1 nghĩa là người dùng đang tạo chương mới
         storyId = getIntent().getIntExtra("STORY_ID", -1);
         chapterId = getIntent().getIntExtra("CHAPTER_ID", -1);
 
@@ -51,8 +54,10 @@ public class ChapterWriterActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         if (chapterId != -1) {
+            // Chế độ: CHỈNH SỬA chương cũ -> Gọi API tải dữ liệu gốc về
             loadChapterDetail();
         } else {
+            // Chế độ: TẠO MỚI chương -> Setup giao diện các nút mặc định
             btnDraft.setText("NHÁP");
             btnPublish.setText("ĐĂNG");
             btnPublish.setOnClickListener(v -> saveChapter("da_dang"));
@@ -63,6 +68,7 @@ public class ChapterWriterActivity extends AppCompatActivity {
         updateButtonStates();
     }
 
+    // Lấy nội dung chi tiết của chương từ Server (Chỉ chạy khi đang ở chế độ Chỉnh sửa chương cũ)
     private void loadChapterDetail() {
         String token = sessionManager.getAuthHeader();
         RetrofitClient.getApi().getChapterDetail(token, chapterId).enqueue(new Callback<Chapter>() {
@@ -77,11 +83,15 @@ public class ChapterWriterActivity extends AppCompatActivity {
                     tvToolbarTitle.setText(originalTitle);
 
                     if (chapter.isPublished()) {
+                        // Nếu chương này ĐÃ TỪNG ĐƯỢC XUẤT BẢN:
+                        // Đổi tên nút thành "XÓA" và "LƯU" thay vì Nháp/Đăng
                         btnDraft.setText("XÓA");
                         btnPublish.setText("LƯU");
                         btnDraft.setOnClickListener(v -> confirmDeleteChapter());
                         btnPublish.setOnClickListener(v -> saveChapter(currentStatus));
                     } else {
+                        // Nếu chương này vẫn đang là BẢN NHÁP:
+                        // Giữ nguyên giao diện nút NHÁP / ĐĂNG
                         btnDraft.setText("NHÁP");
                         btnPublish.setText("ĐĂNG");
                         btnDraft.setOnClickListener(v -> saveChapter("ban_thao"));
@@ -99,6 +109,7 @@ public class ChapterWriterActivity extends AppCompatActivity {
         });
     }
 
+    // Gửi dữ liệu lên Server (Tạo mới hoặc Cập nhật tùy vào việc đã có ID chương hay chưa)
     private void saveChapter(String status) {
         String title = etTitle.getText().toString().trim();
         String content = etContent.getText().toString().trim();
@@ -108,6 +119,7 @@ public class ChapterWriterActivity extends AppCompatActivity {
             return;
         }
 
+        // Đóng gói dữ liệu gửi lên Backend thành một đối tượng Body
         Map<String, Object> body = new HashMap<>();
         body.put("truyen_id", storyId);
         body.put("tieu_de", title);
@@ -116,6 +128,7 @@ public class ChapterWriterActivity extends AppCompatActivity {
 
         String token = sessionManager.getAuthHeader();
         if (chapterId != -1) {
+            // TRƯỜNG HỢP CẬP NHẬT: Gọi API updateChapter và truyền kèm theo ID của chương
             RetrofitClient.getApi().updateChapter(token, chapterId, body).enqueue(new Callback<Chapter>() {
                 @Override
                 public void onResponse(@NonNull Call<Chapter> call, @NonNull Response<Chapter> response) {
@@ -171,18 +184,25 @@ public class ChapterWriterActivity extends AppCompatActivity {
         etContent.addTextChangedListener(watcher);
     }
 
+    // Cập nhật trạng thái Bật/Tắt (Màu sắc) của các nút bấm dựa trên việc người dùng đã nhập chữ hay chưa
     private void updateButtonStates() {
         String title = etTitle.getText().toString().trim();
         String content = etContent.getText().toString().trim();
+        
+        // Kiểm tra xem người dùng đã nhập CẢ Tiêu đề VÀ Nội dung chưa?
         boolean hasText = !title.isEmpty() && !content.isEmpty();
 
+        // Kiểm tra xem hiện tại nút Draft đang hiện chữ "XÓA" (nghĩa là đang ở Chế độ Sửa) hay "NHÁP" (Tạo mới)
         boolean isEditMode = btnDraft.getText().toString().equalsIgnoreCase("XÓA");
 
         if (isEditMode) {
+            // Chế độ Sửa: Phải kiểm tra xem người dùng CÓ THỰC SỰ SỬA CHỮ nào so với nội dung gốc tải từ server không
             boolean hasChanged = !title.equals(originalTitle) || !content.equals(originalContent);
-            btnDraft.setEnabled(true);
+            
+            btnDraft.setEnabled(true); // Nút XÓA thì lúc nào cũng bấm được
             btnDraft.setTextColor(getResources().getColor(R.color.text_dark));
             
+            // Nút LƯU chỉ sáng lên nếu: Đã điền đủ chữ VÀ Có sự thay đổi nội dung
             if (hasText && hasChanged) {
                 btnPublish.setEnabled(true);
                 btnPublish.setTextColor(getResources().getColor(R.color.primary));
@@ -191,6 +211,7 @@ public class ChapterWriterActivity extends AppCompatActivity {
                 btnPublish.setTextColor(android.graphics.Color.parseColor("#999999"));
             }
         } else {
+            // Chế độ Tạo mới: Chỉ cần điền đủ nội dung là cả 2 nút NHÁP và ĐĂNG đều sáng lên
             if (hasText) {
                 btnDraft.setEnabled(true);
                 btnDraft.setTextColor(getResources().getColor(R.color.text_dark));
@@ -214,6 +235,7 @@ public class ChapterWriterActivity extends AppCompatActivity {
             .show();
     }
 
+    // Gọi API xóa hoàn toàn chương này
     private void deleteChapter() {
         String token = sessionManager.getAuthHeader();
         RetrofitClient.getApi().deleteChapter(token, chapterId).enqueue(new Callback<Map<String, Object>>() {

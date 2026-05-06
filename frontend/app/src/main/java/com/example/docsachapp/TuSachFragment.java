@@ -53,6 +53,7 @@ import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
+// Fragment "Tủ Sách": Quản lý truyện đã đăng của tác giả, cho phép tạo truyện mới (gồm 2 bước)
 public class TuSachFragment extends Fragment {
 
     private View layoutMain, popupAuthorWorks, popupCreateStep1, popupCreateStep2, popupChooseCategory;
@@ -140,7 +141,7 @@ public class TuSachFragment extends Fragment {
     }
 
     private void initCreateBookViews(View view) {
-        // Bước 1
+        // Ánh xạ View cho Bước 1: Tiêu đề, Mô tả và Bìa Truyện
         etBookTitle = view.findViewById(R.id.et_book_title);
         etBookDesc = view.findViewById(R.id.et_book_description);
         btnAddCover = view.findViewById(R.id.btn_add_cover);
@@ -157,7 +158,7 @@ public class TuSachFragment extends Fragment {
         etBookDesc.addTextChangedListener(step1Watcher);
         btnAddCover.setOnClickListener(v -> showImagePickerDialog());
 
-        // Bước 2
+        // Ánh xạ View cho Bước 2: Hiển thị lại thông tin, Chọn Thể Loại và Trạng Thái
         tvStep2Title = view.findViewById(R.id.tv_book_title_display);
         tvStep2Desc = view.findViewById(R.id.tv_book_desc_display);
         tvStep2Category = view.findViewById(R.id.tv_book_categories_display);
@@ -243,6 +244,7 @@ public class TuSachFragment extends Fragment {
         checkStep2Validity();
     }
 
+    // Gọi API để tạo truyện mới. MultipartBody được sử dụng do có đính kèm file ảnh bìa (anh_bia).
     private void createStoryOnServer(boolean navigateToAddChapter) {
         String token = sessionManager.getAuthHeader();
         if (token == null) return;
