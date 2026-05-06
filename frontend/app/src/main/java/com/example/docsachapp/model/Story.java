@@ -25,7 +25,7 @@ public class Story {
     @SerializedName("trang_thai_display")
     private String statusDisplay;
 
-    @SerializedName("anh_bia")
+    @SerializedName("cover_url") // ✅ Khớp với backend (link ảnh tuyệt đối)
     private String coverUrl;
 
     @SerializedName("so_luot_doc")
@@ -45,6 +45,9 @@ public class Story {
 
     @SerializedName("so_chuong")
     private int chaptersCount;
+
+    @SerializedName("followers") // ✅ Khớp với backend
+    private int followerCount;
 
     @SerializedName("is_following")
     private boolean isFollowing;
@@ -78,19 +81,14 @@ public class Story {
     public float getRating() { return rating; }
     public int getTotalRatings() { return totalRatings; }
     public int getChaptersCount() { return chaptersCount; }
+    public int getFollowerCount() { return followerCount; }
     public boolean isFollowing() { return isFollowing; }
     public int getUserRating() { return userRating; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
 
-    /**
-     * Trả về trạng thái hiển thị thân thiện.
-     * Ưu tiên dùng trang_thai_display nếu backend trả về, nếu không thì map từ trang_thai.
-     */
     public String getStatusDisplay() {
-        if (statusDisplay != null && !statusDisplay.isEmpty()) {
-            return statusDisplay;
-        }
+        if (statusDisplay != null && !statusDisplay.isEmpty()) return statusDisplay;
         if (status == null) return "Không rõ";
         switch (status) {
             case "hoan_thanh": return "Hoàn thành";
@@ -99,25 +97,12 @@ public class Story {
         }
     }
 
-    /**
-     * Format thời gian updated_at thành chuỗi tương đối (VD: "5 phút trước", "2 giờ trước").
-     * Nếu không parse được thì trả nguyên chuỗi.
-     */
-    public String getFormattedUpdatedAt() {
-        return formatRelativeTime(updatedAt);
-    }
-
-    /**
-     * Format thời gian created_at thành chuỗi tương đối.
-     */
-    public String getFormattedCreatedAt() {
-        return formatRelativeTime(createdAt);
-    }
+    public String getFormattedUpdatedAt() { return formatRelativeTime(updatedAt); }
+    public String getFormattedCreatedAt() { return formatRelativeTime(createdAt); }
 
     private String formatRelativeTime(String isoTime) {
         if (isoTime == null || isoTime.isEmpty()) return "";
         try {
-            // Chuẩn hóa offset "+07:00" → "+0700" cho SimpleDateFormat
             String normalized = isoTime;
             if (normalized.matches(".*[+-]\\d{2}:\\d{2}$")) {
                 int colonPos = normalized.lastIndexOf(':');
@@ -126,41 +111,20 @@ public class Story {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
             Date date = sdf.parse(normalized);
             if (date == null) return isoTime;
-
             long diffMs = System.currentTimeMillis() - date.getTime();
             long diffMin = diffMs / (60 * 1000);
             long diffHour = diffMs / (3600 * 1000);
             long diffDay = diffMs / (86400 * 1000L);
-
             if (diffMin < 1) return "Vừa xong";
             if (diffMin < 60) return diffMin + " phút trước";
             if (diffHour < 24) return diffHour + " giờ trước";
             if (diffDay < 30) return diffDay + " ngày trước";
-
-            SimpleDateFormat displayFmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            return displayFmt.format(date);
-        } catch (Exception e) {
-            return isoTime;
-        }
+            return new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date);
+        } catch (Exception e) { return isoTime; }
     }
 
-    public String getAuthorName() {
-        return author != null && author.getUsername() != null ? author.getUsername() : "Ẩn danh";
-    }
+    public String getAuthorName() { return author != null && author.getUsername() != null ? author.getUsername() : "Ẩn danh"; }
 
-    public String getGenresText() {
-        if (genres == null || genres.isEmpty()) return "";
-        StringBuilder builder = new StringBuilder();
-        for (Genre genre : genres) {
-            if (genre != null && genre.getName() != null) {
-                if (builder.length() > 0) builder.append(", ");
-                builder.append(genre.getName());
-            }
-        }
-        return builder.toString();
-    }
-
-    // ✅ FIX: Thêm hàm equals để hàm remove() trong List có thể tìm thấy truyện theo ID
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -170,9 +134,7 @@ public class Story {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+    public int hashCode() { return Objects.hash(id); }
 
     public static class Author {
         @SerializedName("id") private int id;
